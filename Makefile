@@ -1,7 +1,7 @@
 CXX=g++
 CXXFLAGS=-g
 LIBS := -lSDL
-OBJECTS := Engine.o main.o
+OBJECTS := Logger.o Engine.o main.o
 
 Unnamed: $(OBJECTS)
 	$(CXX) $(OBJECTS) $(LIBS) -o Unnamed

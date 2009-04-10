@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "Logger.h"
 
 Engine *Engine::instance = NULL;
 
@@ -25,13 +26,23 @@ Engine* Engine::getInstance()
 Engine::Engine(int w, int h, bool fs)
 	: width(w), height(h), fullscreen(fs), quit(false)
 {
-	setupSDL();
+	Logger::getInstance()->log("Engine created: %ix%i\n");
+
+	if(setupSDL())
+	{
+		Logger::getInstance()->log("SDL init succeeded\n");
+	}
+	else
+	{
+		Logger::getInstance()->log("SDL init failed\n");
+	}
 }
 
 bool Engine::setupSDL()
 {
 	if(SDL_Init(SDL_INIT_EVERYTHING) == -1)
 	{
+		Logger::getInstance()->log("SDL subsystems init failed\n");
 		return false;
 	}
 
@@ -46,6 +57,7 @@ bool Engine::setupSDL()
 
 	if(!screen)
 	{
+		Logger::getInstance()->log("Setting video mode failed\n");
 		return false;
 	}
 
@@ -83,6 +95,7 @@ void Engine::runGameCycle()
 
 Engine::~Engine()
 {
+	Logger::getInstance()->close();
 }
 
 
