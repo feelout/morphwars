@@ -2,6 +2,7 @@
 #define ENGINE_H
 
 #include <SDL/SDL.h>
+#include "EventDispatcher.h"
 
 /**
  * Engine coordinates all subsystems and game cycle
@@ -37,6 +38,11 @@ class Engine
 		 * Stops game cycle after iteration
 		 */
 		bool quit;
+
+		/**
+		 * Dispatches events to all present subsytems
+		 */
+		EventDispatcher *dispatcher;
 
 		/**
 		 * Construct window and initializes subsystems

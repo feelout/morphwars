@@ -36,6 +36,8 @@ Engine::Engine(int w, int h, bool fs)
 	{
 		Logger::getInstance()->log("SDL init failed\n");
 	}
+
+	dispatcher = new EventDispatcher();
 }
 
 bool Engine::setupSDL()
@@ -75,15 +77,7 @@ void Engine::runGameCycle()
 		// Event processing
 		while(SDL_PollEvent(&event))
 		{
-			/*
-			   Mb process to some EventDispatcher, which sends signals
-			   to all connected listeners (IListener). Probably better
-			   that putting too much responsibility on one class
-			*/
-			if(event.type == SDL_QUIT)
-			{
-				quit = true;
-			}
+			dispatcher->passEvent(event);
 		}
 		// Do all game logic and drawing here
 		
@@ -93,8 +87,15 @@ void Engine::runGameCycle()
 	delete instance; //mb will throw segfaults, we`ll see
 }
 
+void Engine::stop()
+{
+	Logger::getInstance()->log("Stopping engine\n");
+	quit = true;
+}
+
 Engine::~Engine()
 {
+	delete dispatcher;
 	Logger::getInstance()->close();
 }
 
