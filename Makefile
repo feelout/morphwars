@@ -1,6 +1,6 @@
 CXX=g++
 CXXFLAGS=-g
-LIBS := -lSDL
+LIBS := -lSDL -lSDL_image
 OBJECTS := Logger.o Engine.o EventDispatcher.o Tile.o TileSet.o Map.o tinystr.o tinyxml.o tinyxmlerror.o tinyxmlparser.o main.o
 
 Unnamed: $(OBJECTS)

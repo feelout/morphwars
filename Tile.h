@@ -10,7 +10,7 @@ const int TILE_TERRAIN_HEIGHT = 21;
 /**
  * Types of tile images
  */
-enum TileImagesType
+enum TileImageType
 {
 	/* Whole tile is filled with surface */
 	CENTER = 0,
@@ -37,6 +37,11 @@ enum MovementType
 const int TILE_IMAGES_NUM = 5;
 const int MOVEMENT_TYPES_NUM = 5;
 
+struct MovementCosts
+{
+	int costs[MOVEMENT_TYPES_NUM];
+};
+
 /**
  * Tile type - type of map cell
  */
@@ -54,7 +59,7 @@ class TileType
 		/**
 		 * Movement costs for moving through tile type;
 		 */
-		int movementCosts[MOVEMENT_TYPES_NUM];
+		MovementCosts movementCosts;
 	public:
 		/**
 		  * Creates tile type
@@ -62,7 +67,7 @@ class TileType
 		  * @param y Line occupied by tile on surface
 		  * @param movementCosts Array with movement costs
 		  */
-		TileType(SDL_Surface *surface, int y, int priority, int *movementCosts);
+		TileType(SDL_Surface *surface, int y, int priority, MovementCosts movementCosts);
 		/**
 		 * Destroys images
 		 */
@@ -87,7 +92,7 @@ class Tile
 	public:
 		Tile(int x, int y, TileType *type);
 
-		void setImageType(TileImageType type);
+		void setImageType(TileImageType imgtype);
 };
 
 #endif //TILE_H

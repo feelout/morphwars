@@ -1,7 +1,7 @@
 #include "Tile.h"
 
-TileType::TileType(SDL_Surface *surface, int y, int priority, int *movementCosts)
-	: priority(priority), movementCosts(movementCosts);
+TileType::TileType(SDL_Surface *surface, int y, int priority, MovementCosts movementCosts)
+	: priority(priority), movementCosts(movementCosts)
 {
 	int rmask = surface->format->Rmask;
 	int gmask = surface->format->Gmask;
@@ -16,7 +16,7 @@ TileType::TileType(SDL_Surface *surface, int y, int priority, int *movementCosts
 
 	for(int x=0; x < TILE_IMAGES_NUM; ++x)
 	{
-		surfaces[i] = SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_SRCCOLORKEY, TILE_WIDTH, TILE_HEIGHT, 32,
+		surfaces[x] = SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_SRCCOLORKEY, TILE_WIDTH, TILE_HEIGHT, 32,
 			rmask, gmask, bmask, amask);
 
 		cuttingRect.x = x*TILE_WIDTH;
@@ -24,7 +24,7 @@ TileType::TileType(SDL_Surface *surface, int y, int priority, int *movementCosts
 		cuttingRect.w = TILE_WIDTH;
 		cuttingRect.h = TILE_HEIGHT;
 
-		SDL_BlitSurface(surface, cuttingRect, surfaces[i], targetRect);
+		SDL_BlitSurface(surface, &cuttingRect, surfaces[x], &targetRect);
 	}
 }
 
@@ -32,20 +32,24 @@ TileType::~TileType()
 {
 	for(int x=0; x < TILE_IMAGES_NUM; ++x)
 	{
-		SDL_FreeSurface(surfaces[i]);
+		SDL_FreeSurface(surfaces[x]);
 	}
 
 	delete[] surfaces;
-	delete[] movementCosts;
 }
 
-SDL_Surface* getTileImage(TileImageType type)
+SDL_Surface* TileType::getTileImage(TileImageType type)
 {
 	return surfaces[type];
 }
 
-
-Tile::Tile(int x, int y, SDL_Surface *image, int **mpcosts)
-	: x(x), y(y), image(image), mpcosts(mpcosts);
+Tile::Tile(int x, int y, TileType *type)
+	: x(x), y(y), type(type)
 {
+	image = type->getTileImage(CENTER);
+}
+
+void Tile::setImageType(TileImageType imgtype)
+{
+	image = type->getTileImage(imgtype);
 }

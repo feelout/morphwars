@@ -8,15 +8,21 @@
 class Map
 {
 	private:
-		Tile *tiles;
+		Tile **tiles;
 		TileSet *tileset;
 
 		int width,height;
+		
+		std::string author;
+		std::string name;
+		std::string version;
 
-		void loadMap(std::string filename);
+		bool loadMap(std::string name);
+		void calculateSurfaces();
 	public:
 		Map(int width, int height, std::string tilesetName);
-		Map(std::string filename);
+		Map(std::string name);
+		~Map();
 };
 
 #endif //MAP_H

@@ -1,6 +1,8 @@
 #include "TileSet.h"
+#include "Logger.h"
 #include <cstdio>
 #include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
 
 TileSet::TileSet(std::string name)
 {
@@ -12,23 +14,25 @@ TileSet::TileSet(std::string name)
 
 bool TileSet::loadTileSet(std::string name)
 {
-	FILE *f_def = fopen( ("/Tilesets/" + name + ".def").c_str(), "r");
+	FILE *f_def = fopen( ("Tilesets/" + name + "/" + name + ".def").c_str(), "r");
 
 	if(!f_def)
 	{
 		Logger::getInstance()->log("Definition file for %s not found.\n", name.c_str());
+		Logger::getInstance()->log("Was searching for %s\n", ("Tilesets/" + name + "/" + name + ".def").c_str());
 		return false;
 	}
 
-	SDL_Surface *f_map = IMG_Load(("/Tilesets/" + name + ".png").c_str());
+	SDL_Surface *f_map = IMG_Load(("Tilesets/" + name + "/" + name + ".png").c_str());
 
 	if(!f_map)
 	{
 		Logger::getInstance()->log("Couldn`t load image for Tileset %s\n", name.c_str());
+		Logger::getInstance()->log("Was searching for %s\n", ("Tilesets/" + name + "/" + name + ".png").c_str());
 		return false;
 	}
 
-	int numOfTileTypes = f_map->h / TILE_Y;
+	int numOfTileTypes = f_map->h / TILE_HEIGHT;
 
 	Logger::getInstance()->log("%i tile types detected\n", numOfTileTypes);
 
@@ -37,10 +41,11 @@ bool TileSet::loadTileSet(std::string name)
 	for(int y=0; y < numOfTileTypes; ++y)
 	{
 		int *movementCosts = new int[MOVEMENT_TYPES_NUM];
+		MovementCosts costs;
 		int priority;
-		fscanf(f_def, "%i,%i,%i,%i,%i,%i\n", &priority, &movementCosts[FEET], *movementCosts[WHEEL],
-				&movementCosts[TRACK], &movementCosts[LOWAIR], &movementCosts[HIGHAIR]);
-		currentType = new TileType(f_map, y, priority, movementCosts);
+		fscanf(f_def, "%i,%i,%i,%i,%i,%i\n", &priority, &costs.costs[FEET], &costs.costs[WHEEL],
+				&costs.costs[TRACK], &costs.costs[LOWAIR], &costs.costs[HIGHAIR]);
+		currentType = new TileType(f_map, y, priority, costs);
 
 		types.push_back(currentType);
 	}
@@ -49,12 +54,19 @@ bool TileSet::loadTileSet(std::string name)
 	SDL_FreeSurface(f_map);
 }
 
+TileType* TileSet::getType(int n)
+{
+	return types[n];
+}
+
 TileSet::~TileSet()
 {
-	std::vector<TileType*>::iterator i;
+	/*std::vector<TileType*>::iterator i;
 
 	for(i = types.begin(); i != types.end(); i++)
 	{
-		delete *i;
+		delete (*i);
 	}
+	*/
+	types.erase(types.begin(), types.end());
 }
