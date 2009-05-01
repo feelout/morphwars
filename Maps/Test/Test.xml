@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<map author="Feelout" name="Sample ground" version="0.1">
+<terrain width="5" height="4">
+	<tileset>Default</tileset>
+	<cells>
+		<line>00000</line>
+		<line>01121</line>
+		<line>12112</line>
+		<line>22101</line>
+	</cells>
+</terrain>
+<units>
+</units>
+<buildings>
+</building>
+<objects>
+</objects>
+</map>

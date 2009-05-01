@@ -45,7 +45,7 @@ class Engine
 		EventDispatcher *dispatcher;
 
 		/**
-		 * Construct window and initializes subsystems
+		 * Constructs window and initializes subsystems
 		 * @param w Width of window
 		 * @param h Height of window
 		 * @param fs Fullscreen mode

@@ -1,0 +1,13 @@
+#Sample tile definition file v0.1
+#Definition filename must be equal to image name (and folder name)
+#Definition consists of one line per each tileset image line
+#Line: MP needed for moving trough tile on following movement types
+#PRIORITY, FEET, WHEEL, TRACK, LOWAIR, HIGHAIR
+
+#The file itself
+#Grass
+3,3,2,2,1,1
+#Water
+1,4,99,99,2,1
+#Mud
+2,4,99,5,2,1

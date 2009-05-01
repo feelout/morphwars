@@ -3,37 +3,91 @@
 
 #include <SDL/SDL.h>
 
-const int TILE_X = 40;
-const int TILE_Y = 40;
+const int TILE_HEIGHT = 40;
+const int TILE_WIDTH = 40;
 const int TILE_TERRAIN_HEIGHT = 21;
 
+/**
+ * Types of tile images
+ */
 enum TileImagesType
 {
+	/* Whole tile is filled with surface */
 	CENTER = 0,
+	/* Used for blending when collided (if priority is higher) */
 	LEFT,
 	RIGHT,
 	UP,
 	DOWN,
 };
 
+// Move to unit?
+/**
+ * Unit movement types
+ */
+enum MovementType
+{
+	FEET = 0,
+	WHEEL,
+	TRACK,
+	LOWAIR,
+	HIGHAIR,
+};
+
+const int TILE_IMAGES_NUM = 5;
+const int MOVEMENT_TYPES_NUM = 5;
+
+/**
+ * Tile type - type of map cell
+ */
 class TileType
 {
 	private:
-		SDL_Surface[5] surfaces; //one for each tile side + center
+		/**
+		 * Tile type images
+		 */
+		SDL_Surface* surfaces[TILE_IMAGES_NUM]; //one for each tile side + center
+		/**
+		 * Priority is used to show which tiles should blend onto others.
+		 */
 		int priority;
+		/**
+		 * Movement costs for moving through tile type;
+		 */
+		int movementCosts[MOVEMENT_TYPES_NUM];
 	public:
-		TileType(SDL_Surface *surfaces, int priority);
+		/**
+		  * Creates tile type
+		  * @param surface Surface, from which tile images are extracted
+		  * @param y Line occupied by tile on surface
+		  * @param movementCosts Array with movement costs
+		  */
+		TileType(SDL_Surface *surface, int y, int priority, int *movementCosts);
+		/**
+		 * Destroys images
+		 */
+		~TileType();
+
+		/**
+		 * Returt tile image for given image type
+		 */
 		SDL_Surface *getTileImage(TileImageType type);
 };
 
+/**
+ * Tile represens a map cell
+ */
 class Tile
 {
 	private:
 		int x,y; //might be not needed
 		SDL_Surface *image;
+		TileType *type;
 		//Units and building occupying
 	public:
-		Tile(int x, int y, SDL_Surface *image);
+		Tile(int x, int y, TileType *type);
+
+		void setImageType(TileImageType type);
 };
 
 #endif //TILE_H
