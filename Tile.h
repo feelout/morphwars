@@ -93,6 +93,9 @@ class Tile
 		Tile(int x, int y, TileType *type);
 
 		void setImageType(TileImageType imgtype);
+		void setImage(SDL_Surface *image);
+		
+		TileType* getType();
 };
 
 #endif //TILE_H

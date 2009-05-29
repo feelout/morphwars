@@ -81,6 +81,7 @@ void Engine::runGameCycle()
 		}
 		// Do all game logic and drawing here
 		
+		SDL_Flip(screen); //TODO: mb separate renderer?
 		SDL_Delay(10); // Not to eat all CPU power
 	}
 

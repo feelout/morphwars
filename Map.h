@@ -23,6 +23,8 @@ class Map
 		Map(int width, int height, std::string tilesetName);
 		Map(std::string name);
 		~Map();
+		
+		Tile* getTile(int x, int y);
 };
 
 #endif //MAP_H

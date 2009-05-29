@@ -106,6 +106,13 @@ players_root_el->NextSiblingElement("player"))
 
 void Map::calculateSurfaces()
 {
+	// TODO: Stub
+	for(int y=0; y < height; ++y)
+	{
+		for(int x=0; x < width; ++x)
+		{
+		}
+	}
 }
 
 Map::~Map()
