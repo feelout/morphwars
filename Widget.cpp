@@ -2,21 +2,15 @@
 
 using namespace Gui;
 
-Widget::Widget(int x, int y, int w, int h)
+Widget::Widget(Rect rect, Widget *parent = NULL)
 {
-	frame.x = x;
-	frame.y = y;
-	frame.w = w;
-	frame.h = h;
+	//this->frame = rect;
+	setFrame(rect);
+	setParent(parent);
+	setActive(true);	
 	
-	active = true;
-}
-
-Widget::Widget(Rect rect)
-{
-	this->frame = rect;
-	
-	active = true;
+	xpolicy = FRIENDLY;
+	ypolicy = FRIENDLY;
 }
 
 bool Widget::isActive()
@@ -32,4 +26,14 @@ void Widget::setActive(bool active)
 bool Widget::isPointInFrame(int x, int y)
 {
 	return frame.isPointInRect(x,y);
+}
+
+void Widget::setParent(Widget *parent)
+{
+	this->parent = parent;
+}
+
+Widget* Widget::getParent()
+{
+	return parent;
 }

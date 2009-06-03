@@ -6,6 +6,13 @@
 
 namespace Gui
 {
+	enum SizePolicy
+	{
+		CONCRETE, //Cannot shrink or expand, use request
+		MINIMUM, //Cannot shrink, can expand
+		MAXIMUM, //Cannot expand, can shrink
+		FRIENDLY //Will accept everything
+	};
 	/**
 	* Widget is base GUI class
 	*/
@@ -21,23 +28,28 @@ namespace Gui
 			*/
 			Rect request;
 			/**
+			* SizePolicy on X axis
+			*/
+			SizePolicy xpolicy;
+			/**
+			* Size policy on Y axis
+			*/
+			SizePolicy ypolicy;
+			/**
 			* True if widget draws itself and responds to actions
 			*/
 			bool active;
-		public:
+
 			/**
-			* Create widget with given bounding rect
-			* @param x x coord of the bounding rect
-			* @param y y coord of the bounding rect
-			* @param w width of the bounding rect
-			* @param h height of the bounding rect
-			*/
-			Widget(int x, int y, int w, int h);
+			 * Parent widget
+			 */
+			Widget *parent;
+		public:
 			/**
 			* Create widget with given bounding rect
 			* @param rect bounding rect
 			*/
-			Widget(Rect rect);
+			Widget(Rect rect, Widget *parent=NULL);
 			/**
 			* Pure virtual destructor
 			*/
@@ -73,5 +85,21 @@ namespace Gui
 			* @return requested frame
 			*/
 			Rect getRequestedFrame() const;
+
+			/**
+			 * Sets widget`s frame.
+			 * Is virtual because containers need to adjust their
+			 * children`s frames after call to this
+			 * @param frame new widget frame
+			 */
+			virtual void setFrame(Rect frame);
+
+			SizePolicy getHorizontalSizePolicy() const;
+			SizePolicy getVerticalSizePolicy() const;
+
+			virtual void setParent(Widget *parent);
+			Widget* getParent() const;
 	};
 }
+
+#endif //WIDGET_H

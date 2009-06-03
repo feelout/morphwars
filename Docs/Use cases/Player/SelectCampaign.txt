@@ -1,0 +1,16 @@
+1.User clicks on Campaign menu button
+2.Campaign selection dialog pops up
+3.User selects race
+ 3.1 If previous race campaign is not completed, select previous
+4.Secect mission from list
+5.Show briefing
+ 5.1 User can skip briefing by clicking on skip button
+6.Load missiong scenario
+7.Scenarion is completed
+ 7.1 If user won, open the next mission
+  7.1.1 If current mission was the last, open the next campaign
+   7.1.1.1 If current campaign was the last, show credits
+ 7.2 If user lost, promt to retry
+  7.2.1 If user chooses to retry, reload map, go to p.5
+8.Show battle result screen
+9.Return to main menu
