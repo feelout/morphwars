@@ -13,6 +13,9 @@
  */
 SDL_Surface* createSurface(int w, int h);
 
+/**
+ * Represents rectangular area
+ */
 struct Rect
 {
 	int x,y;
@@ -31,4 +34,12 @@ struct Rect
 		return ( (px <= x+w) && (px >= x) && (py <= y+h) && (py >= y) );
 	}
 };
+
+/**
+ * Represents RGB model color
+ */
+struct RGBColor
+{
+	int r,g,b;
+}
 #endif //ASSIST_H
