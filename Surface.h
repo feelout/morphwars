@@ -3,6 +3,7 @@
 
 #include <SDL/SDL.h>
 #include <string>
+#include <vector>
 
 namespace Graphics
 {
@@ -16,6 +17,8 @@ namespace Graphics
 			Surface(std::string filename);
 
 			SDL_Surface *getSurface();
+
+			static std::vector<Surface*> splitSpriteStrip(Surface *strip, int frameWidth, int frameHeight);
 	};
 }
 

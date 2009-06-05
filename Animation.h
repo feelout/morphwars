@@ -10,17 +10,30 @@ namespace Graphics
 	{
 		private:
 			std::vector<Surface*> surfaces;
-			int frameTime;
+			int currentFrame;
+			unsigned int frameTime;
+			unsigned int lastFrameTime;
 			bool loop;
+			bool animating;
 		public:
-			Animation(Surface *imgStrip, int frameTime);
-			Animation(int frameTime);
+			Animation(Surface *imgStrip, int width, int height, int frameTime);
 
-			void setFrameTime(int frameTime);
-			int getFrameTime();
+			void setFrameTime(unsigned int frameTime);
+			unsigned int getFrameTime();
 
 			void setLooped(bool looped);
 			bool isLooped();
+
+			int getCurrentFrame();
+			void setCurrentFrame(int frame);
+			Surface *getFrame(int framenum);
+
+			void start();
+			void stop();
+			void pause();
+			void resume();
+
+			void draw(Drawer *target);
 	};
 }
 
