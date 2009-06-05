@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "Logger.h"
+#include "Renderer.h"
 
 Engine *Engine::instance = NULL;
 
@@ -24,48 +25,20 @@ Engine* Engine::getInstance()
 
 // Instance methods
 Engine::Engine(int w, int h, bool fs)
-	: width(w), height(h), fullscreen(fs), quit(false)
+	: quit(false)
 {
 	Logger::getInstance()->log("Engine created: %ix%i\n");
 
-	if(setupSDL())
+	if(Renderer::getInstance()->init(w,h,fs))
 	{
-		Logger::getInstance()->log("SDL init succeeded\n");
+		Logger::getInstance()->log("Renderer init succeeded\n");
 	}
 	else
 	{
-		Logger::getInstance()->log("SDL init failed\n");
+		Logger::getInstance()->log("Rendere init failed\n");
 	}
 
 	dispatcher = new EventDispatcher();
-}
-
-bool Engine::setupSDL()
-{
-	if(SDL_Init(SDL_INIT_EVERYTHING) == -1)
-	{
-		Logger::getInstance()->log("SDL subsystems init failed\n");
-		return false;
-	}
-
-	int flags = SDL_SWSURFACE;
-
-	if(fullscreen)
-	{
-		flags = flags | SDL_FULLSCREEN;
-	}
-
-	screen = SDL_SetVideoMode(width, height, 32, flags);
-
-	if(!screen)
-	{
-		Logger::getInstance()->log("Setting video mode failed\n");
-		return false;
-	}
-
-	SDL_WM_SetCaption("Unknown", NULL);
-
-	return true;
 }
 
 void Engine::runGameCycle()
@@ -81,7 +54,8 @@ void Engine::runGameCycle()
 		}
 		// Do all game logic and drawing here
 		
-		SDL_Flip(screen); //TODO: mb separate renderer?
+		Renderer::getInstance()->flipBuffers();
+		//SDL_Flip(screen); //TODO: mb separate renderer?
 		SDL_Delay(10); // Not to eat all CPU power
 	}
 

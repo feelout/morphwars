@@ -15,5 +15,5 @@ SDL_Surface *createSurface(int w, int h)
 	bmask = 0x00ff0000;
 	amask = 0xff000000;
 #endif
-	return SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_COLORKEY, w , h, rmask, 32, gmask, bmask, amask);
+	return SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_SRCCOLORKEY, w , h, rmask, 32, gmask, bmask, amask);
 }

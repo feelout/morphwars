@@ -1,7 +1,7 @@
 CXX=g++
 CXXFLAGS=-g
-LIBS := -lSDL -lSDL_image
-OBJECTS := Logger.o Engine.o EventDispatcher.o Tile.o TileSet.o Map.o tinystr.o tinyxml.o tinyxmlerror.o tinyxmlparser.o main.o
+LIBS := -lSDL -lSDL_image -lSDL_gfx
+OBJECTS := Logger.o Engine.o EventDispatcher.o Tile.o TileSet.o Map.o tinystr.o tinyxml.o tinyxmlerror.o tinyxmlparser.o assist.o Renderer.o Drawer.o Surface.o main.o
 
 Unnamed: $(OBJECTS)
 	$(CXX) $(OBJECTS) $(LIBS) -o Unnamed

@@ -10,6 +10,8 @@
  * Creates SDL_Surface
  * @param w width of the surface
  * @param h height of the surface
+ *
+ * @deprecated
  */
 SDL_Surface* createSurface(int w, int h);
 
@@ -23,10 +25,10 @@ struct Rect
 	
 	Rect(int x,int y, int w, int h)
 	{
-		this.x = x;
-		this.y = y;
-		this.w = w;
-		this.h = h;
+		this->x = x;
+		this->y = y;
+		this->w = w;
+		this->h = h;
 	}
 	
 	bool isPointInRect(int px, int py)
@@ -40,6 +42,6 @@ struct Rect
  */
 struct RGBColor
 {
-	int r,g,b;
-}
+	unsigned char r,g,b;
+};
 #endif //ASSIST_H

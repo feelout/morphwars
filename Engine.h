@@ -14,25 +14,6 @@ class Engine
 		 * The only singleton instance
 		 */
 		static Engine *instance;
-		//static int *instance;
-
-		// TODO: Extract w,h,fs and screen to Renderer class
-		/**
-		 * Width of window
-		 */
-		int width;
-		/**
-		 * Height of window
-		 */
-		int height;
-		/**
-		 * Fullscreen mode
-		 */
-		bool fullscreen;
-		/**
-		 * Videobuffer surface
-		 */
-		SDL_Surface *screen;
 
 		/**
 		 * Stops game cycle after iteration
