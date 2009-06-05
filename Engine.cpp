@@ -39,6 +39,7 @@ Engine::Engine(int w, int h, bool fs)
 	}
 
 	dispatcher = new EventDispatcher();
+	equalizer = new FPSEqualizer();
 }
 
 void Engine::runGameCycle()
@@ -47,6 +48,7 @@ void Engine::runGameCycle()
 
 	while(!quit)
 	{
+		equalizer->frameStarted();
 		// Event processing
 		while(SDL_PollEvent(&event))
 		{
@@ -55,8 +57,7 @@ void Engine::runGameCycle()
 		// Do all game logic and drawing here
 		
 		Renderer::getInstance()->flipBuffers();
-		//SDL_Flip(screen); //TODO: mb separate renderer?
-		SDL_Delay(10); // Not to eat all CPU power
+		equalizer->frameEnded();
 	}
 
 	delete instance; //mb will throw segfaults, we`ll see

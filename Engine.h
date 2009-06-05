@@ -3,6 +3,7 @@
 
 #include <SDL/SDL.h>
 #include "EventDispatcher.h"
+#include "FPSEqualizer.h"
 
 /**
  * Engine coordinates all subsystems and game cycle
@@ -24,6 +25,8 @@ class Engine
 		 * Dispatches events to all present subsytems
 		 */
 		EventDispatcher *dispatcher;
+
+		FPSEqualizer *equalizer;
 
 		/**
 		 * Constructs window and initializes subsystems
