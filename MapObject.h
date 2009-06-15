@@ -14,7 +14,7 @@ namespace Core
             MapObject(Tile *tile);
             virtual ~MapObject();
 
-            virtual void draw(Drawer *target);
+            virtual void draw(Graphics::Drawer *target);
     };
 }
 

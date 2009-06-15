@@ -18,7 +18,7 @@ namespace Graphics
 
             static AnimationManager *instance;
 
-            std::map<std::string type, Animation *anim> animations;
+            std::map<std::string, Animation*> animations;
 
             bool loadAnimation(std::string type);
         public:

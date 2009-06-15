@@ -26,7 +26,7 @@ class Engine
 		 */
 		EventDispatcher *dispatcher;
 
-		FPSEqualizer *equalizer;
+		Utility::FPSEqualizer *equalizer;
 
 		/**
 		 * Constructs window and initializes subsystems

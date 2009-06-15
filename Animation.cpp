@@ -10,12 +10,12 @@ Animation::Animation(Surface *imgStrip, int width, int height, int frameTime)
 	surfaces = Surface::splitSpriteStrip(imgStrip, width, height);
 }
 
-void Animation::setFrameTime(int frameTime)
+void Animation::setFrameTime(unsigned int frameTime)
 {
 	this->frameTime = frameTime;
 }
 
-int Animation::getFrameTime()
+unsigned int Animation::getFrameTime()
 {
 	return frameTime;
 }
@@ -38,12 +38,12 @@ int Animation::getCurrentFrame()
 void Animation::setCurrentFrame(int frame)
 {
 	currentFrame = frame;
-	lastFrameTime =Timer::currentTicks();
+	lastFrameTime = Utility::Timer::currentTicks();
 }
 
 Surface* Animation::getFrame(int framenum)
 {
-	return surface[framenum];
+	return surfaces[framenum];
 }
 
 void Animation::start()
@@ -71,14 +71,14 @@ void Animation::resume()
 void Animation::draw(Drawer *target, int x, int y)
 {
     //Ugly. TODO: Think about moving blit to Drawer
-	getFrame(getCurrentFrame())->blit(target->getSurface(), x, y);
+	getFrame(getCurrentFrame())->blit(target->getTarget(), x, y);
 }
 
 void Animation::update()
 {
     if(animating)
     {
-        if(Timer::currentTicks() >= (lastFrameTime + frameTime))
+        if(Utility::Timer::currentTicks() >= (lastFrameTime + frameTime))
         {
             setCurrentFrame(++currentFrame);
         }

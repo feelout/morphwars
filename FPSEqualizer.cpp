@@ -10,10 +10,10 @@ FPSEqualizer::FPSEqualizer(int desiredFPS)
 
 void FPSEqualizer::frameStarted()
 {
-	frameStartTime = Timer::getTicks();
+	frameStartTime = Timer::currentTicks();
 }
 
 void FPSEqualizer::frameEnded()
 {
-	Timer::delay((frameStartTime+(1000/fps))-Timer::getTicks());
+	Timer::delay((frameStartTime+(1000/fps))-Timer::currentTicks());
 }

@@ -4,6 +4,7 @@
 #include <SDL/SDL.h>
 #include <string>
 #include <vector>
+#include "assist.h"
 
 namespace Graphics
 {
@@ -55,7 +56,7 @@ namespace Graphics
 			 * @param x x coord of blit point
 			 * @param y y coord of blit point
 			 */
-			void blit(Surface *target, Rect clip, int x, int y);
+			void blit(Surface *target, Rect *clip, int x, int y);
 
             /**
              * Splits surface into frames

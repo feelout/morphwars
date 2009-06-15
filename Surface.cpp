@@ -37,30 +37,35 @@ Surface::~Surface()
     SDL_FreeSurface(surface);
 }
 
-SDL_Surface* Surface::getSurface()
+SDL_Surface* Surface::getSurface() const
 {
 	return surface;
 }
 
 void Surface::blit(Surface *target, int x, int y)
 {
-    Rect clip = {0, 0, surface->w, surface->h};
+    Rect *clip = new Rect(0, 0, surface->w, surface->h);
     blit(target, clip, x, y);
+    delete clip;
 }
 
-void Surface::blit(Surface *target, Rect clip, int x, int y)
+void Surface::blit(Surface *target, Rect *clip, int x, int y)
 {
-    Rect dstrect = {x, y, target->w, target->h);
-    SDL_BlitSurface(surface->getSurface(), &clip, target->getSurface(), &dstrect);
+    Rect *dstrect = new Rect(x, y, target->getSurface()->w, target->getSurface()->h);
+    SDL_Rect cl = clip->toSDLRect();
+    SDL_Rect dst = dstrect->toSDLRect();
+    //SDL_BlitSurface(surface, &clip->toSDLRect(), target->getSurface(), &dstrect->toSDLRect());
+    SDL_BlitSurface(surface, &cl, target->getSurface(), &dst);
+    delete dstrect;
 }
 
 std::vector<Surface*> Surface::splitSpriteStrip(Surface *strip, int frameWidth, int frameHeight)
 {
     std::vector<Surface*> result;
 
-    int frameCount = strip->w / frameWidth;
+    int frameCount = strip->getSurface()->w / frameWidth;
     Rect frameRect;
-    SDL_Surface *frame;
+    Surface *frame;
 
     for(int i=0; i < frameCount; ++i)
     {
@@ -70,7 +75,7 @@ std::vector<Surface*> Surface::splitSpriteStrip(Surface *strip, int frameWidth, 
         frameRect.w = frameWidth;
         frameRect.h = frameHeight;
 
-        strip->blit(frame, frameRect, 0, 0);
+        strip->blit(frame, &frameRect, 0, 0);
 
         result.push_back(frame);
     }

@@ -30,10 +30,25 @@ struct Rect
 		this->w = w;
 		this->h = h;
 	}
+
+	Rect()
+	{
+		Rect(0,0,0,0);
+	}
 	
-	bool isPointInRect(int px, int py)
+	bool isPointInRect(int px, int py) const
 	{
 		return ( (px <= x+w) && (px >= x) && (py <= y+h) && (py >= y) );
+	}
+
+	SDL_Rect toSDLRect() const
+	{
+		SDL_Rect rect;
+		rect.x = x;
+		rect.y = y;
+		rect.w = w;
+		rect.h = h;
+		return rect;
 	}
 };
 

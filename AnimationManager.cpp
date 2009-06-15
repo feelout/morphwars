@@ -13,7 +13,7 @@ AnimationManager::AnimationManager()
 bool AnimationManager::loadAnimation(std::string type)
 {
     Surface *sfsStrip = new Surface("animations/"+type+".png");
-    Animation *anim = new Animation(//Shit, we need definition file
+    //Animation *anim = new Animation(//Shit, we need definition file
 }
 
 AnimationManager* AnimationManager::getInstance()

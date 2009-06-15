@@ -56,7 +56,7 @@ bool TileSet::loadTileSet(std::string name)
 	SDL_FreeSurface(f_map);
 }
 
-TileType* TileSet::getType(int n)
+TileType* TileSet::getType(int n) const
 {
 	return types[n];
 }

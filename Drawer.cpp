@@ -36,7 +36,7 @@ void Drawer::fillRect(Rect rect, RGBColor color)
 	boxRGBA(target->getSurface(), rect.x, rect.y, rect.x+rect.w, rect.y+rect.h, color.r, color.g, color.b, 255);
 }
 
-Surface* Drawer::getTarget()
+Surface* Drawer::getTarget() const
 {
     return target;
 }

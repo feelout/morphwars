@@ -4,6 +4,10 @@
 
 Engine *Engine::instance = NULL;
 
+const int DEFAULT_FPS = 60;
+
+using namespace Graphics;
+
 // Static methods
 void Engine::init(int width, int height, bool fullscreen)
 {
@@ -39,7 +43,7 @@ Engine::Engine(int w, int h, bool fs)
 	}
 
 	dispatcher = new EventDispatcher();
-	equalizer = new FPSEqualizer();
+	equalizer = new Utility::FPSEqualizer(DEFAULT_FPS);
 }
 
 void Engine::runGameCycle()
@@ -72,7 +76,7 @@ void Engine::stop()
 Engine::~Engine()
 {
 	delete dispatcher;
-	Logger::getInstance()->close();
+	Utility::Logger::getInstance()->close();
 }
 
 

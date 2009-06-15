@@ -1,5 +1,7 @@
 #include "Renderer.h"
 
+using namespace Graphics;
+
 Renderer* Renderer::instance = NULL;
 
 Renderer::Renderer()

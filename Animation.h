@@ -2,6 +2,7 @@
 #define ANIMATION_H
 
 #include <vector>
+#include "Drawer.h"
 #include "Surface.h"
 
 namespace Graphics
@@ -33,7 +34,7 @@ namespace Graphics
 			void pause();
 			void resume();
 
-			void draw(Drawer *target);
+			void draw(Drawer *target, int x, int y);
 			void update();
 	};
 }

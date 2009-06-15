@@ -1,4 +1,5 @@
 #include "Timer.h"
+#include <SDL/SDL.h>
 
 using namespace Utility;
 

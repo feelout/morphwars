@@ -20,7 +20,7 @@ namespace Graphics
 			void drawRect(Rect rect, RGBColor color);
 			void fillRect(Rect rect, RGBColor color);
 
-            Surface *getTarget() const;
+			Surface *getTarget() const;
 	};
 }
 

@@ -6,7 +6,7 @@ OBJECTS := Logger.o Engine.o EventDispatcher.o Tile.o TileSet.o Map.o tinystr.o 
 Unnamed: $(OBJECTS)
 	$(CXX) $(OBJECTS) $(LIBS) -o Unnamed
 
-%.o : %.cpp
+%.o : %.c
 	$(CXX) $(CXXFLAGS) -c $(input) -o $(output)
 
 clean:
