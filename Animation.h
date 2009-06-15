@@ -34,6 +34,7 @@ namespace Graphics
 			void resume();
 
 			void draw(Drawer *target);
+			void update();
 	};
 }
 

@@ -5,26 +5,29 @@
 #include "Tile.h"
 #include "TileSet.h"
 
-class Map
+namespace Core
 {
-	private:
-		Tile **tiles;
-		TileSet *tileset;
+    class Map
+    {
+        private:
+            Tile **tiles;
+            TileSet *tileset;
 
-		int width,height;
-		
-		std::string author;
-		std::string name;
-		std::string version;
+            int width,height;
 
-		bool loadMap(std::string name);
-		void calculateSurfaces();
-	public:
-		Map(int width, int height, std::string tilesetName);
-		Map(std::string name);
-		~Map();
-		
-		Tile* getTile(int x, int y);
-};
+            std::string author;
+            std::string name;
+            std::string version;
+
+            bool loadMap(std::string name);
+            void calculateSurfaces();
+        public:
+            Map(int width, int height, std::string tilesetName);
+            Map(std::string name);
+            ~Map();
+
+            Tile* getTile(int x, int y);
+    };
+}
 
 #endif //MAP_H

@@ -32,7 +32,48 @@ Surface::Surface(std::string filename)
 	surface = IMG_Load(filename.c_str());
 }
 
+Surface::~Surface()
+{
+    SDL_FreeSurface(surface);
+}
+
 SDL_Surface* Surface::getSurface()
 {
 	return surface;
+}
+
+void Surface::blit(Surface *target, int x, int y)
+{
+    Rect clip = {0, 0, surface->w, surface->h};
+    blit(target, clip, x, y);
+}
+
+void Surface::blit(Surface *target, Rect clip, int x, int y)
+{
+    Rect dstrect = {x, y, target->w, target->h);
+    SDL_BlitSurface(surface->getSurface(), &clip, target->getSurface(), &dstrect);
+}
+
+std::vector<Surface*> Surface::splitSpriteStrip(Surface *strip, int frameWidth, int frameHeight)
+{
+    std::vector<Surface*> result;
+
+    int frameCount = strip->w / frameWidth;
+    Rect frameRect;
+    SDL_Surface *frame;
+
+    for(int i=0; i < frameCount; ++i)
+    {
+        frame = new Surface(frameWidth, frameHeight);
+        frameRect.x = i*frameWidth;
+        frameRect.y = 0;
+        frameRect.w = frameWidth;
+        frameRect.h = frameHeight;
+
+        strip->blit(frame, frameRect, 0, 0);
+
+        result.push_back(frame);
+    }
+
+    return result;
 }

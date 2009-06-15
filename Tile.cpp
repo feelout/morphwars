@@ -1,6 +1,8 @@
 #include "Tile.h"
 #include "assist.h"
 
+using namespace Core;
+
 TileType::TileType(SDL_Surface *surface, int y, int priority, MovementCosts movementCosts)
 	: priority(priority), movementCosts(movementCosts)
 {

@@ -2,6 +2,8 @@
 #include <stdarg.h>
 #include <SDL/SDL.h>
 
+using namespace Utility;
+
 Logger* Logger::instance = NULL;
 
 const std::string DEFAULT_LOG_NAME = "log.txt";
@@ -12,7 +14,7 @@ Logger* Logger::getInstance()
 	{
 		instance = new Logger(DEFAULT_LOG_NAME);
 	}
-	
+
 	return instance;
 }
 
@@ -38,7 +40,7 @@ void Logger::log(const char* fmt, ...)
 	va_start(args,fmt);
 	vfprintf(file, fmt, args);
 	va_end(args);
-	
+
 	fflush(file);
 }
 

@@ -70,7 +70,7 @@ void EventDispatcher::passEvent(SDL_Event event)
 			}
 			break;
 		default:
-			Logger::getInstance()->log("Unhandled SDL_Event\n");
+			Utility::Logger::getInstance()->log("Unhandled SDL_Event\n");
 			break;
 	}
 }

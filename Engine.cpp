@@ -27,15 +27,15 @@ Engine* Engine::getInstance()
 Engine::Engine(int w, int h, bool fs)
 	: quit(false)
 {
-	Logger::getInstance()->log("Engine created: %ix%i\n");
+	Utility::Logger::getInstance()->log("Engine created: %ix%i\n");
 
 	if(Renderer::getInstance()->init(w,h,fs))
 	{
-		Logger::getInstance()->log("Renderer init succeeded\n");
+		Utility::Logger::getInstance()->log("Renderer init succeeded\n");
 	}
 	else
 	{
-		Logger::getInstance()->log("Rendere init failed\n");
+		Utility::Logger::getInstance()->log("Rendere init failed\n");
 	}
 
 	dispatcher = new EventDispatcher();
@@ -55,7 +55,7 @@ void Engine::runGameCycle()
 			dispatcher->passEvent(event);
 		}
 		// Do all game logic and drawing here
-		
+
 		Renderer::getInstance()->flipBuffers();
 		equalizer->frameEnded();
 	}
@@ -65,7 +65,7 @@ void Engine::runGameCycle()
 
 void Engine::stop()
 {
-	Logger::getInstance()->log("Stopping engine\n");
+	Utility::Logger::getInstance()->log("Stopping engine\n");
 	quit = true;
 }
 

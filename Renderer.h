@@ -3,21 +3,24 @@
 
 #include <SDL/SDL.h>
 
-class Renderer
+namespace Graphics
 {
-	private:
-		SDL_Surface *frameBuffer;
-		
-		static Renderer *instance;
+    class Renderer
+    {
+        private:
+            SDL_Surface *frameBuffer;
 
-		Renderer();
-	public:
-		static Renderer* getInstance();
+            static Renderer *instance;
 
-		bool init(int width, int height, bool fullscreen);
-		SDL_Surface *getBuffer();
-		void flipBuffers();
-		void shutdown();
-};
+            Renderer();
+        public:
+            static Renderer* getInstance();
+
+            bool init(int width, int height, bool fullscreen);
+            SDL_Surface *getBuffer();
+            void flipBuffers();
+            void shutdown();
+    };
+}
 
 #endif //RENDERER_H

@@ -2,6 +2,8 @@
 #include "Logger.h"
 #include "tinyxml.h"
 
+using namespace Core;
+
 Map::Map(int width, int height, std::string tilesetname)
 	: width(width), height(height)
 {
@@ -20,60 +22,60 @@ Map::Map(int width, int height, std::string tilesetname)
 
 Map::Map(std::string name)
 {
-	Logger::getInstance()->log("Loading map %s\n", name.c_str());
+	Utility::Logger::getInstance()->log("Loading map %s\n", name.c_str());
 	if(loadMap(name))
 	{
-		Logger::getInstance()->log("Map %s loaded successfully\n", name.c_str());
+		Utility::Logger::getInstance()->log("Map %s loaded successfully\n", name.c_str());
 	}
 	else
 	{
-		Logger::getInstance()->log("Couldn`t load map %s\n", name.c_str());
+		Utility::Logger::getInstance()->log("Couldn`t load map %s\n", name.c_str());
 	}
 }
 
 bool Map::loadMap(std::string name)
 {
 	std::string folder = "Maps/"+name+"/";
-	
+
 	TiXmlDocument xmlmap((folder+name+".xml").c_str());
-	xmlmap.LoadFile(); 
+	xmlmap.LoadFile();
 	/* Map metadata */
 	TiXmlElement *map = xmlmap.FirstChildElement("map");
-	
+
 	if(!map)
 	{
-		Logger::getInstance()->log("Couldn`t find <map> element.\n");
+		Utility::Logger::getInstance()->log("Couldn`t find <map> element.\n");
 		return false;
 	}
-	
+
 	author = map->Attribute("author");
 	name = map->Attribute("name");
 	version = map->Attribute("version");
-	
-	Logger::getInstance()->log("Loading map %s %s by %s\n", name.c_str(), version.c_str(), author.c_str());
-	
+
+	Utility::Logger::getInstance()->log("Loading map %s %s by %s\n", name.c_str(), version.c_str(), author.c_str());
+
 	/* Terrain */
 	TiXmlElement *terrain = map->FirstChildElement("terrain");
-	
+
 	if(!terrain)
 	{
-		Logger::getInstance()->log("Couldn`t find <terrain> element.\n");
+		Utility::Logger::getInstance()->log("Couldn`t find <terrain> element.\n");
 		return false;
 	}
-	
+
 	terrain->QueryIntAttribute("width", &width);
 	terrain->QueryIntAttribute("height", &height);
 
-	Logger::getInstance()->log("Dimensions: %ix%i\n", width, height);
-	
+	Utility::Logger::getInstance()->log("Dimensions: %ix%i\n", width, height);
+
 	tiles = new Tile*[width*height];
-	
+
 	// Creating tileset
 	tileset = new TileSet(terrain->FirstChildElement("tileset")->GetText());
-	
+
 	// Cells themselves
 	TiXmlNode *cells_node = terrain->FirstChildElement("cells");
-	
+
 	int y=0;
 	int x=0;
 	for(TiXmlElement *row = cells_node->FirstChildElement("row");  row; row = row->NextSiblingElement("row"), ++y)
@@ -83,19 +85,19 @@ bool Map::loadMap(std::string name)
 		{
 			int tilenum;
 			sscanf(cell->GetText(), "%i", &tilenum);
-			
+
 			tiles[x+y*width] = new Tile(x,y,tileset->getType(tilenum));
 		}
 	}
-	
+
 	calculateSurfaces();
-	
+
 	// TODO: Objects
-	
+
 	/* TODO: Players */
-	
+
 	TiXmlElement *players_root_el = map->FirstChildElement("players");
-	
+
 	for(TiXmlElement *player_el = players_root_el->FirstChildElement("player"); player_el; player_el =
 players_root_el->NextSiblingElement("player"))
 	{

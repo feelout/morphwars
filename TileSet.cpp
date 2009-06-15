@@ -4,12 +4,14 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
+using namespace Core;
+
 TileSet::TileSet(std::string name)
 {
 	if(loadTileSet(name))
-		Logger::getInstance()->log("Tileset %s loaded\n", name.c_str());
+		Utility::Logger::getInstance()->log("Tileset %s loaded\n", name.c_str());
 	else
-		Logger::getInstance()->log("Couldn`t load Tileset %s\n", name.c_str());
+		Utility::Logger::getInstance()->log("Couldn`t load Tileset %s\n", name.c_str());
 }
 
 bool TileSet::loadTileSet(std::string name)
@@ -18,8 +20,8 @@ bool TileSet::loadTileSet(std::string name)
 
 	if(!f_def)
 	{
-		Logger::getInstance()->log("Definition file for %s not found.\n", name.c_str());
-		Logger::getInstance()->log("Was searching for %s\n", ("Tilesets/" + name + "/" + name + ".def").c_str());
+		Utility::Logger::getInstance()->log("Definition file for %s not found.\n", name.c_str());
+		Utility::Logger::getInstance()->log("Was searching for %s\n", ("Tilesets/" + name + "/" + name + ".def").c_str());
 		return false;
 	}
 
@@ -27,14 +29,14 @@ bool TileSet::loadTileSet(std::string name)
 
 	if(!f_map)
 	{
-		Logger::getInstance()->log("Couldn`t load image for Tileset %s\n", name.c_str());
-		Logger::getInstance()->log("Was searching for %s\n", ("Tilesets/" + name + "/" + name + ".png").c_str());
+		Utility::Logger::getInstance()->log("Couldn`t load image for Tileset %s\n", name.c_str());
+		Utility::Logger::getInstance()->log("Was searching for %s\n", ("Tilesets/" + name + "/" + name + ".png").c_str());
 		return false;
 	}
 
 	int numOfTileTypes = f_map->h / TILE_HEIGHT;
 
-	Logger::getInstance()->log("%i tile types detected\n", numOfTileTypes);
+	Utility::Logger::getInstance()->log("%i tile types detected\n", numOfTileTypes);
 
 	TileType *currentType;
 

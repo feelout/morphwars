@@ -1,10 +1,12 @@
 #include "Animation.h"
+#include "Timer.h"
 
 using namespace Graphics;
 
 Animation::Animation(Surface *imgStrip, int width, int height, int frameTime)
-	: currentFrame(0), frameTime(frameTime), loop(false), animating(false)
+	: frameTime(frameTime), loop(false), animating(false)
 {
+    setCurrentFrame(0);
 	surfaces = Surface::splitSpriteStrip(imgStrip, width, height);
 }
 
@@ -36,6 +38,7 @@ int Animation::getCurrentFrame()
 void Animation::setCurrentFrame(int frame)
 {
 	currentFrame = frame;
+	lastFrameTime =Timer::currentTicks();
 }
 
 Surface* Animation::getFrame(int framenum)
@@ -45,12 +48,13 @@ Surface* Animation::getFrame(int framenum)
 
 void Animation::start()
 {
-	currentFrame = 0;
+	setCurrentFrame(0);
 	animating = true;
 }
 
 void Animation::stop()
 {
+    setCurrentFrame(0);
 	animating = false;
 }
 
@@ -66,5 +70,17 @@ void Animation::resume()
 
 void Animation::draw(Drawer *target, int x, int y)
 {
-	target->blit(getFrame(getCurrentFrame()), x, y);
+    //Ugly. TODO: Think about moving blit to Drawer
+	getFrame(getCurrentFrame())->blit(target->getSurface(), x, y);
+}
+
+void Animation::update()
+{
+    if(animating)
+    {
+        if(Timer::currentTicks() >= (lastFrameTime + frameTime))
+        {
+            setCurrentFrame(++currentFrame);
+        }
+    }
 }
