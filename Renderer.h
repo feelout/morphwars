@@ -2,13 +2,15 @@
 #define RENDERER_H
 
 #include <SDL/SDL.h>
+#include "Surface.h"
 
 namespace Graphics
 {
     class Renderer
     {
         private:
-            SDL_Surface *frameBuffer;
+            SDL_Surface *frameBufferSDL;
+	    Surface *frameBuffer;
 
             static Renderer *instance;
 
@@ -17,7 +19,8 @@ namespace Graphics
             static Renderer* getInstance();
 
             bool init(int width, int height, bool fullscreen);
-            SDL_Surface *getBuffer();
+            //SDL_Surface *getBuffer();
+	    Surface *getBuffer();
             void flipBuffers();
             void shutdown();
     };

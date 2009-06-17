@@ -29,18 +29,27 @@ bool Renderer::init(int width, int height, bool fullscreen)
 		flags = flags | SDL_FULLSCREEN;
 	}
 
-	frameBuffer = SDL_SetVideoMode(width, height, 32, flags);
+	frameBufferSDL = SDL_SetVideoMode(width, height, 32, flags);
 
-	if(!frameBuffer)
+	if(!frameBufferSDL)
 		return false;
+		
+	frameBuffer = new Surface(frameBufferSDL);
+	
+	return true;
 }
 
-SDL_Surface *Renderer::getBuffer()
+Surface *Renderer::getBuffer()
 {
 	return frameBuffer;
 }
 
 void Renderer::flipBuffers()
 {
-	SDL_Flip(frameBuffer);
+	SDL_Flip(frameBufferSDL);
+}
+
+void Renderer::shutdown()
+{
+	delete frameBuffer;
 }

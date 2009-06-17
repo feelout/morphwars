@@ -1,5 +1,4 @@
 #include "../Renderer.h"
-#include "../Animation.h"
 #include "../Timer.h"
 #include "../Surface.h"
 #include "../Drawer.h"
@@ -17,25 +16,36 @@ int main()
 	}
 
 	Surface *animSurf = new Surface("Animation.png");
-	Animation *anim = new Animation(animSurf, 40, 40, 500);
-	anim->setLooped(true);
-	anim->start();
-
 	Drawer *target = new Drawer(Renderer::getInstance()->getBuffer());
+	
+	Rect blitRect;
+	blitRect.x = 0;
+	blitRect.y = 0;
+	blitRect.w = 40;
+	blitRect.h = 40;
+
+	Surface *second = new Surface(40, 40);
+	
+	animSurf->blit(second, &blitRect, 0, 0);
 
 	unsigned int startTime = Timer::currentTicks();
 
-	while(Timer::currentTicks() < (startTime + 5000))
+	while(Timer::currentTicks() < (startTime + 2000))
 	{
-		anim->update();
-		anim->draw(target, 50, 50);
+		/* Direct blit of loaded surface to buffer */
+		animSurf->blit(Renderer::getInstance()->getBuffer(), 100, 100);
+		/* Direct blit of part of loaded surface to buffer */
+		animSurf->blit(Renderer::getInstance()->getBuffer(), &blitRect, 100, 150);
+		/* Indirect blit to buffer */
+		second->blit(Renderer::getInstance()->getBuffer(), 100, 200);
+		/* Flipping render buffers */
 		Renderer::getInstance()->flipBuffers();
 		Timer::delay(10);
 	}
 
-	delete anim;
 	delete animSurf;
 	delete target;
+	delete second;
 
 	Renderer::getInstance()->shutdown();
 }

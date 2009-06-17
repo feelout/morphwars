@@ -6,7 +6,7 @@ using namespace Graphics;
 Animation::Animation(Surface *imgStrip, int width, int height, int frameTime)
 	: frameTime(frameTime), loop(false), animating(false)
 {
-    setCurrentFrame(0);
+	setCurrentFrame(0);
 	surfaces = Surface::splitSpriteStrip(imgStrip, width, height);
 }
 
@@ -38,6 +38,10 @@ int Animation::getCurrentFrame()
 void Animation::setCurrentFrame(int frame)
 {
 	currentFrame = frame;
+	if(frame >= surfaces.size())
+	{
+		currentFrame = 0;
+	}
 	lastFrameTime = Utility::Timer::currentTicks();
 }
 
@@ -54,7 +58,7 @@ void Animation::start()
 
 void Animation::stop()
 {
-    setCurrentFrame(0);
+	setCurrentFrame(0);
 	animating = false;
 }
 
@@ -70,17 +74,17 @@ void Animation::resume()
 
 void Animation::draw(Drawer *target, int x, int y)
 {
-    //Ugly. TODO: Think about moving blit to Drawer
+	//Ugly. TODO: Think about moving blit to Drawer
 	getFrame(getCurrentFrame())->blit(target->getTarget(), x, y);
 }
 
 void Animation::update()
 {
-    if(animating)
-    {
-        if(Utility::Timer::currentTicks() >= (lastFrameTime + frameTime))
-        {
-            setCurrentFrame(++currentFrame);
-        }
-    }
+	if(animating)
+	{
+		if(Utility::Timer::currentTicks() >= (lastFrameTime + frameTime))
+		{
+			setCurrentFrame(++currentFrame);
+		}
+	}
 }

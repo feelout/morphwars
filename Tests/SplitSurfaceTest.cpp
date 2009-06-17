@@ -1,5 +1,5 @@
+#include <vector>
 #include "../Renderer.h"
-#include "../Animation.h"
 #include "../Timer.h"
 #include "../Surface.h"
 #include "../Drawer.h"
@@ -17,23 +17,27 @@ int main()
 	}
 
 	Surface *animSurf = new Surface("Animation.png");
-	Animation *anim = new Animation(animSurf, 40, 40, 500);
-	anim->setLooped(true);
-	anim->start();
+	
+	std::vector<Surface*> surfaces = Surface::splitSpriteStrip(animSurf, 40, 40);
+	std::vector<Surface*>::iterator i;
 
 	Drawer *target = new Drawer(Renderer::getInstance()->getBuffer());
 
 	unsigned int startTime = Timer::currentTicks();
 
+	int j;
 	while(Timer::currentTicks() < (startTime + 5000))
 	{
-		anim->update();
-		anim->draw(target, 50, 50);
+		j=0;
+		for(i = surfaces.begin(); i != surfaces.end(); ++i, j++)
+		{
+			(*i)->blit(Renderer::getInstance()->getBuffer(), 50*j, 0);
+		}
+		
 		Renderer::getInstance()->flipBuffers();
 		Timer::delay(10);
 	}
 
-	delete anim;
 	delete animSurf;
 	delete target;
 
