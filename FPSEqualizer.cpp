@@ -1,6 +1,9 @@
 #include "FPSEqualizer.h"
 #include "Timer.h"
 
+/** DELETE ME **/
+#include <stdio.h>
+
 using namespace Utility;
 
 FPSEqualizer::FPSEqualizer(int desiredFPS)
@@ -15,5 +18,10 @@ void FPSEqualizer::frameStarted()
 
 void FPSEqualizer::frameEnded()
 {
-	Timer::delay((frameStartTime+(1000/fps))-Timer::currentTicks());
+	unsigned int neededTime = frameStartTime + (1000/fps);
+	if(neededTime < Timer::currentTicks())
+	{
+		return;
+	}
+	Timer::delay(neededTime - Timer::currentTicks());
 }
