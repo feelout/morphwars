@@ -26,14 +26,14 @@ namespace Graphics
              * Get singleton instance
              * @return the only instance
              */
-            AnimationManager* getInstance();
+            static AnimationManager* getInstance();
 
             /**
              * Get requested animation
              * @param type Animation type
              * @return animation with given type
              */
-            Animation *getAnimations(std::string type);
+            Animation *getAnimation(std::string type);
     };
 }
 

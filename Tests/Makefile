@@ -1,4 +1,4 @@
-Tests: AnimationTest BlitTest SplitSurfaceTest
+Tests: AnimationTest BlitTest SplitSurfaceTest AnimationManagerTest
 	echo "All tests compiled"
 
 AnimationTest: AnimationTest.o ../Renderer.o ../Animation.o ../Timer.o ../Surface.o  ../Drawer.o ../Logger.o
@@ -12,6 +12,12 @@ SplitSurfaceTest: SplitSurfaceTest.o ../Renderer.o ../Timer.o ../Surface.o  ../D
 
 AnimationTest.o: AnimationTest.cpp
 	g++ -g -c AnimationTest.cpp
+
+AnimationManagerTest: ../Renderer.o ../Animation.o ../Timer.o ../Drawer.o ../Surface.o ../Logger.o ../AnimationManager.o AnimationManagerTest.o
+	g++ -o AnimationManagerTest -lSDL -lSDL_image -lSDL_gfx ../Renderer.o ../Animation.o ../Timer.o ../Drawer.o ../Surface.o ../Logger.o ../AnimationManager.o AnimationManagerTest.o
+
+AnimationManagerTest.o: AnimationManagerTest.cpp
+	g++ -g -c AnimationManagerTest.cpp
 
 BlitTest.o: BlitTest.cpp
 	g++ -g -c BlitTest.cpp
