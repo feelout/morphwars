@@ -18,6 +18,7 @@ namespace Graphics
 			bool animating;
 		public:
 			Animation(Surface *imgStrip, int width, int height, int frameTime);
+			Animation(Animation *tocopy);
 
 			void setFrameTime(unsigned int frameTime);
 			unsigned int getFrameTime();

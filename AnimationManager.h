@@ -5,6 +5,10 @@
 #include <string>
 #include "Animation.h"
 
+/**
+ * SHIT! we need to update animations individually. So, instead
+ * of returning the only reference to gived animations, we must
+ * create a copy. But we can cache images, of course. */
 namespace Graphics
 {
     /**
@@ -18,8 +22,19 @@ namespace Graphics
 
             static AnimationManager *instance;
 
+	    /**
+	     * List of all animation classes
+	     */
             std::map<std::string, Animation*> animations;
+	    /**
+	     * List of all animation copies in game.
+	     */
+	    std::list<Animation*> registeredAnimations;
 
+	    /**
+	     * Loads animation with given type
+	     * TODO: Maybe, move to Animation class
+	     */
             bool loadAnimation(std::string type);
         public:
             /**
@@ -34,6 +49,11 @@ namespace Graphics
              * @return animation with given type
              */
             Animation *getAnimation(std::string type);
+
+	    /**
+	     * Update all registered animations. Call each frame.
+	     */
+	    void updateAnimations();
     };
 }
 

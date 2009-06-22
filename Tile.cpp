@@ -6,11 +6,6 @@ using namespace Core;
 TileType::TileType(SDL_Surface *surface, int y, int priority, MovementCosts movementCosts)
 	: priority(priority), movementCosts(movementCosts)
 {
-	/*int rmask = surface->format->Rmask;
-	int gmask = surface->format->Gmask;
-	int bmask = surface->format->Bmask;
-	int amask = surface->format->Amask;*/
-
 	SDL_Rect targetRect, cuttingRect;
 	targetRect.x = 0;
 	targetRect.y = 0;
@@ -19,8 +14,6 @@ TileType::TileType(SDL_Surface *surface, int y, int priority, MovementCosts move
 
 	for(int x=0; x < TILE_IMAGES_NUM; ++x)
 	{
-		/*surfaces[x] = SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_SRCCOLORKEY, TILE_WIDTH, TILE_HEIGHT, 32,
-			rmask, gmask, bmask, amask);*/
 		surfaces[x] = createSurface(TILE_WIDTH, TILE_HEIGHT);
 
 		cuttingRect.x = x*TILE_WIDTH;

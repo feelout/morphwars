@@ -10,6 +10,12 @@ Animation::Animation(Surface *imgStrip, int width, int height, int frameTime)
 	surfaces = Surface::splitSpriteStrip(imgStrip, width, height);
 }
 
+Animation::Animation(Animation *tocopy)
+	surfaces(tocopy->surfaces), loop(tocopy->loop), currentFrame(0), frameTime(tocopy->frameTime),
+	animating(false)
+{
+}
+
 void Animation::setFrameTime(unsigned int frameTime)
 {
 	this->frameTime = frameTime;

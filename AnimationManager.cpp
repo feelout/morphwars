@@ -35,6 +35,8 @@ bool AnimationManager::loadAnimation(std::string type)
 
 	delete sfcStrip;
 	fclose(f_def);
+
+	return true;
 }
 
 AnimationManager* AnimationManager::getInstance()
@@ -58,8 +60,31 @@ Animation* AnimationManager::getAnimation(std::string type)
 		else
 		{
 			Utility::Logger::getInstance()->log("Failed to load animation %s\n", type.c_str());
+			return NULL;
 		}
 	}
 
-	return animations[type];
+	/* We return copy of animation to allow separate states for each object */
+	Animation *result = new Animation(animations[type]);
+	/* Register animation copy, so it could be updated */
+	registeredAnimations.push_back(result);
+
+	return result;
+}
+
+void AnimationManager::updateAnimations()
+{
+	std::list<Animation*>::iterator i;
+
+	for(i = registeredAnimations.begin(); i != registeredAnimations.end(); ++i)
+	{
+		if(*i)
+		{
+			(*i)->update();
+		}
+		else //Animation was freed
+		{
+			registeredAnimations.remove(i);
+		}
+	}
 }
