@@ -1,7 +1,13 @@
 #include "MapObject.h"
 #include "AnimationManager.h"
+#include "Logger.h"
 
 using namespace Core;
+
+bool MapObjectType::loadFromFile(std::string name)
+{
+	return false;
+}
 
 MapObjectType::MapObjectType(std::string name)
 {
@@ -15,11 +21,11 @@ MapObjectType::MapObjectType(std::string name)
 	}
 }
 
-virtual MapObjectType::~MapObjectType()
+MapObjectType::~MapObjectType()
 {
 }
 
-AnimationPack *MapObjectType::getGraphics()
+Graphics::AnimationPack *MapObjectType::getGraphics()
 {
 	return &graphics;
 }
@@ -32,11 +38,9 @@ MapObject::MapObject(MapObjectType *type, Tile *tile, Player *owner)
 
 MapObject::~MapObject()
 {
-	/* Delete our copy of animation.*/
-	delete anim;
 }
 
-virtual void MapObject::draw(Graphics::Drawer *target, int x, int y)
+void MapObject::draw(Graphics::Drawer *target, int x, int y)
 {
 	type->getGraphics()->getCurrent()->draw(target, x, y);
 }

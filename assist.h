@@ -58,5 +58,12 @@ struct Rect
 struct RGBColor
 {
 	unsigned char r,g,b;
+
+	RGBColor(int r, int g, int b)
+	{
+		this->r = r;
+		this->g = g;
+		this->b = b;
+	}
 };
 #endif //ASSIST_H

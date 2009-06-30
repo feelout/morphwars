@@ -8,18 +8,18 @@
 
 namespace Graphics
 {
-    /**
-     * Represents an image
-     */
+	/**
+	 * Represents an image
+	 */
 	class Surface
 	{
 		private:
 			SDL_Surface *surface;
 		public:
-            /**
-             * Creates a surface from given SDL_Surface
-             * @param surface Source surface
-             */
+			/**
+			 * Creates a surface from given SDL_Surface
+			 * @param surface Source surface
+			 */
 			Surface(SDL_Surface *surface);
 			/**
 			 * Creates a surface with given dimensions
@@ -37,17 +37,20 @@ namespace Graphics
 			 */
 			~Surface();
 
-            /**
-             * Returns internal SDL_Surface*
-             */
+			int getWidth() const;
+			int getHeight() const;
+
+			/**
+			 * Returns internal SDL_Surface*
+			 */
 			SDL_Surface *getSurface() const;
 
-            /**
-             * Blits whole surface to target
-             * @param target Surface to blit to
-             * @param x x coord of blit point
-             * @param y y coord of blit point
-             */
+			/**
+			 * Blits whole surface to target
+			 * @param target Surface to blit to
+			 * @param x x coord of blit point
+			 * @param y y coord of blit point
+			 */
 			void blit(Surface *target, int x, int y);
 			/**
 			 * Blits part of surface to target
@@ -58,14 +61,14 @@ namespace Graphics
 			 */
 			void blit(Surface *target, Rect *clip, int x, int y);
 
-            /**
-             * Splits surface into frames
-             * @param strip Source surface
-             * @param frameWidth width of each frame
-             * @param frameHeight hieght of each frame
-             */
+			/**
+			 * Splits surface into frames
+			 * @param strip Source surface
+			 * @param frameWidth width of each frame
+			 * @param frameHeight hieght of each frame
+			 */
 			static std::vector<Surface*> splitSpriteStrip(Surface *strip, int frameWidth, int frameHeight);
 	};
 }
 
-#endif
+#endif //SURFACE_H

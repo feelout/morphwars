@@ -24,6 +24,7 @@ namespace Core
         public:
             Map(int width, int height, std::string tilesetName);
             Map(std::string name);
+	    Map(TiXmlElement *xmlmap);
             ~Map();
 
             Tile* getTile(int x, int y);

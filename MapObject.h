@@ -16,9 +16,10 @@ namespace Core
 	class MapObjectType
 	{
 		protected:
-			AnimationPack graphics;
+			Graphics::AnimationPack graphics;
+			bool enabled;
 
-			virtual bool loadFromFile(std::string name)=0;
+			virtual bool loadFromFile(std::string name);
 		public:
 			/**
 			 * Creates an object type from file
@@ -31,13 +32,16 @@ namespace Core
 			 * Returns graphics of type
 			 * @return Type graphics
 			 */
-			AnimationPack* getGraphics();
+			Graphics::AnimationPack* getGraphics();
 
 			/**
 			 * Copies itself
 			 * @return Clone of instance
 			 */
 			virtual MapObjectType* clone()=0;
+
+			bool isEnabled() const;
+			void setEnabled(bool enabled);
 	};
 	/**
 	 * MapObject is drawable object on the map

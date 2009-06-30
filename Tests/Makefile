@@ -1,4 +1,4 @@
-Tests: AnimationTest BlitTest SplitSurfaceTest AnimationManagerTest
+Tests: AnimationTest BlitTest SplitSurfaceTest AnimationManagerTest TilesetTest
 	echo "All tests compiled"
 
 AnimationTest: AnimationTest.o ../Renderer.o ../Animation.o ../Timer.o ../Surface.o  ../Drawer.o ../Logger.o
@@ -9,6 +9,12 @@ BlitTest: BlitTest.o ../Renderer.o ../Timer.o ../Surface.o  ../Drawer.o ../Logge
 
 SplitSurfaceTest: SplitSurfaceTest.o ../Renderer.o ../Timer.o ../Surface.o  ../Drawer.o ../Logger.o
 	g++ -o SplitSurfaceTest -lSDL -lSDL_image -lSDL_gfx ../Renderer.o ../Animation.o ../Timer.o ../Surface.o ../Drawer.o ../Logger.o SplitSurfaceTest.o
+
+TilesetTest: TilesetTest.o ../Renderer.o ../Timer.o ../Surface.o  ../Drawer.o ../Logger.o ../Tile.o ../TileSet.o
+	g++ -o TilesetTest -lSDL -lSDL_image -lSDL_gfx ../Renderer.o ../Animation.o ../Timer.o ../Surface.o ../Drawer.o ../Logger.o ../Tile.o ../TileSet.o TilesetTest.o
+
+TilesetTest.o: TilesetTest.cpp
+	g++ -g -c TilesetTest.cpp
 
 AnimationTest.o: AnimationTest.cpp
 	g++ -g -c AnimationTest.cpp
@@ -26,4 +32,4 @@ SplitSurfaceTest.o: SplitSurfaceTest.cpp
 	g++ -g -c SplitSurfaceTest.cpp
 
 clean:
-	rm -rf *.~ *.o AnimationTest BlitTest SplitSurfaceTest log.txt
+	rm -rf *.~ *.o AnimationTest BlitTest SplitSurfaceTest AnimationManagerTest TilesetTest log.txt

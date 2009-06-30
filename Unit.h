@@ -19,7 +19,7 @@ namespace Core
 			virtual bool loadFromFile(std::string name);
 		public:
 			UnitType(std::string name);
-			virtual ~MapObjectType();
+			virtual ~UnitType();
 
 			virtual UnitType* clone();
 
@@ -29,26 +29,21 @@ namespace Core
 			int getAttack() const;
 			int getDefense() const;
 			int getCose() const;
-			MovementType movementType() const;
+			MovementType getMovementType() const;
 	};
 
 	class Unit : public MapObject
 	{
 		protected:
-			/* Hit points */
-			int maxhp;
+			UnitType *type;
 			int hp;
-			/* Movement points */
-			int maxmp;
 			int mp;
-			/* Skill points */
-			int maxsp;
 			int sp;
-			/* Attack */
 			int attack;
-			/* Defense */
 			int defense;
 		public:
+			// Add support for setting color of unit from player`s color.
+			// Or just change color of selection frame
 			Unit(UnitType *type, Tile *tile, Player *owner);
 	};
 }

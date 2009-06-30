@@ -2,6 +2,7 @@
 #define TILE_H
 
 #include <SDL/SDL.h>
+#include "Surface.h"
 
 namespace Core
 {
@@ -17,10 +18,10 @@ namespace Core
         /* Whole tile is filled with surface */
         CENTER = 0,
         /* Used for blending when collided (if priority is higher) */
-        LEFT,
-        RIGHT,
-        UP,
-        DOWN,
+	NORTHWEST,
+	NORTHEAST,
+	SOUTHWEST,
+	SOUTHEAST,
     };
 
     // Move to unit?
@@ -51,10 +52,6 @@ namespace Core
     {
         private:
             /**
-             * Tile type images
-             */
-            SDL_Surface* surfaces[TILE_IMAGES_NUM]; //one for each tile side + center
-            /**
              * Priority is used to show which tiles should blend onto others.
              */
             int priority;
@@ -62,6 +59,11 @@ namespace Core
              * Movement costs for moving through tile type;
              */
             MovementCosts movementCosts;
+
+	    /**
+	     * NEW TILE CLASS
+	     */
+	    Graphics::Surface* surfaces[TILE_IMAGES_NUM]; //one for each tile side + center
         public:
             /**
               * Creates tile type
@@ -69,7 +71,8 @@ namespace Core
               * @param y Line occupied by tile on surface
               * @param movementCosts Array with movement costs
               */
-            TileType(SDL_Surface *surface, int y, int priority, MovementCosts movementCosts);
+            //TileType(SDL_Surface *surface, int y, int priority, MovementCosts movementCosts);
+            TileType(Graphics::Surface *surface, int y, int priority, MovementCosts movementCosts);
             /**
              * Destroys images
              */
@@ -78,7 +81,7 @@ namespace Core
             /**
              * Returt tile image for given image type
              */
-            SDL_Surface *getTileImage(TileImageType type);
+	    Graphics::Surface *getTileImage(TileImageType type) const;
     };
 
     /**
@@ -88,16 +91,16 @@ namespace Core
     {
         private:
             int x,y; //might be not needed
-            SDL_Surface *image;
+	    Graphics::Surface *image;
             TileType *type;
             //Units and building occupying
         public:
             Tile(int x, int y, TileType *type);
 
             void setImageType(TileImageType imgtype);
-            void setImage(SDL_Surface *image);
+            void setImage(Graphics::Surface *image);
 
-            TileType* getType();
+            TileType* getType() const;
     };
 }
 

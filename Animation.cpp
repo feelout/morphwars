@@ -11,7 +11,7 @@ Animation::Animation(Surface *imgStrip, int width, int height, int frameTime)
 }
 
 Animation::Animation(Animation *tocopy)
-	surfaces(tocopy->surfaces), loop(tocopy->loop), currentFrame(0), frameTime(tocopy->frameTime),
+	: surfaces(tocopy->surfaces), loop(tocopy->loop), currentFrame(0), frameTime(tocopy->frameTime),
 	animating(false)
 {
 }

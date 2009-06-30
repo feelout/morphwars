@@ -84,7 +84,7 @@ void AnimationManager::updateAnimations()
 		}
 		else //Animation was freed
 		{
-			registeredAnimations.remove(i);
+			registeredAnimations.erase(i);
 		}
 	}
 }

@@ -1,8 +1,7 @@
 #include "TileSet.h"
 #include "Logger.h"
 #include <cstdio>
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
+#include "Surface.h"
 
 using namespace Core;
 
@@ -25,7 +24,8 @@ bool TileSet::loadTileSet(std::string name)
 		return false;
 	}
 
-	SDL_Surface *f_map = IMG_Load(("Tilesets/" + name + "/" + name + ".png").c_str());
+	//SDL_Surface *f_map = IMG_Load(("Tilesets/" + name + "/" + name + ".png").c_str());
+	Graphics::Surface *f_map = new Graphics::Surface(("Tilesets/" + name + "/" + name + ".png").c_str());
 
 	if(!f_map)
 	{
@@ -34,7 +34,7 @@ bool TileSet::loadTileSet(std::string name)
 		return false;
 	}
 
-	int numOfTileTypes = f_map->h / TILE_HEIGHT;
+	int numOfTileTypes = f_map->getHeight() / TILE_HEIGHT;
 
 	Utility::Logger::getInstance()->log("%i tile types detected\n", numOfTileTypes);
 
@@ -53,7 +53,7 @@ bool TileSet::loadTileSet(std::string name)
 	}
 
 	fclose(f_def);
-	SDL_FreeSurface(f_map);
+	delete f_map;
 }
 
 TileType* TileSet::getType(int n) const

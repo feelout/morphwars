@@ -3,39 +3,40 @@
 
 using namespace Core;
 
-TileType::TileType(SDL_Surface *surface, int y, int priority, MovementCosts movementCosts)
+TileType::TileType(Graphics::Surface *src, int y, int priority, MovementCosts movementCosts)
 	: priority(priority), movementCosts(movementCosts)
 {
-	SDL_Rect targetRect, cuttingRect;
-	targetRect.x = 0;
-	targetRect.y = 0;
-	targetRect.w = TILE_WIDTH;
-	targetRect.h = TILE_HEIGHT;
+	// Rect of tiletype line on tileset
+	Rect cuttingRect;
+	cuttingRect.x = 0;
+	cuttingRect.y = y*TILE_HEIGHT;
+	cuttingRect.w = TILE_WIDTH*TILE_IMAGES_NUM;
+	cuttingRect.h = TILE_HEIGHT;
 
-	for(int x=0; x < TILE_IMAGES_NUM; ++x)
+	// Getting tiletype line
+	Graphics::Surface *mainSurf = new Graphics::Surface(TILE_WIDTH*TILE_IMAGES_NUM, TILE_HEIGHT);
+	src->blit(mainSurf, &cuttingRect, 0, 0);
+	
+	// Splitting line on tile surfaces
+	std::vector<Graphics::Surface*> v_surfaces = Graphics::Surface::splitSpriteStrip(mainSurf, TILE_WIDTH, TILE_HEIGHT);
+
+	for(int i=0; i < TILE_IMAGES_NUM; ++i)
 	{
-		surfaces[x] = createSurface(TILE_WIDTH, TILE_HEIGHT);
-
-		cuttingRect.x = x*TILE_WIDTH;
-		cuttingRect.y = y*TILE_HEIGHT;
-		cuttingRect.w = TILE_WIDTH;
-		cuttingRect.h = TILE_HEIGHT;
-
-		SDL_BlitSurface(surface, &cuttingRect, surfaces[x], &targetRect);
+		surfaces[i] = v_surfaces[i];
 	}
+
+	delete mainSurf;
 }
 
 TileType::~TileType()
 {
 	for(int x=0; x < TILE_IMAGES_NUM; ++x)
 	{
-		SDL_FreeSurface(surfaces[x]);
+		delete surfaces[x];
 	}
-
-	delete[] surfaces;
 }
 
-SDL_Surface* TileType::getTileImage(TileImageType type)
+Graphics::Surface* TileType::getTileImage(TileImageType type) const
 {
 	return surfaces[type];
 }
@@ -51,12 +52,12 @@ void Tile::setImageType(TileImageType imgtype)
 	image = type->getTileImage(imgtype);
 }
 
-void Tile::setImage(SDL_Surface *image)
+void Tile::setImage(Graphics::Surface *image)
 {
 	this->image = image;
 }
 
-TileType* Tile::getType()
+TileType* Tile::getType() const
 {
 	return type;
 }
