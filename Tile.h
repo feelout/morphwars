@@ -13,7 +13,7 @@ namespace Core
     /**
      * Types of tile images
      */
-    enum TileImageType
+    enum Direction
     {
         /* Whole tile is filled with surface */
         CENTER = 0,
@@ -81,7 +81,9 @@ namespace Core
             /**
              * Returt tile image for given image type
              */
-	    Graphics::Surface *getTileImage(TileImageType type) const;
+	    Graphics::Surface *getTileImage(Direction type) const;
+
+	    int getPriority() const;
     };
 
     /**
@@ -97,10 +99,20 @@ namespace Core
         public:
             Tile(int x, int y, TileType *type);
 
-            void setImageType(TileImageType imgtype);
+            //void setImageType(Direction imgtype);
             void setImage(Graphics::Surface *image);
 
             TileType* getType() const;
+
+	    /**
+	     * Calculates direction from this tile to another
+	     * @param dst Tile to face
+	     * @return Direction
+	     */
+	    Direction getDirection(Tile *dst);
+
+	    int getX() const;
+	    int getY() const;
     };
 }
 

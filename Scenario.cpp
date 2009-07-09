@@ -1,5 +1,6 @@
 #include "Scenario.h"
 #include "Logger.h"
+#include "UnitTypeManager.h"
 
 using namespace Core;
 
@@ -7,7 +8,7 @@ Scenario::Scenario(std::string path)
 {
 	if(!loadFromFile(path))
 	{
-		Utility::Logger::getInstance()->log("Failed to load scenario %s\n", path);
+		Utility::Logger::getInstance()->log("Failed to load scenario %s\n", path.c_str());
 	}
 }
 
@@ -21,11 +22,12 @@ bool Scenario::loadFromFile(std::string path)
 {
 	Utility::Logger::getInstance()->log("Loading scenario %s\n", path.c_str());
 
-	TiXmlDocument xmldoc(path);
+	TiXmlDocument xmldoc(path.c_str());
 
 	if(!xmldoc.LoadFile())
 	{
 		Utility::Logger::getInstance()->log("Failed to load scenario XML file.\n");
+		return false;
 	}
 
 	TiXmlElement *root = xmldoc.FirstChildElement("scenario");
@@ -36,33 +38,35 @@ bool Scenario::loadFromFile(std::string path)
 
 	Utility::Logger::getInstance()->log("Loading object types\n");
 	/** Unit and Building types **/
-	TiXmlElement *parent, *child;
+	TiXmlNode *parent, *child=NULL;
 	
 	parent = root->FirstChildElement("types");
 
 	while(child = parent->IterateChildren("unit", child))
 	{
-		UnitTypeManager::getInstance()->getType(child->ValueStr());
+		UnitTypeManager::getInstance()->getType(child->ToElement()->GetText());
 	}
 
-	while(child = parent->IterateChildren("building", child))
+	child = NULL;
+	/*while(child = parent->IterateChildren("building", child)->ToElement())
 	{
 		BuildingTypeManager::getInstance()->getType(child->ValueStr());
-	}
+	}*/
 
 	/** Players **/
 	Utility::Logger::getInstance()->log("Loading players\n");
 
-	TiXmlElement *section, *current;
+	TiXmlNode *section=NULL, *current=NULL;
 	Player *currentPlayer;
 	Unit *currentUnit;
 	Building *currentBuilding;
 
 	parent = root->FirstChildElement("players");
+	child = NULL;
 
 	while(child = parent->IterateChildren("player", child))
 	{
-		std::string s_fraction = child->Attribute("fraction");
+		std::string s_fraction = child->ToElement()->Attribute("fraction");
 		Fraction fraction;
 
 		if(s_fraction == "Legacy")
@@ -79,19 +83,27 @@ bool Scenario::loadFromFile(std::string path)
 		}
 
 		/** TODO: Add controller **/
-		currentPlayer = new Player(child->Attribute("name"),  fraction, RGBColor(child->QueryIntAttribute("r"),
-					child->QueryIntAttribute("g"), child->QueryIntAttribute("b")));
+		int r,g,b; //Player`s color
+		child->ToElement()->QueryIntAttribute("r", &r);
+		child->ToElement()->QueryIntAttribute("g", &g);
+		child->ToElement()->QueryIntAttribute("b", &b);
+
+		currentPlayer = new Player(child->ToElement()->Attribute("name"),  fraction, RGBColor(r,g,b));
 
 		section = child->FirstChildElement("units");
 
 		while(current = section->IterateChildren("unit", current))
 		{
-			currentUnit = new Unit(UnitTypeManager::getInstance()->getType(current->Attribute("type")),
-						map->getTile(current->QueryIntAttribute("x"),current->QueryIntAttribute("y")),
-						currentPlayer);
+			int x,y;
+			current->ToElement()->QueryIntAttribute("x", &x);
+			current->ToElement()->QueryIntAttribute("y", &y);
+			currentUnit = new Unit(UnitTypeManager::getInstance()->getType(current->ToElement()->Attribute("type")),
+						map->getTile(x,y), currentPlayer);
 		}
 
 		section = child->FirstChildElement("buildings");
+
+		current = NULL;
 
 		while(current = section->IterateChildren("building", current))
 		{

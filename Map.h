@@ -4,6 +4,8 @@
 #include <string>
 #include "Tile.h"
 #include "TileSet.h"
+#include "Drawer.h"
+#include "tinyxml.h"
 
 namespace Core
 {
@@ -19,15 +21,15 @@ namespace Core
             std::string name;
             std::string version;
 
-            bool loadMap(std::string name);
             void calculateSurfaces();
         public:
             Map(int width, int height, std::string tilesetName);
-            Map(std::string name);
 	    Map(TiXmlElement *xmlmap);
             ~Map();
 
             Tile* getTile(int x, int y);
+
+	    void draw(Graphics::Drawer *target, int x, int y);
     };
 }
 

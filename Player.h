@@ -1,6 +1,10 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <string>
+#include <list>
+#include "assist.h"
+
 namespace Core
 {
 	class PlayerController; //subclass for mouse+keyboard, ai, net

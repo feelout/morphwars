@@ -4,21 +4,12 @@
 
 using namespace Core;
 
-bool MapObjectType::loadFromFile(std::string name)
+MapObjectType::MapObjectType()
 {
-	return false;
 }
 
 MapObjectType::MapObjectType(std::string name)
 {
-	if(!loadFromFile(name))
-	{
-		Utility::Logger::getInstance()->log("Object class %s loaded\n", name.c_str());
-	}
-	else
-	{
-		Utility::Logger::getInstance()->log("Failed to load object class %s\n", name.c_str());
-	}
 }
 
 MapObjectType::~MapObjectType()

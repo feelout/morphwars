@@ -8,6 +8,7 @@ namespace Core
 	class UnitType: public MapObjectType
 	{
 		protected:
+			std::string name;
 			int maxhp; 	// Hit points
 			int maxmp;	// Movement points
 			int maxsp;	// Skill points
@@ -16,19 +17,20 @@ namespace Core
 			int cost;	// Cost in energy
 			MovementType movementType;
 			
-			virtual bool loadFromFile(std::string name);
+			UnitType();
 		public:
-			UnitType(std::string name);
+			UnitType(std::string typeName);
 			virtual ~UnitType();
 
 			virtual UnitType* clone();
 
+			std::string getName() const;
 			int getMaxHP() const;
 			int getMaxMP() const;
 			int getMaxSP() const;
 			int getAttack() const;
 			int getDefense() const;
-			int getCose() const;
+			int getCost() const;
 			MovementType getMovementType() const;
 	};
 

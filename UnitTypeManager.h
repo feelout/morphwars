@@ -14,9 +14,7 @@ namespace Core
 
 			static UnitTypeManager* instance;
 
-			std::map<std::string, Unit*> unitTypes;
-
-			bool loadUnitType(std::string typeName);
+			std::map<std::string, UnitType*> unitTypes;
 		public:
 			static UnitTypeManager* getInstance();
 
@@ -28,7 +26,7 @@ namespace Core
 			 * do not need to create copy of type.
 			 * Returned Unit type is used in constructor
 			 */
-			Unit* getType(std::string typeName);
+			UnitType* getType(std::string typeName);
 	};
 }
 

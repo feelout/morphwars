@@ -65,5 +65,10 @@ struct RGBColor
 		this->g = g;
 		this->b = b;
 	}
+
+	RGBColor()
+	{
+		RGBColor(0, 0, 0);
+	}
 };
 #endif //ASSIST_H

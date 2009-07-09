@@ -16,22 +16,32 @@ Surface::Surface(int width, int height)
 	{
 		Utility::Logger::getInstance()->log("Failed to create Surface %ix%i\n", width, height);
 	}
+
+	Uint32 colorkey = SDL_MapRGB(surface->format, 0xFF, 0, 0xFF);
+	SDL_SetColorKey(surface, SDL_SRCCOLORKEY, colorkey);
 }
 
 Surface::Surface(std::string filename)
 {
-	surface = IMG_Load(filename.c_str());
+	SDL_Surface *loaded = IMG_Load(filename.c_str());
 
-	if(!surface)
+	if(!loaded)
 	{
 		Utility::Logger::getInstance()->log("Couldn`t load image file %s\n", filename.c_str());
+		return;
 	}
+
+	// Optimize loaded surface
+	surface = SDL_DisplayFormat(loaded);
+	SDL_FreeSurface(loaded);
+
+	Uint32 colorkey = SDL_MapRGB(surface->format, 0xFF, 0, 0xFF);
+	SDL_SetColorKey(surface, SDL_SRCCOLORKEY, colorkey); 
 }
 
 Surface::~Surface()
 {
-	SDL_FreeSurface(surface);
-}
+	SDL_FreeSurface(surface); }
 
 int Surface::getWidth() const
 {

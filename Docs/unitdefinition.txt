@@ -1,0 +1,8 @@
+Boriska	#name
+50	#hp
+4	#mp
+20	#sp
+6	#attack
+1	#defense
+100	#cost
+0	#movementtype

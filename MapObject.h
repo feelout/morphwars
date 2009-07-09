@@ -19,7 +19,7 @@ namespace Core
 			Graphics::AnimationPack graphics;
 			bool enabled;
 
-			virtual bool loadFromFile(std::string name);
+			MapObjectType();
 		public:
 			/**
 			 * Creates an object type from file

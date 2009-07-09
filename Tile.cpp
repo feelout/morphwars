@@ -36,21 +36,27 @@ TileType::~TileType()
 	}
 }
 
-Graphics::Surface* TileType::getTileImage(TileImageType type) const
+Graphics::Surface* TileType::getTileImage(Direction type) const
 {
 	return surfaces[type];
+}
+
+int TileType::getPriority() const
+{
+	return priority;
 }
 
 Tile::Tile(int x, int y, TileType *type)
 	: x(x), y(y), type(type)
 {
+	//printf("Tile (%i,%i) created\n", x, y);
 	image = type->getTileImage(CENTER);
 }
 
-void Tile::setImageType(TileImageType imgtype)
+/*void Tile::setImageType(TileImageType imgtype)
 {
 	image = type->getTileImage(imgtype);
-}
+}*/
 
 void Tile::setImage(Graphics::Surface *image)
 {
@@ -60,4 +66,43 @@ void Tile::setImage(Graphics::Surface *image)
 TileType* Tile::getType() const
 {
 	return type;
+}
+
+Direction Tile::getDirection(Tile *dst)
+{
+	int xdelta = this->x - dst->x;
+	int ydelta = this->y - dst->y;
+
+	if(xdelta > 0)
+	{
+		if(ydelta > 0)
+		{
+			return NORTHEAST;
+		}
+		else
+		{
+			return SOUTHEAST;
+		}
+	}
+	else
+	{
+		if(ydelta > 0)
+		{
+			return NORTHWEST;
+		}
+		else
+		{
+			return SOUTHWEST;
+		}
+	}
+}
+
+int Tile::getX() const
+{
+	return x;
+}
+
+int Tile::getY() const
+{
+	return y;
 }

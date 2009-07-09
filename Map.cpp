@@ -1,8 +1,18 @@
+#include <algorithm>
 #include "Map.h"
 #include "Logger.h"
-#include "tinyxml.h"
 
 using namespace Core;
+
+bool CompareTiles(Tile *t1, Tile *t2)
+{
+	if((!t1) || (!t2))
+	{
+		return false;
+	}
+	//printf("CompareTiles: (%i,%i) vs (%i,%i)\n", t1->getX(), t1->getY(), t2->getX(), t2->getY());
+	return t1->getType()->getPriority() > t2->getType()->getPriority();
+}
 
 Map::Map(int width, int height, std::string tilesetname)
 	: width(width), height(height)
@@ -15,104 +25,90 @@ Map::Map(int width, int height, std::string tilesetname)
 		for(int x=0; x < width; ++x)
 		{
 			tiles[x+y*width] = new Tile(x, y, tileset->getType(0));
-			tiles[x+y*width]->setImageType(CENTER);
+			tiles[x+y*width]->setImage(tiles[x+y*width]->getType()->getTileImage(CENTER));
 		}
 	}
 }
 
-Map::Map(std::string name)
+Map::Map(TiXmlElement *xmlmap)
 {
-	Utility::Logger::getInstance()->log("Loading map %s\n", name.c_str());
-	if(loadMap(name))
-	{
-		Utility::Logger::getInstance()->log("Map %s loaded successfully\n", name.c_str());
-	}
-	else
-	{
-		Utility::Logger::getInstance()->log("Couldn`t load map %s\n", name.c_str());
-	}
-}
+	xmlmap->QueryIntAttribute("width", &width);
+	xmlmap->QueryIntAttribute("height", &height);
 
-bool Map::loadMap(std::string name)
-{
-	std::string folder = "Maps/"+name+"/";
+	Utility::Logger::getInstance()->log("Map dimensions: %ix%i\n", width, height);
 
-	TiXmlDocument xmlmap((folder+name+".xml").c_str());
-	xmlmap.LoadFile();
-	/* Map metadata */
-	TiXmlElement *map = xmlmap.FirstChildElement("map");
-
-	if(!map)
-	{
-		Utility::Logger::getInstance()->log("Couldn`t find <map> element.\n");
-		return false;
-	}
-
-	author = map->Attribute("author");
-	name = map->Attribute("name");
-	version = map->Attribute("version");
-
-	Utility::Logger::getInstance()->log("Loading map %s %s by %s\n", name.c_str(), version.c_str(), author.c_str());
-
-	/* Terrain */
-	TiXmlElement *terrain = map->FirstChildElement("terrain");
-
-	if(!terrain)
-	{
-		Utility::Logger::getInstance()->log("Couldn`t find <terrain> element.\n");
-		return false;
-	}
-
-	terrain->QueryIntAttribute("width", &width);
-	terrain->QueryIntAttribute("height", &height);
-
-	Utility::Logger::getInstance()->log("Dimensions: %ix%i\n", width, height);
-
+	tileset = new TileSet(xmlmap->Attribute("tileset"));
+	//printf("tiles = new Tile*[%i]\n", width * height);
 	tiles = new Tile*[width*height];
 
-	// Creating tileset
-	tileset = new TileSet(terrain->FirstChildElement("tileset")->GetText());
+	TiXmlNode *row=NULL, *cell=NULL;
+	int x=0, y=0;
 
-	// Cells themselves
-	TiXmlNode *cells_node = terrain->FirstChildElement("cells");
-
-	int y=0;
-	int x=0;
-	for(TiXmlElement *row = cells_node->FirstChildElement("row");  row; row = row->NextSiblingElement("row"), ++y)
+	while(row = xmlmap->IterateChildren("row", row))
 	{
-		x = 0;
-		for(TiXmlElement *cell = row->FirstChildElement("cell"); cell; cell = cell->NextSiblingElement("cell"), ++x)
+		//FIXME: atoi(cell->Value()) is somehow always zero
+		while(cell = row->IterateChildren("cell", cell))
 		{
-			int tilenum;
-			sscanf(cell->GetText(), "%i", &tilenum);
-
-			tiles[x+y*width] = new Tile(x,y,tileset->getType(tilenum));
+			tiles[x+y*width] = new Tile(x, y, tileset->getType(atoi(cell->ToElement()->GetText())));
+			++x;
 		}
+		x=0;
+		++y;
 	}
 
 	calculateSurfaces();
-
-	// TODO: Objects
-
-	/* TODO: Players */
-
-	TiXmlElement *players_root_el = map->FirstChildElement("players");
-
-	for(TiXmlElement *player_el = players_root_el->FirstChildElement("player"); player_el; player_el =
-players_root_el->NextSiblingElement("player"))
-	{
-		// Create players, their unit, buildings
-		// Neutral players will be here also
-	}
 }
 
 void Map::calculateSurfaces()
 {
-	// TODO: Stub
+	Utility::Logger::getInstance()->log("Calculating map surfaces.\n");
+
 	for(int y=0; y < height; ++y)
 	{
 		for(int x=0; x < width; ++x)
 		{
+			//TODO: Cache instead of producting unneeded copies
+			/** Check neighbours **/
+			Graphics::Surface *tilesurf = new Graphics::Surface(TILE_WIDTH, TILE_HEIGHT);
+			Tile *currentTile = getTile(x,y);
+			currentTile->getType()->getTileImage(CENTER)->blit(tilesurf, 0, 0);
+
+			int currentTilePriority = currentTile->getType()->getPriority();
+
+			/** Check neighbours **/
+			std::vector<Tile*> neighbours;
+
+			//printf("Checking neighbours of (%i,%i)\n", x, y);
+
+			for(int dx=-1; dx < 2; ++dx)
+			{
+				for(int dy=-1; dy < 2; ++dy)
+				{
+					//printf("Checking (%i,%i)\n", x+dx, y+dy);
+					if(getTile(x+dx,y+dy))
+					{
+						//TODO: getTile should return NULL if coordinates are bad
+						//printf("Adding (%i,%i) to neighbour list\n", x+dx, y+dy);
+						neighbours.push_back(getTile(x+dx, y+dy));
+					}
+				}
+			}
+
+			/** Sort neighbours by priority **/
+			std::sort(neighbours.begin(), neighbours.end(), CompareTiles);
+
+			/** Blit neighbour surfaces **/
+			for(std::vector<Tile*>::iterator i=neighbours.begin(); i != neighbours.end(); ++i)
+			{
+				if((*i)->getType()->getPriority() > currentTilePriority)
+				{
+					Direction facing = (*i)->getDirection(currentTile);
+
+					(*i)->getType()->getTileImage(facing)->blit(tilesurf, 0, 0);
+				}
+			}
+
+			currentTile->setImage(tilesurf);
 		}
 	}
 }
@@ -121,9 +117,28 @@ Map::~Map()
 {
 	for(int i=0; i < width*height; ++i)
 	{
-		tiles[i]->setImageType(CENTER);
 		delete tiles[i];
 	}
 	delete[] tiles;
 	delete tileset;
+}
+
+Tile* Map::getTile(int x, int y)
+{
+	//TODO: Maybe move this to smthing like IsTileValid - if overhead is too high
+	if((x < 0) || (y < 0) || (x >= width) || (y >= height))
+	{
+		//printf("getTile: invalid tile (%i,%i)\n", x, y);
+		return NULL;
+	}
+
+	return tiles[x+y*width];
+}
+
+void Map::draw(Graphics::Drawer *target, int x, int y)
+{
+	//STUB
+		
+
+
 }

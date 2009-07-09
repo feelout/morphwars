@@ -1,8 +1,14 @@
-Tests: AnimationTest BlitTest SplitSurfaceTest AnimationManagerTest TilesetTest
+Tests: Prereq AnimationTest BlitTest SplitSurfaceTest AnimationManagerTest TilesetTest MapTest
 	echo "All tests compiled"
 
-AnimationTest: AnimationTest.o ../Renderer.o ../Animation.o ../Timer.o ../Surface.o  ../Drawer.o ../Logger.o
-	g++ -o AnimationTest -lSDL -lSDL_image -lSDL_gfx ../Renderer.o ../Animation.o ../Timer.o ../Surface.o ../Drawer.o ../Logger.o AnimationTest.o
+Prereq:
+	rm ../main.o
+
+AnimationTest: AnimationTest.o ../Renderer.o ../Animation.o ../Timer.o ../Surface.o  ../Drawer.o ../Logger.o 
+	g++ -o AnimationTest -lSDL -lSDL_image -lSDL_gfx ../*.o AnimationTest.o
+
+MapTest: MapTest.o ../Renderer.o ../Animation.o ../Timer.o ../Surface.o  ../Drawer.o ../Logger.o ../Map.o ../Scenario.o
+	g++ -o MapTest -lSDL -lSDL_image -lSDL_gfx ../*.o MapTest.o
 
 BlitTest: BlitTest.o ../Renderer.o ../Timer.o ../Surface.o  ../Drawer.o ../Logger.o
 	g++ -o BlitTest -lSDL -lSDL_image -lSDL_gfx ../Renderer.o ../Animation.o ../Timer.o ../Surface.o ../Drawer.o ../Logger.o BlitTest.o
@@ -19,6 +25,9 @@ TilesetTest.o: TilesetTest.cpp
 AnimationTest.o: AnimationTest.cpp
 	g++ -g -c AnimationTest.cpp
 
+MapTest.o: MapTest.cpp
+	g++ -g -c MapTest.cpp
+
 AnimationManagerTest: ../Renderer.o ../Animation.o ../Timer.o ../Drawer.o ../Surface.o ../Logger.o ../AnimationManager.o AnimationManagerTest.o
 	g++ -o AnimationManagerTest -lSDL -lSDL_image -lSDL_gfx ../Renderer.o ../Animation.o ../Timer.o ../Drawer.o ../Surface.o ../Logger.o ../AnimationManager.o AnimationManagerTest.o
 
@@ -32,4 +41,4 @@ SplitSurfaceTest.o: SplitSurfaceTest.cpp
 	g++ -g -c SplitSurfaceTest.cpp
 
 clean:
-	rm -rf *.~ *.o AnimationTest BlitTest SplitSurfaceTest AnimationManagerTest TilesetTest log.txt
+	rm -rf *.~ *.o AnimationTest BlitTest SplitSurfaceTest AnimationManagerTest TilesetTest MapTest log.txt
