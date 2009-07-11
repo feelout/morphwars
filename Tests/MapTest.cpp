@@ -19,12 +19,14 @@ int main()
 	}
 
 	Drawer *target = new Drawer(Renderer::getInstance()->getBuffer());
-	Scenario *scenario = new Scenario("../Maps/Test/Test.xml");
-
+	Scenario *scenario = new Scenario("../Maps/River/River.xml");
+	//Scenario *scenario = new Scenario("../Maps/Test/Test.xml");
+	
 	unsigned int startTime = Timer::currentTicks();
 
-	while(Timer::currentTicks() < (startTime + 1000))
+	while(Timer::currentTicks() < (startTime + 3000))
 	{
+		scenario->draw(target, 0, 0);
 		Renderer::getInstance()->flipBuffers();
 		Timer::delay(10);
 	}

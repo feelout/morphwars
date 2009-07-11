@@ -40,7 +40,7 @@ bool TileSet::loadTileSet(std::string name)
 
 	TileType *currentType;
 
-	for(int y=0; y < numOfTileTypes; ++y)
+	for(int y=0; y < numOfTileTypes+1; ++y)
 	{
 		int *movementCosts = new int[MOVEMENT_TYPES_NUM];
 		MovementCosts costs;

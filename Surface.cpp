@@ -1,4 +1,5 @@
 #include "Surface.h"
+#include "Drawer.h"
 #include "Logger.h"
 #include <SDL/SDL_image.h>
 
@@ -19,6 +20,11 @@ Surface::Surface(int width, int height)
 
 	Uint32 colorkey = SDL_MapRGB(surface->format, 0xFF, 0, 0xFF);
 	SDL_SetColorKey(surface, SDL_SRCCOLORKEY, colorkey);
+
+	Drawer filler(this);
+	Rect fillingRect(0,0,width,height);
+	RGBColor fillingColor(255, 0, 255);
+	filler.fillRect(fillingRect, fillingColor);
 }
 
 Surface::Surface(std::string filename)

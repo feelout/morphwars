@@ -3,12 +3,14 @@
 
 #include <SDL/SDL.h>
 #include "Surface.h"
+#include "Drawer.h"
 
 namespace Core
 {
-    const int TILE_HEIGHT = 40;
-    const int TILE_WIDTH = 40;
-    const int TILE_TERRAIN_HEIGHT = 21;
+    const int TILE_HEIGHT = 60;//40;
+    const int TILE_WIDTH = 60;//40;
+    const int TILE_TERRAIN_HEIGHT = 31;//21;
+    const int TILE_HEIGHT_OFFSET = 15;
 
     /**
      * Types of tile images
@@ -113,6 +115,8 @@ namespace Core
 
 	    int getX() const;
 	    int getY() const;
+
+	    void draw(Graphics::Drawer *target, int x, int y);
     };
 }
 

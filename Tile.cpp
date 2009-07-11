@@ -106,3 +106,10 @@ int Tile::getY() const
 {
 	return y;
 }
+
+void Tile::draw(Graphics::Drawer *target, int x, int y)
+{
+	//printf("Drawing Tile (%i,%i) on %i,%i\n", this->x, this->y, x, y);
+	image->blit(target->getTarget(), x, y);
+	//target->drawRect(Rect(x+1, y+1, TILE_WIDTH-1, TILE_HEIGHT-1), RGBColor(255, 0, 0));
+}

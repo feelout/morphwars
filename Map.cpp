@@ -70,6 +70,16 @@ void Map::calculateSurfaces()
 			//TODO: Cache instead of producting unneeded copies
 			/** Check neighbours **/
 			Graphics::Surface *tilesurf = new Graphics::Surface(TILE_WIDTH, TILE_HEIGHT);
+
+			/*Graphics::Drawer *filler = new Graphics::Drawer(tilesurf);
+			Rect *filling_rect = new Rect(0, 0, TILE_WIDTH, TILE_HEIGHT);
+			RGBColor *filling_color = new RGBColor(255, 0, 255);
+			filler->fillRect(*filling_rect, *filling_color);
+
+			delete filler;
+			delete filling_rect;
+			delete filling_color;*/
+
 			Tile *currentTile = getTile(x,y);
 			currentTile->getType()->getTileImage(CENTER)->blit(tilesurf, 0, 0);
 
@@ -97,6 +107,7 @@ void Map::calculateSurfaces()
 			/** Sort neighbours by priority **/
 			std::sort(neighbours.begin(), neighbours.end(), CompareTiles);
 
+			printf("Blitting neighbour surfaces for (%i,%i)\n", x, y);
 			/** Blit neighbour surfaces **/
 			for(std::vector<Tile*>::iterator i=neighbours.begin(); i != neighbours.end(); ++i)
 			{
@@ -137,8 +148,20 @@ Tile* Map::getTile(int x, int y)
 
 void Map::draw(Graphics::Drawer *target, int x, int y)
 {
-	//STUB
-		
+	int dx=0,dy=0;
+	
+	for(int tiley=0; tiley < height; ++tiley)
+	{
+		dx = (tiley % 2) * TILE_WIDTH/2;
+		//dy = (dx != 0) ? TILE_HEIGHT_OFFSET : 0;
+		dy = TILE_HEIGHT - TILE_TERRAIN_HEIGHT;
 
+		//printf("Row %i: shift: %i, height: %i\n", tiley, dy, tiley*(TILE_TERRAIN_HEIGHT)-dy);
 
+		for(int tilex=0; tilex < width; ++tilex)
+		{
+			getTile(tilex, tiley)->draw(target, x+dx+(tilex*TILE_WIDTH),
+					y+(tiley*(TILE_HEIGHT_OFFSET)-dy));
+		}
+	}
 }

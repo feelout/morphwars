@@ -17,7 +17,6 @@ int main()
 	}
 
 	Surface *animSurf = new Surface("Animation.png");
-	//Surface *transSurf = new Surface("Transparent.png");
 	Surface *colorkey = new Surface("ColorKey.png");
 
 	Drawer *target = new Drawer(Renderer::getInstance()->getBuffer());

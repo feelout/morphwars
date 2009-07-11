@@ -116,3 +116,9 @@ bool Scenario::loadFromFile(std::string path)
 	//TODO: setup scripts
 	return true;
 }
+
+void Scenario::draw(Graphics::Drawer *target, int x, int y)
+{
+	//FIXME: Add units nad other stuff..
+	map->draw(target, x, y);
+}

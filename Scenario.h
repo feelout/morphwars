@@ -5,6 +5,7 @@
 #include <list>
 #include "Map.h"
 #include "Player.h"
+#include "Drawer.h"
 
 namespace Core
 {
@@ -19,6 +20,8 @@ namespace Core
 		public:
 			Scenario(std::string path);
 			~Scenario();
+
+			void draw(Graphics::Drawer *target, int x, int y);
 	};
 }
 

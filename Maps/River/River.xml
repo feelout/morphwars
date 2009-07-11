@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<scenario author="Feelout" name="River" version="0.1">
+	<map width="5" height="4" tileset="Default">
+		<row>
+			<cell>1</cell>
+			<cell>1</cell>
+			<cell>0</cell>
+			<cell>0</cell>
+			<cell>0</cell>
+		</row>
+
+		<row>
+			<cell>1</cell>
+			<cell>1</cell>
+			<cell>0</cell>
+			<cell>0</cell>
+			<cell>0</cell>
+		</row>
+
+		<row>
+			<cell>1</cell>
+			<cell>1</cell>
+			<cell>0</cell>
+			<cell>0</cell>
+			<cell>0</cell>
+		</row>
+
+		<row>
+			<cell>1</cell>
+			<cell>1</cell>
+			<cell>0</cell>
+			<cell>0</cell>
+			<cell>0</cell>
+		</row>
+	</map>
+
+	<types>
+		<unit enable="true">Boriska</unit>
+		<unit enable="true">Lord</unit>
+		<building enable="true">Watchtower</building>
+	</types>
+
+	<players>
+		<player name="Decluh" fraction="Hand" r="255" g="0" b="0" controller="local">
+			<units>
+				<unit type="Boriska" x="1" y="1" />
+			</units>
+			<buildings>
+				<building type="Watchtower" id="RED_WT" x="3" y="1" />
+			</buildings>
+		</player>
+		<player name="Margo" fraction="Hand" r="0" g="0" b="255" controller="local">
+			<units>
+				<unit type="Lord" x="3" y="3" />
+			</units>
+			<buildings>
+				<building type="Watchtower" id="BLUE_WT" x="4" y="2" />
+			</buildings>
+		</player>
+	</players>
+
+	<scripts>
+		<onbegin>beginscript.lua</onbegin>
+		<oneachturn>eachturn.lua</oneachturn>
+		<ondestroy id="RED_WT">bluewin.lua</ondestroy>
+		<ondestroy id="BLUE_WT">redwin.lua</ondestroy>
+	</scripts>
+</scenario>
