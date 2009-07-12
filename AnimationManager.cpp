@@ -72,6 +72,16 @@ Animation* AnimationManager::getAnimation(std::string type)
 	return result;
 }
 
+void AnimationManager::addAnimation(std::string name, Animation *animation)
+{
+	if(animations[name])
+	{
+		Utility::Logger::getInstance()->log("AnimationManager: Type %s already exists.\n", name.c_str());
+		return;
+	}
+	animations[name] = animation;
+}
+
 void AnimationManager::updateAnimations()
 {
 	std::list<Animation*>::iterator i;

@@ -51,6 +51,8 @@ namespace Graphics
              */
             Animation *getAnimation(std::string type);
 
+	    void addAnimation(std::string name, Animation *animation);
+
 	    /**
 	     * Update all registered animations. Call each frame.
 	     */

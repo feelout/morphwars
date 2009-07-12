@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <string>
 
+#define WriteToLog(x) Utility::Logger::getInstance()->log(x)
+
 namespace Utility
 {
     /**

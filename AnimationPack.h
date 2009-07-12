@@ -21,6 +21,12 @@ namespace Graphics
 
 		public:
 			AnimationPack();
+			/**
+			 * Creates animation pack from a file
+			 * @param strip Surface to make animations from
+			 * @param definition Path to a definition file
+			 */
+			AnimationPack(Surface *strip, std::string definition);
 			~AnimationPack();
 
 			/**
