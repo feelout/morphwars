@@ -19,7 +19,7 @@ int main()
 	}
 
 	Drawer *target = new Drawer(Renderer::getInstance()->getBuffer());
-	Scenario *scenario = new Scenario("../Maps/River/River.xml");
+	Scenario *scenario = new Scenario("../Maps/Test/Test.xml");
 	//Scenario *scenario = new Scenario("../Maps/Test/Test.xml");
 	
 	unsigned int startTime = Timer::currentTicks();

@@ -71,15 +71,6 @@ void Map::calculateSurfaces()
 			/** Check neighbours **/
 			Graphics::Surface *tilesurf = new Graphics::Surface(TILE_WIDTH, TILE_HEIGHT);
 
-			/*Graphics::Drawer *filler = new Graphics::Drawer(tilesurf);
-			Rect *filling_rect = new Rect(0, 0, TILE_WIDTH, TILE_HEIGHT);
-			RGBColor *filling_color = new RGBColor(255, 0, 255);
-			filler->fillRect(*filling_rect, *filling_color);
-
-			delete filler;
-			delete filling_rect;
-			delete filling_color;*/
-
 			Tile *currentTile = getTile(x,y);
 			currentTile->getType()->getTileImage(CENTER)->blit(tilesurf, 0, 0);
 
@@ -88,9 +79,9 @@ void Map::calculateSurfaces()
 			/** Check neighbours **/
 			std::vector<Tile*> neighbours;
 
-			//printf("Checking neighbours of (%i,%i)\n", x, y);
+			//printf("\nChecking neighbours of (%i,%i)\n", x, y);
 
-			for(int dx=-1; dx < 2; ++dx)
+			/*for(int dx=-1; dx < 2; ++dx)
 			{
 				for(int dy=-1; dy < 2; ++dy)
 				{
@@ -102,22 +93,53 @@ void Map::calculateSurfaces()
 						neighbours.push_back(getTile(x+dx, y+dy));
 					}
 				}
+			}*/
+
+			//DEBUG
+
+			int additionalDx = (y % 2 == 0) ? -1 : 0;
+
+			for(int dx=additionalDx; dx < 2+additionalDx; ++dx)
+			{
+				for(int dy=-1; dy < 2; dy+=2)
+				{
+					//printf(" * Checking (%i, %i)", x+dx, y+dy);
+
+					if(getTile(x+dx, y+dy))
+					{
+						//printf("\tpassed\n");
+						neighbours.push_back(getTile(x+dx, y+dy));
+					}
+					else
+					{
+						//printf("\tfailed\n");
+					}
+				}
 			}
+
+			//printf("Neighbours: %i\n", neighbours.size());
+
+			//ENDDEBUG
 
 			/** Sort neighbours by priority **/
 			std::sort(neighbours.begin(), neighbours.end(), CompareTiles);
 
-			printf("Blitting neighbour surfaces for (%i,%i)\n", x, y);
+			//printf("Blitting neighbour surfaces for (%i,%i)\n", x, y);
 			/** Blit neighbour surfaces **/
 			for(std::vector<Tile*>::iterator i=neighbours.begin(); i != neighbours.end(); ++i)
 			{
+				//printf("Current tile priority: %i\tNeighbour priority: %i\n", currentTilePriority,
+						//(*i)->getType()->getPriority());
 				if((*i)->getType()->getPriority() > currentTilePriority)
 				{
+					printf("Blitting neighbour surfaces for (%i,%i)\n", x, y);
 					Direction facing = (*i)->getDirection(currentTile);
+					//Direction facing = currentTile->getDirection((*i));
+
+					printf("\tTile: (%i,%i), Facing: %i\n", (*i)->getX(), (*i)->getY(), facing);
 
 					(*i)->getType()->getTileImage(facing)->blit(tilesurf, 0, 0);
-				}
-			}
+				} }
 
 			currentTile->setImage(tilesurf);
 		}

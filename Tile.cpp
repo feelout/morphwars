@@ -70,29 +70,74 @@ TileType* Tile::getType() const
 
 Direction Tile::getDirection(Tile *dst)
 {
-	int xdelta = this->x - dst->x;
-	int ydelta = this->y - dst->y;
+	printf("Calculating direction from (%i,%i) to (%i,%i)\n", x, y, dst->x, dst->y);
+	//int dx = this->x - dst->x;
+	//int dy = this->y - dst->y;
+	int dx = dst->x - this->x;
+	int dy = dst->y - this->y;
 
-	if(xdelta > 0)
+	printf("dx = %i, dy = %i\n", dx, dy);
+
+	if(dy == 0)
 	{
-		if(ydelta > 0)
+		if(dx > 0) return EAST;
+		else if(dx < 0) return WEST;
+		else return CENTER;
+		//return CENTER;
+	}
+
+	if((y % 2) == (dst->getY() % 2))
+	{
+		printf("Tiles are not shifted\n");
+		if(dy > 0)
 		{
-			return NORTHEAST;
+			if(dx > 0) return SOUTHEAST;
+			else if(dx < 0) return SOUTHWEST;
+			else return SOUTH;
+			//else return SOUTHWEST;
 		}
 		else
 		{
-			return SOUTHEAST;
+			if(dx > 0) return NORTHEAST;
+			else if(dx < 0) return NORTHWEST;
+			else return NORTH;
+			//else return NORTHWEST;
 		}
 	}
 	else
 	{
-		if(ydelta > 0)
+		printf("Tiles are shifted\n");
+		if(dy > 0)
 		{
-			return NORTHWEST;
+			//if(dx > 0) return SOUTHEAST;
+			//else return SOUTHWEST;
+			if(y % 2 == 0)
+			{
+				if(dx < 0) return SOUTHWEST;
+				else return SOUTHWEST;
+			}
+			else
+			{
+				if(dx > 0) return SOUTHEAST;
+				else return SOUTHWEST;
+			}
 		}
-		else
+		else //THE MAIN BUG
 		{
-			return SOUTHWEST;
+			//if(dx > 0) return NORTHEAST;
+			//else return NORTHWEST;
+			if(y % 2 == 0)
+			{
+				if(dx < 0) return NORTHWEST;
+				else return NORTHEAST;
+			}
+			else
+			{
+				if(dx > 0) return NORTHEAST;
+				else return NORTHWEST;
+			}
+			//if(dx < 0) return NORTHWEST;
+			//else return NORTHEAST;
 		}
 	}
 }
@@ -111,5 +156,14 @@ void Tile::draw(Graphics::Drawer *target, int x, int y)
 {
 	//printf("Drawing Tile (%i,%i) on %i,%i\n", this->x, this->y, x, y);
 	image->blit(target->getTarget(), x, y);
+	// Drawing grid
+	RGBColor gridcolor(255, 255, 255);
+	target->drawLine(x, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET, x + TILE_WIDTH / 2, y + TILE_HEIGHT - TILE_TERRAIN_HEIGHT,
+			gridcolor);
+	target->drawLine(x + TILE_WIDTH / 2, y + TILE_HEIGHT - TILE_TERRAIN_HEIGHT,
+			x + TILE_WIDTH, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET, gridcolor);
+	target->drawLine(x + TILE_WIDTH, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET,
+			x + TILE_WIDTH / 2, y + TILE_HEIGHT, gridcolor);
+	target->drawLine(x + TILE_WIDTH / 2, y +TILE_HEIGHT, x, y +TILE_HEIGHT - TILE_HEIGHT_OFFSET, gridcolor);
 	//target->drawRect(Rect(x+1, y+1, TILE_WIDTH-1, TILE_HEIGHT-1), RGBColor(255, 0, 0));
 }

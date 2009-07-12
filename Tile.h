@@ -9,7 +9,7 @@ namespace Core
 {
     const int TILE_HEIGHT = 60;//40;
     const int TILE_WIDTH = 60;//40;
-    const int TILE_TERRAIN_HEIGHT = 31;//21;
+    const int TILE_TERRAIN_HEIGHT = 30;//21;
     const int TILE_HEIGHT_OFFSET = 15;
 
     /**
@@ -17,14 +17,27 @@ namespace Core
      */
     enum Direction
     {
-        /* Whole tile is filled with surface */
+        // Whole tile is filled with surface 
         CENTER = 0,
-        /* Used for blending when collided (if priority is higher) */
+        //Used for blending when collided (if priority is higher) 
 	NORTHWEST,
+	NORTH,
 	NORTHEAST,
-	SOUTHWEST,
+	EAST,
 	SOUTHEAST,
+	SOUTH,
+	SOUTHWEST,
+	WEST,
     };
+
+    /*enum Direction
+    {
+	    CENTER = 0,
+	    SOUTHWEST,
+	    SOUTHEAST,
+	    NORTHWEST,
+	    NORTHEAST,
+    };*/
 
     // Move to unit?
     /**
@@ -39,7 +52,7 @@ namespace Core
         HIGHAIR,
     };
 
-    const int TILE_IMAGES_NUM = 5;
+    const int TILE_IMAGES_NUM = 9;
     const int MOVEMENT_TYPES_NUM = 5;
 
     struct MovementCosts
