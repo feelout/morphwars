@@ -27,6 +27,8 @@ namespace Graphics
 			 * @param definition Path to a definition file
 			 */
 			AnimationPack(Surface *strip, std::string definition);
+
+			AnimationPack(const AnimationPack& source);
 			~AnimationPack();
 
 			/**
@@ -46,6 +48,8 @@ namespace Graphics
 			 * @return Current animtion
 			 */
 			Animation* getCurrent() const;
+
+			AnimationPack& operator = (const AnimationPack& other);
 	};
 }
 

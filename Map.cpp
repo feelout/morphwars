@@ -132,11 +132,11 @@ void Map::calculateSurfaces()
 						//(*i)->getType()->getPriority());
 				if((*i)->getType()->getPriority() > currentTilePriority)
 				{
-					printf("Blitting neighbour surfaces for (%i,%i)\n", x, y);
+					//printf("Blitting neighbour surfaces for (%i,%i)\n", x, y);
 					Direction facing = (*i)->getDirection(currentTile);
 					//Direction facing = currentTile->getDirection((*i));
 
-					printf("\tTile: (%i,%i), Facing: %i\n", (*i)->getX(), (*i)->getY(), facing);
+					//printf("\tTile: (%i,%i), Facing: %i\n", (*i)->getX(), (*i)->getY(), facing);
 
 					(*i)->getType()->getTileImage(facing)->blit(tilesurf, 0, 0);
 				} }

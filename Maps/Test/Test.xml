@@ -36,7 +36,7 @@
 
 	<types>
 		<unit enable="true">Boriska</unit>
-		<unit enable="true">Lord</unit>
+		<!-- <unit enable="true">Lord</unit> -->
 		<building enable="true">Watchtower</building>
 	</types>
 
@@ -51,7 +51,7 @@
 		</player>
 		<player name="Margo" fraction="Hand" r="0" g="0" b="255" controller="local">
 			<units>
-				<unit type="Lord" x="3" y="3" />
+				<!-- <unit type="Lord" x="3" y="3" /> -->
 			</units>
 			<buildings>
 				<building type="Watchtower" id="BLUE_WT" x="4" y="2" />

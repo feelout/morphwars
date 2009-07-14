@@ -24,10 +24,13 @@ UnitType::UnitType(std::string typeName)
 
 	movementType = (MovementType)mt;
 
+	//FIXMEHONEY: Load the freakin` animation pack!!!!
 	Graphics::Surface *strip = new Graphics::Surface("Objects/Units/"+typeName+"/Gfx.png");
 	std::string xmlpath = "Opjects/Units/"+typeName+"/Animations.xml";
 
 	graphics = Graphics::AnimationPack(strip, "Objects/Units/"+typeName+"/Animations.xml");	
+
+	//graphics.changeToAnimation(typeName+"-NW");
 
 	name = name_buf;
 
@@ -46,6 +49,7 @@ UnitType::UnitType()
 
 UnitType* UnitType::clone()
 {
+	Utility::Logger::getInstance()->log("UnitType::clone()\n");
 	UnitType *result = new UnitType();
 
 	result->name = name;
@@ -57,7 +61,13 @@ UnitType* UnitType::clone()
 	result->movementType = movementType;
 	result->enabled = enabled;
 
+	//DEBUG
+	//graphics.changeToAnimation("Boriska-NW");
+	//ENDDEBUG
+
 	result->graphics = graphics;
+
+	graphics.changeToAnimation("Boriska-NW");
 	
 	return result;
 }
@@ -105,16 +115,21 @@ MovementType UnitType::getMovementType() const
 Unit::Unit(UnitType *type, Tile *tile, Player *owner)
 	: MapObject(type, tile, owner)
 {
+	Utility::Logger::getInstance()->log("Unit::Unit\n");
 	hp = type->getMaxHP();
 	mp = type->getMaxMP();
 	sp = type->getMaxSP();
 	attack = type->getAttack();
 	defense = type->getDefense();
 
-	this->type = type->clone();
+	type->getGraphics()->changeToAnimation("Boriska-NW");
+	Utility::Logger::getInstance()->log("Name : %s\n", type->getName().c_str());
 }
 
 void Unit::draw(Graphics::Drawer *target, int x, int y)
 {
+	Utility::Logger::getInstance()->log("Unit::Draw\n");
+	type->getName();
+	type->getGraphics()->changeToAnimation("Boriska-NW");
 	type->getGraphics()->getCurrent()->draw(target, x, y);
 }

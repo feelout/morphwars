@@ -1,4 +1,5 @@
 #include "UnitTypeManager.h"
+#include "Logger.h"
 
 using namespace Core;
 
@@ -19,11 +20,11 @@ UnitTypeManager* UnitTypeManager::getInstance()
 
 UnitType* UnitTypeManager::getType(std::string typeName)
 {
-	printf("UnitTypeManager::getType(%s)\n", typeName.c_str());
+	Utility::Logger::getInstance()->log("UnitTypeManager::getType(%s)\n", typeName.c_str());
 
 	if(!unitTypes[typeName])
 	{
-		printf("Not found in collection\n");
+		Utility::Logger::getInstance()->log("\tNot found in collection\n");
 		unitTypes[typeName] = new UnitType(typeName);
 	}
 	

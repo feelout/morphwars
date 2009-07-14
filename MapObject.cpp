@@ -24,7 +24,8 @@ Graphics::AnimationPack *MapObjectType::getGraphics()
 MapObject::MapObject(MapObjectType *type, Tile *tile, Player *owner)
 	: tile(tile), owner(owner)
 {
-	this->type = type->clone();
+	//Utility::Logger::getInstance()->log("MapObjectType::MapObjectType()\n");
+	tile->addObject(this);
 }
 
 MapObject::~MapObject()
@@ -34,4 +35,9 @@ MapObject::~MapObject()
 void MapObject::draw(Graphics::Drawer *target, int x, int y)
 {
 	type->getGraphics()->getCurrent()->draw(target, x, y);
+}
+
+Tile* MapObject::getTile() const
+{
+	return tile;
 }

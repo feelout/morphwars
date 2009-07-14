@@ -1,4 +1,5 @@
 #include "Tile.h"
+#include "MapObject.h"
 #include "assist.h"
 
 using namespace Core;
@@ -70,13 +71,13 @@ TileType* Tile::getType() const
 
 Direction Tile::getDirection(Tile *dst)
 {
-	printf("Calculating direction from (%i,%i) to (%i,%i)\n", x, y, dst->x, dst->y);
+	//printf("Calculating direction from (%i,%i) to (%i,%i)\n", x, y, dst->x, dst->y);
 	//int dx = this->x - dst->x;
 	//int dy = this->y - dst->y;
 	int dx = dst->x - this->x;
 	int dy = dst->y - this->y;
 
-	printf("dx = %i, dy = %i\n", dx, dy);
+	//printf("dx = %i, dy = %i\n", dx, dy);
 
 	if(dy == 0)
 	{
@@ -88,7 +89,7 @@ Direction Tile::getDirection(Tile *dst)
 
 	if((y % 2) == (dst->getY() % 2))
 	{
-		printf("Tiles are not shifted\n");
+		//printf("Tiles are not shifted\n");
 		if(dy > 0)
 		{
 			if(dx > 0) return SOUTHEAST;
@@ -106,7 +107,7 @@ Direction Tile::getDirection(Tile *dst)
 	}
 	else
 	{
-		printf("Tiles are shifted\n");
+		//printf("Tiles are shifted\n");
 		if(dy > 0)
 		{
 			//if(dx > 0) return SOUTHEAST;
@@ -142,6 +143,12 @@ Direction Tile::getDirection(Tile *dst)
 	}
 }
 
+void Tile::addObject(MapObject *object)
+{
+	objects.push_back(object);
+	//TODO: Sort objects, buildings first
+}
+
 int Tile::getX() const
 {
 	return x;
@@ -156,6 +163,10 @@ void Tile::draw(Graphics::Drawer *target, int x, int y)
 {
 	//printf("Drawing Tile (%i,%i) on %i,%i\n", this->x, this->y, x, y);
 	image->blit(target->getTarget(), x, y);
+	for(std::vector<MapObject*>::iterator i = objects.begin(); i != objects.end(); ++i)
+	{
+		(*i)->draw(target, x, y);
+	}
 	// Drawing grid
 	RGBColor gridcolor(255, 255, 255);
 	target->drawLine(x, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET, x + TILE_WIDTH / 2, y + TILE_HEIGHT - TILE_TERRAIN_HEIGHT,

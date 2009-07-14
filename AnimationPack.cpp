@@ -11,20 +11,24 @@ AnimationPack::AnimationPack()
 }
 
 AnimationPack::AnimationPack(Surface *strip, std::string definition)
+	: current(NULL)
 {
-	FILE *f = fopen(definition.c_str(), "r");
+	Utility::Logger::getInstance()->log("Loading animation pack %s\n", definition.c_str());
 
-	if(!f)
+	TiXmlDocument xmldoc(definition.c_str());
+	if(!xmldoc.LoadFile())
 	{
-		Utility::Logger::getInstance()->log("Failed to load animation pack definition %i\n", definition.c_str());
+		Utility::Logger::getInstance()->log("Failed to load animation pack XML file : %s.\n", definition.c_str());
 		return;
 	}
 
-	fclose(f);
+	TiXmlElement *parent = xmldoc.FirstChildElement("animationpack");
 
-	TiXmlDocument xmldoc(definition.c_str());
-
-	TiXmlNode *parent = xmldoc.FirstChild("animationpack");
+	if(!parent)
+	{
+		Utility::Logger::getInstance()->log("Missing <animationpack> parent tag.\n");
+		return;
+	}
 
 	TiXmlNode *currentChild=NULL;
 	TiXmlElement *currentXMLAnimation=NULL;
@@ -55,6 +59,23 @@ AnimationPack::AnimationPack(Surface *strip, std::string definition)
 
 		strip_y += width;
 	}
+
+	current = currentAnimation;
+}
+
+AnimationPack::AnimationPack(const AnimationPack& source)
+	: current(NULL)
+{
+	std::map<std::string, Animation*>::iterator i;
+
+	for(i = animations.begin(); i != animations.end(); ++i)
+	{
+		addAnimation(i->first, AnimationManager::getInstance()->getAnimation(i->first));
+	}
+
+	i = animations.begin();
+
+	changeToAnimation(i->first);
 }
 
 AnimationPack::~AnimationPack()
@@ -65,16 +86,61 @@ AnimationPack::~AnimationPack()
 
 void AnimationPack::addAnimation(std::string name, Animation *animation)
 {
+	Utility::Logger::getInstance()->log("AddAnimation(%s)\n", name.c_str());
 	animations[name] = animation;
 }
 
 void AnimationPack::changeToAnimation(std::string name)
 {
-	current->stop();
+	Utility::Logger::getInstance()->log("AnimationPack::changeToAnimation(%s)\n", name.c_str());
+	//DEBUG
+	if(current)
+	{
+		current->stop();
+	}
+	//ENDDEBUG
+	Utility::Logger::getInstance()->log("Animations total: %i\n", animations.size());
+
+	if(!animations[name])
+	{
+		Utility::Logger::getInstance()->log("AnimationPack: missing animation requested: %s\n", name.c_str());
+		return;
+	}
+
+	if(current)
+	{
+		current->stop();
+	}
+
 	current = animations[name];
 }
 
 Animation* AnimationPack::getCurrent() const
 {
 	return current;
+}
+
+AnimationPack& AnimationPack::operator = (const AnimationPack& other)
+{
+	Utility::Logger::getInstance()->log("AnimationPack::operator=\n");
+
+	current = NULL;
+
+	if(this != &other)
+	{
+		std::map<std::string, Animation *>::const_iterator i;
+
+		Utility::Logger::getInstance()->log("\tCopying animations\n");
+		for(i = other.animations.begin(); i != other.animations.end(); ++i)
+		{
+			Animation *anim = AnimationManager::getInstance()->getAnimation(i->first);
+			Utility::Logger::getInstance()->log("\t\tCopying %s\n", i->first.c_str());
+			addAnimation(i->first, AnimationManager::getInstance()->getAnimation(i->first));
+		}
+
+		i = animations.begin();
+
+		changeToAnimation(i->first);
+	}
+	return *this;
 }

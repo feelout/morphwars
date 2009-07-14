@@ -7,130 +7,135 @@
 
 namespace Core
 {
-    const int TILE_HEIGHT = 60;//40;
-    const int TILE_WIDTH = 60;//40;
-    const int TILE_TERRAIN_HEIGHT = 30;//21;
-    const int TILE_HEIGHT_OFFSET = 15;
+	class MapObject;
 
-    /**
-     * Types of tile images
-     */
-    enum Direction
-    {
-        // Whole tile is filled with surface 
-        CENTER = 0,
-        //Used for blending when collided (if priority is higher) 
-	NORTHWEST,
-	NORTH,
-	NORTHEAST,
-	EAST,
-	SOUTHEAST,
-	SOUTH,
-	SOUTHWEST,
-	WEST,
-    };
+	const int TILE_HEIGHT = 60;//40;
+	const int TILE_WIDTH = 60;//40;
+	const int TILE_TERRAIN_HEIGHT = 30;//21;
+	const int TILE_HEIGHT_OFFSET = 15;
 
-    /*enum Direction
-    {
-	    CENTER = 0,
-	    SOUTHWEST,
-	    SOUTHEAST,
-	    NORTHWEST,
-	    NORTHEAST,
-    };*/
+	/**
+	 * Types of tile images
+	 */
+	enum Direction
+	{
+		// Whole tile is filled with surface 
+		CENTER = 0,
+		//Used for blending when collided (if priority is higher) 
+		NORTHWEST,
+		NORTH,
+		NORTHEAST,
+		EAST,
+		SOUTHEAST,
+		SOUTH,
+		SOUTHWEST,
+		WEST,
+	};
 
-    // Move to unit?
-    /**
-     * Unit movement types
-     */
-    enum MovementType
-    {
-        FEET = 0,
-        WHEEL,
-        TRACK,
-        LOWAIR,
-        HIGHAIR,
-    };
+	/*enum Direction
+	  {
+	  CENTER = 0,
+	  SOUTHWEST,
+	  SOUTHEAST,
+	  NORTHWEST,
+	  NORTHEAST,
+	  };*/
 
-    const int TILE_IMAGES_NUM = 9;
-    const int MOVEMENT_TYPES_NUM = 5;
+	// Move to unit?
+	/**
+	 * Unit movement types
+	 */
+	enum MovementType
+	{
+		FEET = 0,
+		WHEEL,
+		TRACK,
+		LOWAIR,
+		HIGHAIR,
+	};
 
-    struct MovementCosts
-    {
-        int costs[MOVEMENT_TYPES_NUM];
-    };
+	const int TILE_IMAGES_NUM = 9;
+	const int MOVEMENT_TYPES_NUM = 5;
 
-    /**
-     * Tile type - type of map cell
-     */
-    class TileType
-    {
-        private:
-            /**
-             * Priority is used to show which tiles should blend onto others.
-             */
-            int priority;
-            /**
-             * Movement costs for moving through tile type;
-             */
-            MovementCosts movementCosts;
+	struct MovementCosts
+	{
+		int costs[MOVEMENT_TYPES_NUM];
+	};
 
-	    /**
-	     * NEW TILE CLASS
-	     */
-	    Graphics::Surface* surfaces[TILE_IMAGES_NUM]; //one for each tile side + center
-        public:
-            /**
-              * Creates tile type
-              * @param surface Surface, from which tile images are extracted
-              * @param y Line occupied by tile on surface
-              * @param movementCosts Array with movement costs
-              */
-            //TileType(SDL_Surface *surface, int y, int priority, MovementCosts movementCosts);
-            TileType(Graphics::Surface *surface, int y, int priority, MovementCosts movementCosts);
-            /**
-             * Destroys images
-             */
-            ~TileType();
+	/**
+	 * Tile type - type of map cell
+	 */
+	class TileType
+	{
+		private:
+			/**
+			 * Priority is used to show which tiles should blend onto others.
+			 */
+			int priority;
+			/**
+			 * Movement costs for moving through tile type;
+			 */
+			MovementCosts movementCosts;
 
-            /**
-             * Returt tile image for given image type
-             */
-	    Graphics::Surface *getTileImage(Direction type) const;
+			/**
+			 * NEW TILE CLASS
+			 */
+			Graphics::Surface* surfaces[TILE_IMAGES_NUM]; //one for each tile side + center
+		public:
+			/**
+			 * Creates tile type
+			 * @param surface Surface, from which tile images are extracted
+			 * @param y Line occupied by tile on surface
+			 * @param movementCosts Array with movement costs
+			 */
+			//TileType(SDL_Surface *surface, int y, int priority, MovementCosts movementCosts);
+			TileType(Graphics::Surface *surface, int y, int priority, MovementCosts movementCosts);
+			/**
+			 * Destroys images
+			 */
+			~TileType();
 
-	    int getPriority() const;
-    };
+			/**
+			 * Returt tile image for given image type
+			 */
+			Graphics::Surface *getTileImage(Direction type) const;
 
-    /**
-     * Tile represens a map cell
-     */
-    class Tile
-    {
-        private:
-            int x,y; //might be not needed
-	    Graphics::Surface *image;
-            TileType *type;
-            //Units and building occupying
-        public:
-            Tile(int x, int y, TileType *type);
+			int getPriority() const;
+	};
 
-            //void setImageType(Direction imgtype);
-            void setImage(Graphics::Surface *image);
+	/**
+	 * Tile represens a map cell
+	 */
+	class Tile
+	{
+		private:
+			int x,y; //might be not needed
+			Graphics::Surface *image;
+			TileType *type;
+			//Units and building occupying
+			std::vector<MapObject*> objects;
+		public:
+			Tile(int x, int y, TileType *type);
 
-            TileType* getType() const;
+			//void setImageType(Direction imgtype);
+			void setImage(Graphics::Surface *image);
 
-	    /**
-	     * Calculates direction from this tile to another
-	     * @param dst Tile to face
-	     * @return Direction
-	     */
-	    Direction getDirection(Tile *dst);
+			TileType* getType() const;
 
-	    int getX() const;
-	    int getY() const;
+			/**
+			 * Calculates direction from this tile to another
+			 * @param dst Tile to face
+			 * @return Direction
+			 */
+			Direction getDirection(Tile *dst);
 
-	    void draw(Graphics::Drawer *target, int x, int y);
-    };
+			void addObject(MapObject *object);
+
+			int getX() const;
+			int getY() const;
+
+			void draw(Graphics::Drawer *target, int x, int y);
+	};
 }
 
 #endif //TILE_H

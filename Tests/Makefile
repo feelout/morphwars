@@ -1,4 +1,4 @@
-Tests: Prereq AnimationTest BlitTest SplitSurfaceTest AnimationManagerTest TilesetTest MapTest
+Tests: Prereq AnimationTest AnimationPackTest BlitTest SplitSurfaceTest AnimationManagerTest TilesetTest MapTest
 	echo "All tests compiled"
 
 Prereq:
@@ -6,6 +6,9 @@ Prereq:
 
 AnimationTest: AnimationTest.o ../Renderer.o ../Animation.o ../Timer.o ../Surface.o  ../Drawer.o ../Logger.o 
 	g++ -o AnimationTest -lSDL -lSDL_image -lSDL_gfx ../*.o AnimationTest.o
+
+AnimationPackTest: AnimationPackTest.o
+	g++ -o AnimationPackTest -lSDL -lSDL_image -lSDL_gfx ../*.o AnimationPackTest.o
 
 MapTest: MapTest.o ../Renderer.o ../Animation.o ../Timer.o ../Surface.o  ../Drawer.o ../Logger.o ../Map.o ../Scenario.o
 	g++ -o MapTest -lSDL -lSDL_image -lSDL_gfx ../*.o MapTest.o
@@ -25,6 +28,9 @@ TilesetTest.o: TilesetTest.cpp
 AnimationTest.o: AnimationTest.cpp
 	g++ -g -c AnimationTest.cpp
 
+AnimationPackTest.o: AnimationPackTest.cpp
+	g++ -g -c AnimationPackTest.cpp
+
 MapTest.o: MapTest.cpp
 	g++ -g -c MapTest.cpp
 
@@ -41,4 +47,4 @@ SplitSurfaceTest.o: SplitSurfaceTest.cpp
 	g++ -g -c SplitSurfaceTest.cpp
 
 clean:
-	rm -rf *.~ *.o AnimationTest BlitTest SplitSurfaceTest AnimationManagerTest TilesetTest MapTest log.txt
+	rm -rf *.~ *.o AnimationTest AnimationPackTest BlitTest SplitSurfaceTest AnimationManagerTest TilesetTest MapTest log.txt

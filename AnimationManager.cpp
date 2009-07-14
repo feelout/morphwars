@@ -80,6 +80,7 @@ void AnimationManager::addAnimation(std::string name, Animation *animation)
 		return;
 	}
 	animations[name] = animation;
+	registeredAnimations.push_back(animation);
 }
 
 void AnimationManager::updateAnimations()

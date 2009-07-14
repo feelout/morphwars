@@ -33,10 +33,10 @@ bool Scenario::loadFromFile(std::string path)
 	TiXmlElement *root = xmldoc.FirstChildElement("scenario");
 
 	/** Map and tileset **/
-	Utility::Logger::getInstance()->log("Loading map\n");
+	Utility::Logger::getInstance()->log("\nLoading map\n");
 	map = new Map(root->FirstChildElement("map"));
 
-	Utility::Logger::getInstance()->log("Loading object types\n");
+	Utility::Logger::getInstance()->log("\nLoading object types\n");
 	/** Unit and Building types **/
 	TiXmlNode *parent, *child=NULL;
 	
@@ -54,7 +54,7 @@ bool Scenario::loadFromFile(std::string path)
 	}*/
 
 	/** Players **/
-	Utility::Logger::getInstance()->log("Loading players\n");
+	Utility::Logger::getInstance()->log("\nLoading players\n");
 
 	TiXmlNode *section=NULL, *current=NULL;
 	Player *currentPlayer;
@@ -92,14 +92,23 @@ bool Scenario::loadFromFile(std::string path)
 
 		section = child->FirstChildElement("units");
 
+		Utility::Logger::getInstance()->log("Adding units to player\n");
 		while(current = section->IterateChildren("unit", current))
 		{
 			int x,y;
 			current->ToElement()->QueryIntAttribute("x", &x);
 			current->ToElement()->QueryIntAttribute("y", &y);
-			currentUnit = new Unit(UnitTypeManager::getInstance()->getType(current->ToElement()->Attribute("type")),
+
+			std::string type = current->ToElement()->Attribute("type");
+
+			Utility::Logger::getInstance()->log("Type : %s\n", type.c_str());
+
+			currentUnit = new Unit(UnitTypeManager::getInstance()->getType(type),
 						map->getTile(x,y), currentPlayer);
+			currentPlayer->addUnit(currentUnit);
 		}
+
+		Utility::Logger::getInstance()->log("Loading buildings\n");
 
 		section = child->FirstChildElement("buildings");
 
@@ -114,6 +123,9 @@ bool Scenario::loadFromFile(std::string path)
 	}
 
 	//TODO: setup scripts
+	
+	Utility::Logger::getInstance()->log("Scenario loaded\n");
+
 	return true;
 }
 

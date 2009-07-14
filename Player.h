@@ -2,7 +2,7 @@
 #define PLAYER_H
 
 #include <string>
-#include <list>
+#include <vector>
 #include "assist.h"
 
 namespace Core
@@ -22,8 +22,8 @@ namespace Core
 	{
 		private:
 			std::string name;
-			std::list<Unit*> units;
-			std::list<Building*> buildings;
+			std::vector<Unit*> units;
+			std::vector<Building*> buildings;
 
 			int energy;
 

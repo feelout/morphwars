@@ -47,6 +47,8 @@ namespace Core
 			// Add support for setting color of unit from player`s color.
 			// Or just change color of selection frame
 			Unit(UnitType *type, Tile *tile, Player *owner);
+
+			virtual void draw(Graphics::Drawer *target, int x, int y);
 	};
 }
 
