@@ -79,41 +79,14 @@ void Map::calculateSurfaces()
 			/** Check neighbours **/
 			std::vector<Tile*> neighbours;
 
-			//printf("\nChecking neighbours of (%i,%i)\n", x, y);
+			std::vector< std::pair<int, int> > neighbourPairs = currentTile->getNeighbours();
+			std::vector< std::pair<int, int> >::iterator nb_iter;
 
-			/*for(int dx=-1; dx < 2; ++dx)
+			for(nb_iter = neighbourPairs.begin(); nb_iter != neighbourPairs.end(); ++nb_iter)
 			{
-				for(int dy=-1; dy < 2; ++dy)
+				if(getTile(nb_iter->first, nb_iter->second))
 				{
-					//printf("Checking (%i,%i)\n", x+dx, y+dy);
-					if(getTile(x+dx,y+dy))
-					{
-						//TODO: getTile should return NULL if coordinates are bad
-						//printf("Adding (%i,%i) to neighbour list\n", x+dx, y+dy);
-						neighbours.push_back(getTile(x+dx, y+dy));
-					}
-				}
-			}*/
-
-			//DEBUG
-
-			int additionalDx = (y % 2 == 0) ? -1 : 0;
-
-			for(int dx=additionalDx; dx < 2+additionalDx; ++dx)
-			{
-				for(int dy=-1; dy < 2; dy+=2)
-				{
-					//printf(" * Checking (%i, %i)", x+dx, y+dy);
-
-					if(getTile(x+dx, y+dy))
-					{
-						//printf("\tpassed\n");
-						neighbours.push_back(getTile(x+dx, y+dy));
-					}
-					else
-					{
-						//printf("\tfailed\n");
-					}
+					neighbours.push_back(getTile(nb_iter->first, nb_iter->second));
 				}
 			}
 
@@ -168,7 +141,17 @@ Tile* Map::getTile(int x, int y)
 	return tiles[x+y*width];
 }
 
-void Map::draw(Graphics::Drawer *target, int x, int y)
+int Map::getWidth() const
+{
+	return width;
+}
+
+int Map::getHeight() const
+{
+	return height;
+}
+
+void Map::draw(Graphics::Drawer *target, int x, int y, FieldOfView *fov)
 {
 	int dx=0,dy=0;
 	
@@ -183,7 +166,7 @@ void Map::draw(Graphics::Drawer *target, int x, int y)
 		for(int tilex=0; tilex < width; ++tilex)
 		{
 			getTile(tilex, tiley)->draw(target, x+dx+(tilex*TILE_WIDTH),
-					y+(tiley*(TILE_HEIGHT_OFFSET)-dy));
+					y+(tiley*(TILE_HEIGHT_OFFSET)-dy), fov->isTileVisible(tilex, tiley));
 		}
 	}
 }

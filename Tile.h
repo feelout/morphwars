@@ -2,6 +2,7 @@
 #define TILE_H
 
 #include <SDL/SDL.h>
+#include <utility>
 #include "Surface.h"
 #include "Drawer.h"
 
@@ -135,7 +136,9 @@ namespace Core
 			int getX() const;
 			int getY() const;
 
-			void draw(Graphics::Drawer *target, int x, int y);
+			std::vector< std::pair<int,int> > getNeighbours() const;
+
+			void draw(Graphics::Drawer *target, int x, int y, bool visible);
 	};
 }
 

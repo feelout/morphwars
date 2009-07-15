@@ -4,6 +4,8 @@
 
 using namespace Core;
 
+const float SHADOW_FACTOR=0.5;
+
 TileType::TileType(Graphics::Surface *src, int y, int priority, MovementCosts movementCosts)
 	: priority(priority), movementCosts(movementCosts)
 {
@@ -62,6 +64,7 @@ Tile::Tile(int x, int y, TileType *type)
 void Tile::setImage(Graphics::Surface *image)
 {
 	this->image = image;
+	this->shadowedImage = Graphics::Surface::createShadowedSurface(image, SHADOW_FACTOR);
 }
 
 TileType* Tile::getType() const
@@ -159,13 +162,36 @@ int Tile::getY() const
 	return y;
 }
 
-void Tile::draw(Graphics::Drawer *target, int x, int y)
+std::vector< std::pair<int, int> > Tile::getNeighbours() const
 {
-	//printf("Drawing Tile (%i,%i) on %i,%i\n", this->x, this->y, x, y);
-	image->blit(target->getTarget(), x, y);
-	for(std::vector<MapObject*>::iterator i = objects.begin(); i != objects.end(); ++i)
+	std::vector< std::pair<int, int> > result;
+
+	int additionalDx = (y % 2 == 0) ? -1 : 0;
+
+	for(int dx=additionalDx; dx < 2+additionalDx; ++dx)
 	{
-		(*i)->draw(target, x, y);
+		for(int dy=-1; dy < 2; dy+=2)
+		{
+			result.push_back(std::make_pair(x+dx, y+dy));
+		}
+	}
+
+	return result;
+}
+
+void Tile::draw(Graphics::Drawer *target, int x, int y, bool visible)
+{
+	if(visible)
+	{
+		image->blit(target->getTarget(), x, y);
+		for(std::vector<MapObject*>::iterator i = objects.begin(); i != objects.end(); ++i)
+		{
+			(*i)->draw(target, x, y);
+		}
+	}
+	else
+	{
+		shadowedImage->blit(target->getTarget(), x, y);
 	}
 	// Drawing grid
 	RGBColor gridcolor(255, 255, 255);
@@ -176,5 +202,4 @@ void Tile::draw(Graphics::Drawer *target, int x, int y)
 	target->drawLine(x + TILE_WIDTH, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET,
 			x + TILE_WIDTH / 2, y + TILE_HEIGHT, gridcolor);
 	target->drawLine(x + TILE_WIDTH / 2, y +TILE_HEIGHT, x, y +TILE_HEIGHT - TILE_HEIGHT_OFFSET, gridcolor);
-	//target->drawRect(Rect(x+1, y+1, TILE_WIDTH-1, TILE_HEIGHT-1), RGBColor(255, 0, 0));
 }

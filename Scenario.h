@@ -17,6 +17,7 @@ namespace Core
 
 			std::list<Player*> players;
 			Map *map;
+			Player *currentPlayer;
 		public:
 			Scenario(std::string path);
 			~Scenario();

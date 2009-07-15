@@ -5,6 +5,7 @@
 #include "Tile.h"
 #include "TileSet.h"
 #include "Drawer.h"
+#include "Player.h"
 #include "tinyxml.h"
 
 namespace Core
@@ -29,7 +30,10 @@ namespace Core
 
             Tile* getTile(int x, int y);
 
-	    void draw(Graphics::Drawer *target, int x, int y);
+	    int getWidth() const;
+	    int getHeight() const;
+
+	    void draw(Graphics::Drawer *target, int x, int y, FieldOfView *fov);
     };
 }
 

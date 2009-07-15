@@ -1,6 +1,7 @@
 #include <algorithm>
 #include "Player.h"
 #include "Logger.h"
+#include "Tile.h"
 #include "Unit.h"
 
 using namespace Core;
@@ -21,9 +22,65 @@ bool BackwardCompareUnits(Unit *u1, Unit *u2)
 	return true;
 }
 
-Player::Player(std::string name, Fraction fraction, RGBColor color)
+FieldOfView::FieldOfView(int w, int h)
+	: w(w), h(h)
+{
+	tiles = new bool[w*h];
+
+	for(int i=0; i < w*h; ++i)
+	{
+		tiles[i] = false;
+	}
+}
+
+bool FieldOfView::isTileVisible(int x, int y)
+{
+	return tiles[x+y*w];
+}
+
+void FieldOfView::setTileVisible(int x, int y, bool visible)
+{
+	if((x < 0) || (x >= w) || (y < 0) || (y >= h)) return;
+
+	tiles[x+y*w] = visible;
+}
+
+void Player::updateFOV()
+{
+	//TODO: find the way to combine vectors
+	for(std::vector<Unit*>::iterator i = units.begin(); i != units.end(); ++i)
+	{
+		std::vector< std::pair<int, int> > neighbours = (*i)->getTile()->getNeighbours();
+		std::vector< std::pair<int, int> >::iterator nb_iter;
+
+		for(nb_iter = neighbours.begin(); nb_iter != neighbours.end(); ++nb_iter)
+		{
+			fov->setTileVisible(nb_iter->first, nb_iter->second, true);
+		}
+
+		fov->setTileVisible((*i)->getTile()->getX(), (*i)->getTile()->getY(), true);
+	}
+
+	//FIXME: Uncomment after completing Building class
+	/*for(std::vector<Building*>::iterator i = buildings.begin(); i != buildings.end(); ++i)
+	{
+		x = (*i)->getTile()->getX();
+		y = (*i)->getTile()->getY();
+
+		for(int dy=-1; dy < 2; ++dy)
+		{
+			for(int dx=-1; dx < 2; ++dx)
+			{
+				fov->setTileVisible(x+dx, y+dy, true);
+			}
+		}
+	}*/
+}
+
+Player::Player(std::string name, Fraction fraction, RGBColor color, int mapWidth, int mapHeight)
 	: name(name), fraction(fraction), color(color), energy(0)
 {
+	fov = new FieldOfView(mapWidth, mapHeight);
 	Utility::Logger::getInstance()->log("Player %s created.\n", name.c_str());
 }
 
@@ -33,9 +90,18 @@ void Player::addUnit(Unit *unit)
 
 	//fixme
 	std::sort(units.begin(), units.end(), BackwardCompareUnits); 
+
+	updateFOV();
 }
 
 void Player::addBuilding(Building *building)
 {
 	buildings.push_back(building);
+
+	updateFOV();
+}
+
+FieldOfView* Player::getFieldOfView() const
+{
+	return fov;
 }

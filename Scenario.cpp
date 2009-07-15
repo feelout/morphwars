@@ -88,7 +88,8 @@ bool Scenario::loadFromFile(std::string path)
 		child->ToElement()->QueryIntAttribute("g", &g);
 		child->ToElement()->QueryIntAttribute("b", &b);
 
-		currentPlayer = new Player(child->ToElement()->Attribute("name"),  fraction, RGBColor(r,g,b));
+		currentPlayer = new Player(child->ToElement()->Attribute("name"),  fraction, RGBColor(r,g,b), 
+				map->getWidth(), map->getHeight());
 
 		section = child->FirstChildElement("units");
 
@@ -122,6 +123,8 @@ bool Scenario::loadFromFile(std::string path)
 		players.push_back(currentPlayer);
 	}
 
+	this->currentPlayer = *(players.begin());
+
 	//TODO: setup scripts
 	
 	Utility::Logger::getInstance()->log("Scenario loaded\n");
@@ -132,5 +135,5 @@ bool Scenario::loadFromFile(std::string path)
 void Scenario::draw(Graphics::Drawer *target, int x, int y)
 {
 	//FIXME: Add units nad other stuff..
-	map->draw(target, x, y);
+	map->draw(target, x, y, currentPlayer->getFieldOfView());
 }

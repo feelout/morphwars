@@ -1,4 +1,4 @@
-#ifndef PLAYER_H
+#ifndef PLAYER_H 
 #define PLAYER_H
 
 #include <string>
@@ -10,7 +10,6 @@ namespace Core
 	class PlayerController; //subclass for mouse+keyboard, ai, net
 	class Unit;
 	class Building;
-	class Tile;
 
 	enum Fraction
 	{
@@ -19,13 +18,16 @@ namespace Core
 		NEUTRAL,
 	};
 
-	struct FieldOfView
+	class FieldOfView
 	{
-		bool **visibility;
+		private:
+			bool *tiles;
+			int w,h;
+		public:
+			FieldOfView(int w, int h);
 
-		FieldOfView(int w, int h);
-
-		bool isTileVisible(Tile *tile);
+			bool isTileVisible(int x, int y);
+			void setTileVisible(int x, int y, bool visible);
 	};
 
 	class Player
@@ -39,11 +41,17 @@ namespace Core
 
 			RGBColor color;
 			Fraction fraction;
+
+			FieldOfView *fov;
+
+			void updateFOV();
 		public:
-			Player(std::string name, Fraction fraction, RGBColor color);
+			Player(std::string name, Fraction fraction, RGBColor color, int mapWidth, int mapHeight);
 
 			void addUnit(Unit *unit);
 			void addBuilding(Building *building);
+
+			FieldOfView* getFieldOfView() const;
 	};
 }
 
