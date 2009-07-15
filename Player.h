@@ -10,12 +10,22 @@ namespace Core
 	class PlayerController; //subclass for mouse+keyboard, ai, net
 	class Unit;
 	class Building;
+	class Tile;
 
 	enum Fraction
 	{
 		LEGACY=0,
 		HAND,
 		NEUTRAL,
+	};
+
+	struct FieldOfView
+	{
+		bool **visibility;
+
+		FieldOfView(int w, int h);
+
+		bool isTileVisible(Tile *tile);
 	};
 
 	class Player

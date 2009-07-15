@@ -32,6 +32,8 @@ namespace Graphics
 			 * @param filename File path
 			 */
 			Surface(std::string filename);
+
+			Surface(const Surface& other);
 			/**
 			 * Frees associated SDL_Surface
 			 */
@@ -66,8 +68,17 @@ namespace Graphics
 			 * @param strip Source surface
 			 * @param frameWidth width of each frame
 			 * @param frameHeight hieght of each frame
+			 * @return Collection of frames
 			 */
 			static std::vector<Surface*> splitSpriteStrip(Surface *strip, int frameWidth, int frameHeight);
+			/**
+			 * Creates darkened version of the surface
+			 * @param src Surface to darken
+			 * @param factor Darkening factor
+			 * @return Darkened copy of src
+			 */
+			// ACHTUNG : Do not darken color key!!!
+			static Surface *createShadowedSurface(Surface *src, float factor);
 	};
 }
 

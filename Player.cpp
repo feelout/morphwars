@@ -31,6 +31,7 @@ void Player::addUnit(Unit *unit)
 {
 	units.push_back(unit);
 
+	//fixme
 	std::sort(units.begin(), units.end(), BackwardCompareUnits); 
 }
 

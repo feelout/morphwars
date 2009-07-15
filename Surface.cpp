@@ -105,3 +105,30 @@ std::vector<Surface*> Surface::splitSpriteStrip(Surface *strip, int frameWidth, 
 
 	return result;
 }
+
+Surface* Surface::createShadowedSurface(Surface *src, float factor)
+{
+	Surface *darkened = new Surface(src->getWidth(), src->getHeight());
+	src->blit(darkened, 0, 0);
+
+	Drawer drawer(darkened);
+	RGBColor color;
+
+	for(int y=0; y < darkened->getHeight(); ++y)
+	{
+		for(int x=0; x < darkened->getWidth(); ++x)
+		{
+			color = drawer.getPixel(x,y);
+			//Check for color key
+			if((color.r == 0xFF) && (color.g == 0) && (color.b == 0xFF)) continue;
+
+			color.r *= factor;
+			color.g *= factor;
+			color.b *= factor;
+
+			drawer.putPixel(x, y, color);
+		}
+	}
+
+	return darkened;
+}

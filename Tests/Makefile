@@ -1,4 +1,4 @@
-Tests: Prereq AnimationTest AnimationPackTest BlitTest SplitSurfaceTest AnimationManagerTest TilesetTest MapTest
+Tests: Prereq AnimationTest AnimationPackTest BlitTest SplitSurfaceTest AnimationManagerTest TilesetTest MapTest ShadowedSurfaceTest
 	echo "All tests compiled"
 
 Prereq:
@@ -18,6 +18,12 @@ BlitTest: BlitTest.o ../Renderer.o ../Timer.o ../Surface.o  ../Drawer.o ../Logge
 
 SplitSurfaceTest: SplitSurfaceTest.o ../Renderer.o ../Timer.o ../Surface.o  ../Drawer.o ../Logger.o
 	g++ -o SplitSurfaceTest -lSDL -lSDL_image -lSDL_gfx ../Renderer.o ../Animation.o ../Timer.o ../Surface.o ../Drawer.o ../Logger.o SplitSurfaceTest.o
+
+ShadowedSurfaceTest: ShadowedSurfaceTest.o ../Renderer.o ../Timer.o ../Surface.o  ../Drawer.o ../Logger.o
+	g++ -o ShadowedSurfaceTest -lSDL -lSDL_image -lSDL_gfx ../Renderer.o ../Animation.o ../Timer.o ../Surface.o ../Drawer.o ../Logger.o ShadowedSurfaceTest.o
+
+ShadowedSurfaceTest.o: ShadowedSurfaceTest.cpp
+	g++ -g -c ShadowedSurfaceTest.cpp
 
 TilesetTest: TilesetTest.o ../Renderer.o ../Timer.o ../Surface.o  ../Drawer.o ../Logger.o ../Tile.o ../TileSet.o
 	g++ -o TilesetTest -lSDL -lSDL_image -lSDL_gfx ../Renderer.o ../Animation.o ../Timer.o ../Surface.o ../Drawer.o ../Logger.o ../Tile.o ../TileSet.o TilesetTest.o
@@ -47,4 +53,4 @@ SplitSurfaceTest.o: SplitSurfaceTest.cpp
 	g++ -g -c SplitSurfaceTest.cpp
 
 clean:
-	rm -rf *.~ *.o AnimationTest AnimationPackTest BlitTest SplitSurfaceTest AnimationManagerTest TilesetTest MapTest log.txt
+	rm -rf *.~ *.o AnimationTest AnimationPackTest BlitTest SplitSurfaceTest AnimationManagerTest TilesetTest MapTest ShadowedSurfaceTest log.txt

@@ -1,4 +1,4 @@
-#include "Drawer.h"
+#include "Drawer.h" 
 #include <SDL/SDL_gfxPrimitives.h>
 
 using namespace Graphics;
@@ -19,6 +19,8 @@ RGBColor Drawer::getPixel(int x, int y)
 	Uint32 pixel = *(Uint32 *)p;
 	RGBColor result;
 	SDL_GetRGB(pixel, target->getSurface()->format, &result.r, &result.g, &result.b);
+
+	return result;
 }
 
 void Drawer::drawLine(int x1, int y1, int x2, int y2, RGBColor color)

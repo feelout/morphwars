@@ -111,6 +111,7 @@ namespace Core
 		private:
 			int x,y; //might be not needed
 			Graphics::Surface *image;
+			Graphics::Surface *shadowedImage;
 			TileType *type;
 			//Units and building occupying
 			std::vector<MapObject*> objects;
