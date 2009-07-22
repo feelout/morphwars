@@ -49,6 +49,11 @@ int TileType::getPriority() const
 	return priority;
 }
 
+int TileType::getMovementCost(MovementType type) const
+{
+	return movementCosts.costs[type];
+}
+
 Tile::Tile(int x, int y, TileType *type)
 	: x(x), y(y), type(type)
 {
@@ -150,6 +155,29 @@ void Tile::addObject(MapObject *object)
 {
 	objects.push_back(object);
 	//TODO: Sort objects, buildings first
+}
+
+void Tile::removeObject(MapObject *object)
+{
+	std::vector<MapObject*>::iterator i;
+
+	for(i = objects.begin(); i != objects.end(); ++i)
+	{
+		if((*i) == object)
+		{
+			objects.erase(i);
+		}
+	}
+}
+
+bool Tile::isEnemy(MapObject *object)
+{
+	if(objects.size() != 0)
+	{
+		return (object->isEnemy(objects[0]));
+	}
+
+	return true;
 }
 
 int Tile::getX() const

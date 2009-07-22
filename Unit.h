@@ -43,12 +43,28 @@ namespace Core
 			int sp;
 			int attack;
 			int defense;
+
+			/** Stupid anti-OOP hack **/
+			int dx, dy; //Drawing deltas
 		public:
 			// Add support for setting color of unit from player`s color.
 			// Or just change color of selection frame
 			Unit(UnitType *type, Tile *tile, Player *owner);
 
 			virtual void draw(Graphics::Drawer *target, int x, int y);
+
+			void setDeltas(int dx, int dy);
+			int getXDelta() const;
+			int getYDelta() const;
+			
+			/**
+			 * Changes unit position unconditionally (unless tile is occypied by enemy
+			 * @param newPosition New position
+			 * @return true on success
+			 */
+			bool changePosition(Tile *newPosition);
+			
+			//void issueOrder(Order *order)
 	};
 }
 

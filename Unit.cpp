@@ -103,7 +103,7 @@ MovementType UnitType::getMovementType() const
 }
 
 Unit::Unit(UnitType *type, Tile *tile, Player *owner)
-	: MapObject(type, tile, owner)
+	: MapObject(type, tile, owner), dx(0), dy(0)
 {
 	hp = type->getMaxHP();
 	mp = type->getMaxMP();
@@ -116,5 +116,19 @@ Unit::Unit(UnitType *type, Tile *tile, Player *owner)
 
 void Unit::draw(Graphics::Drawer *target, int x, int y)
 {
-	type->getGraphics()->getCurrent()->draw(target, x, y);
+	type->getGraphics()->getCurrent()->draw(target, x+dx, y+dy);
+}
+
+bool Unit::changePosition(Tile *newPosition)
+{
+	if(newPosition == tile)
+		return false;
+	
+	if(newPosition->isEnemy(this))
+		return false;
+
+	tile->removeObject(this);
+	newPosition->addObject(this);
+
+	return true;
 }

@@ -77,10 +77,11 @@ void Player::updateFOV()
 	}*/
 }
 
-Player::Player(std::string name, Fraction fraction, RGBColor color, int mapWidth, int mapHeight)
-	: name(name), fraction(fraction), color(color), energy(0)
+Player::Player(std::string name, Fraction fraction, Force *force, RGBColor color, int mapWidth, int mapHeight)
+	: name(name), fraction(fraction), force(force), color(color), energy(0)
 {
 	fov = new FieldOfView(mapWidth, mapHeight);
+	force->addPlayer(this);
 	Utility::Logger::getInstance()->log("Player %s created.\n", name.c_str());
 }
 
@@ -104,4 +105,9 @@ void Player::addBuilding(Building *building)
 FieldOfView* Player::getFieldOfView() const
 {
 	return fov;
+}
+
+Force* Player::getForce() const
+{
+	return force;
 }

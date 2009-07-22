@@ -102,6 +102,7 @@ namespace Core
 			Graphics::Surface *getTileImage(Direction type) const;
 
 			int getPriority() const;
+			int getMovementCost(MovementType type) const;
 	};
 
 	/**
@@ -132,6 +133,9 @@ namespace Core
 			Direction getDirection(Tile *dst);
 
 			void addObject(MapObject *object);
+			void removeObject(MapObject *object);
+
+			bool isEnemy(MapObject *object);
 
 			int getX() const;
 			int getY() const;

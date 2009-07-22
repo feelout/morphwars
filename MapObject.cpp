@@ -1,6 +1,7 @@
 #include "MapObject.h"
 #include "AnimationManager.h"
 #include "Logger.h"
+#include "Player.h"
 
 using namespace Core;
 
@@ -40,4 +41,19 @@ void MapObject::draw(Graphics::Drawer *target, int x, int y)
 Tile* MapObject::getTile() const
 {
 	return tile;
+}
+
+bool MapObject::isEnemy(MapObject *other) const
+{
+	return (owner->getForce() != other->getOwner()->getForce());
+}
+
+Player* MapObject::getOwner() const
+{
+	return owner;
+}
+
+MapObjectType* MapObject::getType() const
+{
+	return type;
 }

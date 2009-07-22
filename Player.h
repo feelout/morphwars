@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "assist.h"
+#include "Force.h"
 
 namespace Core
 {
@@ -41,17 +42,20 @@ namespace Core
 
 			RGBColor color;
 			Fraction fraction;
+			Force *force;
 
 			FieldOfView *fov;
 
 			void updateFOV();
 		public:
-			Player(std::string name, Fraction fraction, RGBColor color, int mapWidth, int mapHeight);
+			Player(std::string name, Fraction fraction, Force *force, RGBColor color, 
+					int mapWidth, int mapHeight);
 
 			void addUnit(Unit *unit);
 			void addBuilding(Building *building);
 
 			FieldOfView* getFieldOfView() const;
+			Force* getForce() const;
 	};
 }
 

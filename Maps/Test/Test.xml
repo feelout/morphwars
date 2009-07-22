@@ -41,7 +41,7 @@
 	</types>
 
 	<players>
-		<player name="Decluh" fraction="Hand" r="255" g="0" b="0" controller="local">
+		<player name="Decluh" fraction="Hand" force="0" r="255" g="0" b="0" controller="local">
 			<units>
 				<unit type="Boriska" x="1" y="1" />
 			</units>
@@ -49,7 +49,7 @@
 				<building type="Watchtower" id="RED_WT" x="3" y="1" />
 			</buildings>
 		</player>
-		<player name="Margo" fraction="Hand" r="0" g="0" b="255" controller="local">
+		<player name="Margo" fraction="Hand" force="1" r="0" g="0" b="255" controller="local">
 			<units>
 				<!-- <unit type="Lord" x="3" y="3" /> -->
 			</units>

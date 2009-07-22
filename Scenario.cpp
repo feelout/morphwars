@@ -64,8 +64,12 @@ bool Scenario::loadFromFile(std::string path)
 	parent = root->FirstChildElement("players");
 	child = NULL;
 
+	std::vector<Force*> forces;
+
 	while(child = parent->IterateChildren("player", child))
 	{
+		Utility::Logger::getInstance()->log("New player\n");
+
 		std::string s_fraction = child->ToElement()->Attribute("fraction");
 		Fraction fraction;
 
@@ -88,7 +92,30 @@ bool Scenario::loadFromFile(std::string path)
 		child->ToElement()->QueryIntAttribute("g", &g);
 		child->ToElement()->QueryIntAttribute("b", &b);
 
-		currentPlayer = new Player(child->ToElement()->Attribute("name"),  fraction, RGBColor(r,g,b), 
+		int forcenum = 0;
+		child->ToElement()->QueryIntAttribute("force", &forcenum);
+
+		Utility::Logger::getInstance()->log("Force number = %i\n", forcenum);
+
+		Force *force = NULL;
+
+		for(std::vector<Force*>::iterator i = forces.begin(); i != forces.end(); ++i)
+		{
+			if((*i)->getNumber() == forcenum)
+			{
+				force = *i;
+				break;
+			}
+		}
+
+		if(!force)
+		{
+			Utility::Logger::getInstance()->log("Creating force %i\n", forcenum);
+			force = new Force(forcenum);
+			forces.push_back(force);
+		}
+
+		currentPlayer = new Player(child->ToElement()->Attribute("name"),  fraction, force, RGBColor(r,g,b), 
 				map->getWidth(), map->getHeight());
 
 		section = child->FirstChildElement("units");

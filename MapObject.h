@@ -78,6 +78,11 @@ namespace Core
 			virtual void draw(Graphics::Drawer *target, int x, int y);
 
 			Tile *getTile() const;
+			Player *getOwner() const;
+			MapObjectType *getType() const;
+
+			bool isEnemy(MapObject *other) const;
+
 	};
 }
 
