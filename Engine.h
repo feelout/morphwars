@@ -4,6 +4,7 @@
 #include <SDL/SDL.h>
 #include "EventDispatcher.h"
 #include "FPSEqualizer.h"
+#include "Scenario.h"
 
 /**
  * Engine coordinates all subsystems and game cycle
@@ -27,6 +28,8 @@ class Engine
 		EventDispatcher *dispatcher;
 
 		Utility::FPSEqualizer *equalizer;
+
+		Core::Scenario *currentScenario;
 
 		/**
 		 * Constructs window and initializes subsystems
@@ -65,6 +68,9 @@ class Engine
 		 * Stops engine
 		 */
 		void stop();
+
+		//DEBUG
+		bool loadScenario(std::string path);
 };
 
 #endif // ENGINE_H

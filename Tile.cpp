@@ -1,5 +1,6 @@
 #include "Tile.h"
 #include "MapObject.h"
+#include "Logger.h"
 #include "assist.h"
 
 using namespace Core;
@@ -28,8 +29,7 @@ TileType::TileType(Graphics::Surface *src, int y, int priority, MovementCosts mo
 		surfaces[i] = v_surfaces[i];
 	}
 
-	delete mainSurf;
-}
+	delete mainSurf; }
 
 TileType::~TileType()
 {
@@ -55,7 +55,7 @@ int TileType::getMovementCost(MovementType type) const
 }
 
 Tile::Tile(int x, int y, TileType *type)
-	: x(x), y(y), type(type)
+	: x(x), y(y), type(type), topobject(NULL)
 {
 	//printf("Tile (%i,%i) created\n", x, y);
 	image = type->getTileImage(CENTER);
@@ -77,53 +77,49 @@ TileType* Tile::getType() const
 	return type;
 }
 
-Direction Tile::getDirection(Tile *dst)
+Direction Tile::getDirection(Tile *dst) const
 {
-	//printf("Calculating direction from (%i,%i) to (%i,%i)\n", x, y, dst->x, dst->y);
-	//int dx = this->x - dst->x;
-	//int dy = this->y - dst->y;
-	int dx = dst->x - this->x;
-	int dy = dst->y - this->y;
+	return Tile::getDirection(std::make_pair(x,y), std::make_pair(dst->x, dst->y));
+}
 
-	//printf("dx = %i, dy = %i\n", dx, dy);
+Direction Tile::getDirection(std::pair<int, int> src, std::pair<int, int> dst)
+{
+	int dx = dst.first - src.first;
+	int dy = dst.second - src.second;
+
+	bool src_shifted = (src.second % 2) == 1;
+	bool dst_shifted = (dst.second % 2) == 1;
 
 	if(dy == 0)
 	{
 		if(dx > 0) return EAST;
 		else if(dx < 0) return WEST;
 		else return CENTER;
-		//return CENTER;
 	}
 
-	if((y % 2) == (dst->getY() % 2))
+	if(src_shifted == dst_shifted)
 	{
-		//printf("Tiles are not shifted\n");
 		if(dy > 0)
 		{
 			if(dx > 0) return SOUTHEAST;
 			else if(dx < 0) return SOUTHWEST;
 			else return SOUTH;
-			//else return SOUTHWEST;
 		}
 		else
 		{
 			if(dx > 0) return NORTHEAST;
 			else if(dx < 0) return NORTHWEST;
 			else return NORTH;
-			//else return NORTHWEST;
 		}
 	}
 	else
 	{
-		//printf("Tiles are shifted\n");
 		if(dy > 0)
 		{
-			//if(dx > 0) return SOUTHEAST;
-			//else return SOUTHWEST;
-			if(y % 2 == 0)
+			if(!src_shifted)
 			{
 				if(dx < 0) return SOUTHWEST;
-				else return SOUTHWEST;
+				else return SOUTHEAST;
 			}
 			else
 			{
@@ -131,11 +127,9 @@ Direction Tile::getDirection(Tile *dst)
 				else return SOUTHWEST;
 			}
 		}
-		else //THE MAIN BUG
+		else
 		{
-			//if(dx > 0) return NORTHEAST;
-			//else return NORTHWEST;
-			if(y % 2 == 0)
+			if(!src_shifted)
 			{
 				if(dx < 0) return NORTHWEST;
 				else return NORTHEAST;
@@ -145,16 +139,46 @@ Direction Tile::getDirection(Tile *dst)
 				if(dx > 0) return NORTHEAST;
 				else return NORTHWEST;
 			}
-			//if(dx < 0) return NORTHWEST;
-			//else return NORTHEAST;
 		}
 	}
 }
 
-void Tile::addObject(MapObject *object)
+int Tile::getDistance(Tile *dst) const //FIXME, check from (1,1) to (2,3)
 {
-	objects.push_back(object);
-	//TODO: Sort objects, buildings first
+	if(this == dst)
+		return 0;
+
+	int distance = 0;
+	std::pair<int, int> dest = std::make_pair(dst->getX(), dst->getY());
+	std::pair<int, int> current = std::make_pair(x, y);
+	Direction facing;
+
+	while(current != dest)
+	{
+		facing = Tile::getDirection(current, dest);
+		current = Tile::translateCoordinates(current.first, current.second, facing);
+		++distance;
+	}
+
+	return distance;
+}
+
+bool Tile::addObject(MapObject *object)
+{
+	if( (objects.empty()) || (!isEnemy(object)) )
+	{
+		objects.push_back(object);
+		//TODO: Sort objects, buildings first
+		topobject = object;
+
+		Utility::Logger::getInstance()->log("Total objects on tile (%i,%i): %i\n", x, y, objects.size());
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void Tile::removeObject(MapObject *object)
@@ -166,18 +190,24 @@ void Tile::removeObject(MapObject *object)
 		if((*i) == object)
 		{
 			objects.erase(i);
+			return;
 		}
 	}
 }
 
-bool Tile::isEnemy(MapObject *object)
+MapObject* Tile::getTopObject() const
+{
+	return topobject;
+}
+
+bool Tile::isEnemy(MapObject *object) const
 {
 	if(objects.size() != 0)
 	{
 		return (object->isEnemy(objects[0]));
 	}
 
-	return true;
+	return false;
 }
 
 int Tile::getX() const
@@ -230,4 +260,43 @@ void Tile::draw(Graphics::Drawer *target, int x, int y, bool visible)
 	target->drawLine(x + TILE_WIDTH, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET,
 			x + TILE_WIDTH / 2, y + TILE_HEIGHT, gridcolor);
 	target->drawLine(x + TILE_WIDTH / 2, y +TILE_HEIGHT, x, y +TILE_HEIGHT - TILE_HEIGHT_OFFSET, gridcolor);
+}
+
+std::pair<int, int> Tile::translateCoordinates(int x, int y, Direction direction)
+{
+	bool shifted = (y % 2) == 1;
+
+	switch(direction)
+	{
+		case CENTER:
+			return std::make_pair(x, y); 
+		case NORTH:
+			return std::make_pair(x, y-2);
+		case EAST:
+			return std::make_pair(x+1, y);
+		case SOUTH:
+			return std::make_pair(x, y+2);
+		case WEST:
+			return std::make_pair(x-1, y);
+		case NORTHWEST:
+			if(shifted)
+				return std::make_pair(x, y-1);
+			else
+				return std::make_pair(x-1, y-1);
+		case NORTHEAST:
+			if(shifted)
+				return std::make_pair(x+1, y-1);
+			else
+				return std::make_pair(x, y-1);
+		case SOUTHEAST:
+			if(shifted)
+				return std::make_pair(x+1, y+1);
+			else
+				return std::make_pair(x, y+1);
+		case SOUTHWEST:
+			if(shifted)
+				return std::make_pair(x, y+1);
+			else
+				return std::make_pair(x-1, y+1);
+	}
 }

@@ -57,6 +57,13 @@ struct Rect
  */
 struct RGBColor
 {
+	static RGBColor RED;
+	static RGBColor YELLOW;
+	static RGBColor BLUE;
+	static RGBColor GREEN;
+	static RGBColor WHITE;
+	static RGBColor BLACK;
+
 	unsigned char r,g,b;
 
 	RGBColor(int r, int g, int b)
@@ -69,6 +76,14 @@ struct RGBColor
 	RGBColor()
 	{
 		RGBColor(0, 0, 0);
+	}
+
+	bool operator==(RGBColor& other)
+	{
+		if(&other == this)
+			return true;
+
+		return ( (r == other.r) && (g == other.g) && (b == other.b) );
 	}
 };
 #endif //ASSIST_H

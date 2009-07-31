@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include "Logger.h"
 #include "Renderer.h"
+#include "OrderManager.h"
 
 Engine *Engine::instance = NULL;
 
@@ -29,7 +30,7 @@ Engine* Engine::getInstance()
 
 // Instance methods
 Engine::Engine(int w, int h, bool fs)
-	: quit(false)
+	: quit(false), currentScenario(NULL)
 {
 	Utility::Logger::getInstance()->log("Engine created: %ix%i\n");
 
@@ -49,6 +50,7 @@ Engine::Engine(int w, int h, bool fs)
 void Engine::runGameCycle()
 {
 	SDL_Event event;
+	Drawer drawer(Renderer::getInstance()->getBuffer());
 
 	while(!quit)
 	{
@@ -60,6 +62,11 @@ void Engine::runGameCycle()
 		}
 		// Do all game logic and drawing here
 
+		if(currentScenario)
+		{
+			Core::OrderManager::getInstance()->processOrders();
+			currentScenario->draw(&drawer, 0, 0);
+		}
 		Renderer::getInstance()->flipBuffers();
 		equalizer->frameEnded();
 	}
@@ -76,7 +83,24 @@ void Engine::stop()
 Engine::~Engine()
 {
 	delete dispatcher;
+	if(currentScenario)
+	{
+		delete currentScenario;
+	}
+
 	Utility::Logger::getInstance()->close();
 }
 
+bool Engine::loadScenario(std::string path)
+{
+	// FIXME: shutdown current scenario
+	if(currentScenario)
+	{
+		Utility::Logger::getInstance()->log("Already playing scenario.");
+		return false;
+	}
 
+	currentScenario = new Core::Scenario(path);
+	dispatcher->attachListener(currentScenario);
+	return true;
+}

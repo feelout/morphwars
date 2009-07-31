@@ -20,6 +20,9 @@ namespace Core
 			bool done;
 		public:
 			Order(Unit *unit);
+			//DEBUG
+			~Order();
+			//ENDDEBUG
 
 			virtual void process()=0;
 			virtual void stop();

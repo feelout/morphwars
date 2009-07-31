@@ -1,6 +1,7 @@
 #include "Scenario.h"
 #include "Logger.h"
 #include "UnitTypeManager.h"
+#include "Order.h"
 
 using namespace Core;
 
@@ -68,7 +69,7 @@ bool Scenario::loadFromFile(std::string path)
 
 	while(child = parent->IterateChildren("player", child))
 	{
-		Utility::Logger::getInstance()->log("New player\n");
+		Utility::Logger::getInstance()->log("\nNew player\n");
 
 		std::string s_fraction = child->ToElement()->Attribute("fraction");
 		Fraction fraction;
@@ -147,20 +148,84 @@ bool Scenario::loadFromFile(std::string path)
 			//TODO: Create building
 		}
 
+		currentPlayer->setDone(false);
 		players.push_back(currentPlayer);
 	}
 
 	this->currentPlayer = *(players.begin());
+	this->currentPlayer->setDone(false);
 
 	//TODO: setup scripts
 	
-	Utility::Logger::getInstance()->log("Scenario loaded\n");
+	Utility::Logger::getInstance()->log("Scenario loaded\n\n");
 
 	return true;
+}
+
+void Scenario::switchTurn(Player *player)
+{
+	currentPlayer->setDone(false);
+	currentPlayer = player;
+	currentPlayer->setDone(true);
 }
 
 void Scenario::draw(Graphics::Drawer *target, int x, int y)
 {
 	//FIXME: Add units nad other stuff..
 	map->draw(target, x, y, currentPlayer->getFieldOfView());
+}
+
+void Scenario::mouseMoved(int x, int y)
+{
+}
+
+void Scenario::mouseLMBClicked(int x, int y)
+{
+	Tile *clickedTile = map->getTileByMouseCoords(x, y, 0, 0);
+
+	if(!clickedTile)
+		return;
+	
+	MapObject *topobject = NULL;
+	topobject = clickedTile->getTopObject();
+
+	if(topobject)
+	{
+		if(topobject->getOwner() == currentPlayer)
+		{
+			currentPlayer->selectObject(topobject);
+		}
+	}
+}
+
+void Scenario::mouseRMBClicked(int x, int y)
+{
+	Utility::Logger::getInstance()->log("Mouse RMB clicked on (%i,%i)\n", x, y);
+	Tile *clickedTile = map->getTileByMouseCoords(x, y, 0, 0);
+
+	if(!clickedTile)
+		return;
+
+	MapObject *selected = currentPlayer->getSelectedObject();
+
+	if(!selected)
+	{
+		Utility::Logger::getInstance()->log("Nothing clicked\n");
+	}
+
+	Utility::Logger::getInstance()->log("Selected type: %s\n", selected->getType()->getType().c_str());
+
+	if(selected->getType()->getType() == "Unit") //ugh, hate it
+	{
+		/*Utility::Logger::getInstance()->log("Distance from (%i,%i) to (%i,%i): %i\n",
+			selected->getTile()->getX(), selected->getTile()->getY(),
+			clickedTile->getX(), clickedTile->getY(), selected->getTile()->getDistance(clickedTile));*/
+		Utility::Logger::getInstance()->log("Moving unit\n");
+		Unit *target = static_cast<Unit*>(selected);
+		MovementOrder *order = new MovementOrder(target, clickedTile, map);
+	}
+}
+
+void Scenario::keyPressed(int key)
+{
 }

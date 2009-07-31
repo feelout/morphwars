@@ -1,6 +1,7 @@
 #include <algorithm>
 #include "Map.h"
 #include "Logger.h"
+#include "Surface.h"
 
 using namespace Core;
 
@@ -169,4 +170,60 @@ void Map::draw(Graphics::Drawer *target, int x, int y, FieldOfView *fov)
 					y+(tiley*(TILE_HEIGHT_OFFSET)-dy), fov->isTileVisible(tilex, tiley));
 		}
 	}
+}
+
+Tile* Map::getTileByMouseCoords(int mx, int my, int dx, int dy)
+{
+	Graphics::Surface coordFinder("Gfx/CoordFinder.png");
+
+	int rectX = (mx-dx) / coordFinder.getWidth();
+	int rectY = (my-dy) / coordFinder.getHeight() * 2;
+
+	/*if(rectY % 2 == 1)
+	{
+		++rectX;
+	}*/
+	int cf_x = (mx-dx) % coordFinder.getWidth();
+	int cf_y = (my-dy) % coordFinder.getHeight();
+
+	//Utility::Logger::getInstance()->log("%i, %i, %i, %i\n", rectX, rectY, cf_x, cf_y);
+
+	int tilex, tiley;
+
+	Graphics::Drawer peeker(&coordFinder);
+	RGBColor color = peeker.getPixel(cf_x, cf_y);
+
+	if(color == RGBColor::WHITE)
+	{
+		tilex = rectX;
+		tiley = rectY;
+	}
+	else if(color == RGBColor::RED)
+	{
+		tilex = rectX-1;
+		tiley = rectY-1;
+	}
+	else if(color == RGBColor::YELLOW)
+	{
+		tilex = rectX;
+		tiley = rectY-1;
+	}
+	else if(color == RGBColor::GREEN)
+	{
+		tilex = rectX-1;
+		tiley = rectY+1;
+	}
+	else if(color == RGBColor::BLUE)
+	{
+		tilex = rectX;
+		tiley = rectY+1;
+	}
+
+	if( (tilex > width) || (tilex < 0) || (tiley > height) || (tiley < 0) )
+	{
+		Utility::Logger::getInstance()->log("Map::getTileByMouseCoords : clicked out of bounds");
+		return NULL;
+	}
+
+	return getTile(tilex, tiley);
 }

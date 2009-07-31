@@ -18,6 +18,7 @@ namespace Core
 		protected:
 			Graphics::AnimationPack graphics;
 			bool enabled;
+			std::string type;
 
 			MapObjectType();
 		public:
@@ -25,7 +26,7 @@ namespace Core
 			 * Creates an object type from file
 			 * @param name Object type name
 			 */
-			MapObjectType(std::string name);
+			MapObjectType(std::string name, std::string type);
 			virtual ~MapObjectType()=0;
 
 			/**
@@ -42,6 +43,9 @@ namespace Core
 
 			bool isEnabled() const;
 			void setEnabled(bool enabled);
+
+			// Big hole in the architecture
+			std::string getType() const;
 	};
 	/**
 	 * MapObject is drawable object on the map
@@ -75,7 +79,7 @@ namespace Core
 			 * Draws object
 			 * @param target
 			 */
-			virtual void draw(Graphics::Drawer *target, int x, int y);
+			void draw(Graphics::Drawer *target, int x, int y);
 
 			Tile *getTile() const;
 			Player *getOwner() const;

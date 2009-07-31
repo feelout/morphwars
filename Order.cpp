@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "Order.h"
+#include "OrderManager.h"
 #include "AStar.h"
 #include "Logger.h"
 #include "Unit.h"
@@ -9,7 +10,16 @@ using namespace Core;
 Order::Order(Unit *unit)
 	: unit(unit), done(false)
 {
+	Utility::Logger::getInstance()->log("Order::Order\n");
+	OrderManager::getInstance()->addOrder(this);
 }
+
+//DEBUG
+Order::~Order()
+{
+	Utility::Logger::getInstance()->log("Order destructor called\n");
+}
+//ENDDEBUG
 
 void Order::stop()
 {
@@ -25,8 +35,11 @@ bool Order::isDone() const
 MovementOrder::MovementOrder(Unit *unit, Tile *target, Map *map)
 	: Order(unit), target(target), map(map)
 {
+	Utility::Logger::getInstance()->log("MovementOrder::MovementOrder\n");
+
 	if(target->isEnemy(unit))
 	{
+		Utility::Logger::getInstance()->log("Occupied by enemy\n");
 		// Can`t move to tile occupied by enemy
 		done = true;
 		return;
@@ -44,6 +57,17 @@ MovementOrder::MovementOrder(Unit *unit, Tile *target, Map *map)
 
 bool MovementOrder::makePath()
 {
+	Utility::Logger::getInstance()->log("Calculating path from (%i,%i) to (%i,%i)\n", unit->getTile()->getX(),
+		unit->getTile()->getY(), target->getX(), target->getY());
+
+	int distance = unit->getTile()->getDistance(target);
+
+	if(distance == 0)
+	{
+		return false;
+	}
+	// TODO: if dist == 1, move without A*
+
 	//std::vector<AStar::Node*> openlist;
 	std::vector<AStar::Node*> closedlist;
 
@@ -57,6 +81,8 @@ bool MovementOrder::makePath()
 
 	while(currentNode->getSource() != target)
 	{
+		Utility::Logger::getInstance()->log("Iteration: currentNode = (%i,%i)\n",
+			currentNode->getSource()->getX(), currentNode->getSource()->getY());
 		/* Adding neighbours to open list */
 		std::vector< std::pair<int,int> > neighbourCoords = currentNode->getSource()->getNeighbours();
 		std::vector< std::pair<int,int> >::iterator nb_iter;
@@ -65,10 +91,26 @@ bool MovementOrder::makePath()
 
 		for(nb_iter = neighbourCoords.begin(); nb_iter != neighbourCoords.end(); ++nb_iter)
 		{
-			AStar::Node *node = new AStar::Node(currentNode, map->getTile(nb_iter->first, nb_iter->second),
+			// Checking for validity
+			int nbx = nb_iter->first;
+			int nby = nb_iter->second;
+
+			if( (nbx < 0) || (nbx >= map->getWidth()) || (nby < 0) || (nby >= map->getHeight()) )
+			{
+				continue;
+			}
+
+			AStar::Node *node = new AStar::Node(currentNode, map->getTile(nbx, nby),
 					((UnitType*)(unit->getType()))->getMovementType(), target);
+
+			std::vector<AStar::Node*>::iterator check;
+			check = std::find(closedlist.begin(), closedlist.end(), node);
+
 			/* Finding minimum-cost node */
-			if((!minimumNode) || (minimumNode->getCost() >  node->getCost()))
+			/* FIXME: CHECK FOR EXISTING IN CLOSED LIST TO AVOID INFINITE LOOPS */
+			/* SHIT, WHY DOESN`T IN WORK :P */
+			if((!minimumNode) || (minimumNode->getCost() >  node->getCost()) 
+				&& (check  == closedlist.end()) )
 			{
 				// Free previous minimum
 				if(minimumNode)
@@ -97,6 +139,8 @@ bool MovementOrder::makePath()
 	for(cl_iter = ++(closedlist.begin()); cl_iter != closedlist.end(); ++cl_iter)
 	{
 		waypoints.push_back((*cl_iter)->getSource());
+		Utility::Logger::getInstance()->log("Waypoint: (%i,%i)\n", (*cl_iter)->getSource()->getX(),
+			(*cl_iter)->getSource()->getY());
 	}
 
 	currentWaypoint = waypoints.begin();
@@ -115,9 +159,26 @@ bool MovementOrder::makePath()
 	{
 		delete (*cl_iter);
 	}*/
+	return true;
 }
 
 void MovementOrder::process()
 {
+	Utility::Logger::getInstance()->log("MovementOrder::process()\n");
+
+	if(done)
+	{
+		return;
+	}
+
 	//STUB
+	while(unit->changePosition(*currentWaypoint++))
+	{
+		Utility::Logger::getInstance()->log("Moved to next waypoint\n");
+		if(unit->getTile() == target)
+		{
+			done = true;
+			return;
+		}
+	}
 }

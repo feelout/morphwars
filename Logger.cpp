@@ -23,7 +23,7 @@ Logger::Logger(std::string filename)
 {
 	// TODO: Mb changed later to w+, not
 	// to produce 2gB logs
-	file = fopen(filename.c_str(),"a+");
+	file = fopen(filename.c_str(),"w");
 
 	if(!file)
 	{

@@ -117,6 +117,7 @@ namespace Core
 			TileType *type;
 			//Units and building occupying
 			std::vector<MapObject*> objects;
+			MapObject* topobject;
 		public:
 			Tile(int x, int y, TileType *type);
 
@@ -130,19 +131,39 @@ namespace Core
 			 * @param dst Tile to face
 			 * @return Direction
 			 */
-			Direction getDirection(Tile *dst);
+			Direction getDirection(Tile *dst) const;
+			static Direction getDirection(std::pair<int, int> src, std::pair<int, int> dst);
+			
+			/**
+			 * Calculates distance from this tile to another
+			 * @param dst Other tile
+			 * @return distance
+			 */
+			int getDistance(Tile *dst) const;
 
-			void addObject(MapObject *object);
+			bool addObject(MapObject *object);
 			void removeObject(MapObject *object);
+			MapObject* getTopObject() const;
 
-			bool isEnemy(MapObject *object);
+			/**
+			 * Check object allegion
+			 * @param object Object
+			 * @return true if tile objects are on the same force
+			 */
+			bool isEnemy(MapObject *object) const;
 
 			int getX() const;
 			int getY() const;
 
+			/**
+			 * Calculates tile neighbours
+			 * @return Coordinates of tile neighbours
+			 */
 			std::vector< std::pair<int,int> > getNeighbours() const;
 
 			void draw(Graphics::Drawer *target, int x, int y, bool visible);
+
+			static std::pair<int, int> translateCoordinates(int x, int y, Direction direction);
 	};
 }
 

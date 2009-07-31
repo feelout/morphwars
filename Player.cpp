@@ -26,7 +26,12 @@ FieldOfView::FieldOfView(int w, int h)
 	: w(w), h(h)
 {
 	tiles = new bool[w*h];
+	
+	clear();
+}
 
+void FieldOfView::clear()
+{
 	for(int i=0; i < w*h; ++i)
 	{
 		tiles[i] = false;
@@ -47,6 +52,7 @@ void FieldOfView::setTileVisible(int x, int y, bool visible)
 
 void Player::updateFOV()
 {
+	fov->clear();
 	//TODO: find the way to combine vectors
 	for(std::vector<Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 	{
@@ -78,7 +84,7 @@ void Player::updateFOV()
 }
 
 Player::Player(std::string name, Fraction fraction, Force *force, RGBColor color, int mapWidth, int mapHeight)
-	: name(name), fraction(fraction), force(force), color(color), energy(0)
+	: name(name), fraction(fraction), force(force), color(color), energy(0), selected(NULL)
 {
 	fov = new FieldOfView(mapWidth, mapHeight);
 	force->addPlayer(this);
@@ -110,4 +116,30 @@ FieldOfView* Player::getFieldOfView() const
 Force* Player::getForce() const
 {
 	return force;
+}
+
+std::string Player::getName() const
+{
+	return name;
+}
+
+void Player::selectObject(MapObject *object)
+{
+	Utility::Logger::getInstance()->log("Object selected by player %s\n", name.c_str());
+	selected = object;
+}
+
+MapObject* Player::getSelectedObject() const
+{
+	return selected;
+}
+
+bool Player::isDone() const
+{
+	return done;
+}
+
+void Player::setDone(bool done)
+{
+	this->done = done;
 }

@@ -51,7 +51,7 @@ namespace Core
 			// Or just change color of selection frame
 			Unit(UnitType *type, Tile *tile, Player *owner);
 
-			virtual void draw(Graphics::Drawer *target, int x, int y);
+			//virtual void draw(Graphics::Drawer *target, int x, int y);
 
 			void setDeltas(int dx, int dy);
 			int getXDelta() const;
@@ -65,6 +65,13 @@ namespace Core
 			bool changePosition(Tile *newPosition);
 			
 			//void issueOrder(Order *order)
+
+			/**
+			 * Moves to adjacent tile
+			 * @param tile Tile to move to. It must me one of 8 neighbour tiles
+			 * @return True if movement occured
+			 */
+			bool moveTo(Tile *tile);
 	};
 }
 

@@ -6,10 +6,11 @@
 #include "Map.h"
 #include "Player.h"
 #include "Drawer.h"
+#include "EventDispatcher.h"
 
 namespace Core
 {
-	class Scenario
+	class Scenario : public IEventListener
 	{
 		private:
 			/** Pass <map> TiXMLNode to Map class **/
@@ -22,7 +23,14 @@ namespace Core
 			Scenario(std::string path);
 			~Scenario();
 
+			void switchTurn(Player *player);
+
 			void draw(Graphics::Drawer *target, int x, int y);
+
+			virtual void mouseMoved(int x, int y);
+			virtual void mouseLMBClicked(int x, int y);
+			virtual void mouseRMBClicked(int x, int y);
+			virtual void keyPressed(int key);
 	};
 }
 

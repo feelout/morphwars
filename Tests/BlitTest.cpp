@@ -57,7 +57,7 @@ int main()
 		/* Blit of transparent surface */
 		//transSurf->blit(Renderer::getInstance()->getBuffer(), 200, 200);
 		/* Blit of surface with a colorkey */
-		colorkey->blit(Renderer::getInstance()->getBuffer(), 100, 400);
+		colorkey->blit(Renderer::getInstance()->getBuffer(), 100, 200);
 
 		//SDL_BlitSurface(ck_surf, &srcRect, Renderer::getInstance()->getBuffer()->getSurface(), &dstRect);
 		/* Flipping render buffers */

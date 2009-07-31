@@ -11,6 +11,7 @@ namespace Core
 	class PlayerController; //subclass for mouse+keyboard, ai, net
 	class Unit;
 	class Building;
+	class MapObject;
 
 	enum Fraction
 	{
@@ -29,6 +30,8 @@ namespace Core
 
 			bool isTileVisible(int x, int y);
 			void setTileVisible(int x, int y, bool visible);
+
+			void clear();
 	};
 
 	class Player
@@ -38,15 +41,17 @@ namespace Core
 			std::vector<Unit*> units;
 			std::vector<Building*> buildings;
 
+			MapObject *selected;
+
 			int energy;
 
 			RGBColor color;
 			Fraction fraction;
 			Force *force;
 
-			FieldOfView *fov;
+			bool done;
 
-			void updateFOV();
+			FieldOfView *fov;
 		public:
 			Player(std::string name, Fraction fraction, Force *force, RGBColor color, 
 					int mapWidth, int mapHeight);
@@ -56,6 +61,16 @@ namespace Core
 
 			FieldOfView* getFieldOfView() const;
 			Force* getForce() const;
+			std::string getName() const;
+
+			void selectObject(MapObject *object);
+			MapObject *getSelectedObject() const;
+
+			/* Has player done his turn. Only one player can have is set to false at a time*/
+			bool isDone() const;
+			void setDone(bool done);
+
+			void updateFOV();
 	};
 }
 

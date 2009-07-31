@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include "Unit.h"
 #include "Logger.h"
+#include "Player.h"
 
 using namespace Core;
 
 UnitType::UnitType(std::string typeName)
-	: MapObjectType(typeName)
+	: MapObjectType(typeName, "Unit")
 {
 	Utility::Logger::getInstance()->log("UnitType::UnitType(%s)\n", typeName.c_str());
 
@@ -49,6 +50,7 @@ UnitType* UnitType::clone()
 	UnitType *result = new UnitType();
 
 	result->name = name;
+	result->type = type;
 	result->maxhp = maxhp;
 	result->maxsp = maxsp;
 	result->attack = attack;
@@ -111,24 +113,27 @@ Unit::Unit(UnitType *type, Tile *tile, Player *owner)
 	attack = type->getAttack();
 	defense = type->getDefense();
 
-	this->type = type->clone();
-}
-
-void Unit::draw(Graphics::Drawer *target, int x, int y)
-{
-	type->getGraphics()->getCurrent()->draw(target, x+dx, y+dy);
+	//this->type = type->clone();
 }
 
 bool Unit::changePosition(Tile *newPosition)
 {
+	Utility::Logger::getInstance()->log("Changing unit position from (%i,%i) to (%i,%i)\n",
+		tile->getX(), tile->getY(), newPosition->getX(), newPosition->getY());
 	if(newPosition == tile)
 		return false;
 	
 	if(newPosition->isEnemy(this))
 		return false;
 
-	tile->removeObject(this);
-	newPosition->addObject(this);
+	if(newPosition->addObject(this))
+	{
+		tile->removeObject(this);
+		tile = newPosition;
+		owner->updateFOV();
 
-	return true;
+		return true;
+	}
+
+	return false;
 }

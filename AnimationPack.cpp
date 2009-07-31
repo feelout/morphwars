@@ -86,7 +86,7 @@ AnimationPack::~AnimationPack()
 
 void AnimationPack::addAnimation(std::string name, Animation *animation)
 {
-	Utility::Logger::getInstance()->log("AddAnimation(%s)\n", name.c_str());
+	//Utility::Logger::getInstance()->log("AddAnimation(%s)\n", name.c_str());
 	animations[name] = animation;
 }
 
@@ -122,7 +122,7 @@ Animation* AnimationPack::getCurrent() const
 
 AnimationPack& AnimationPack::operator = (const AnimationPack& other)
 {
-	Utility::Logger::getInstance()->log("AnimationPack::operator=\n");
+	//Utility::Logger::getInstance()->log("AnimationPack::operator=\n");
 
 	current = NULL;
 
@@ -130,11 +130,11 @@ AnimationPack& AnimationPack::operator = (const AnimationPack& other)
 	{
 		std::map<std::string, Animation *>::const_iterator i;
 
-		Utility::Logger::getInstance()->log("\tCopying animations\n");
+		//Utility::Logger::getInstance()->log("\tCopying animations\n");
 		for(i = other.animations.begin(); i != other.animations.end(); ++i)
 		{
 			Animation *anim = AnimationManager::getInstance()->getAnimation(i->first);
-			Utility::Logger::getInstance()->log("\t\tCopying %s\n", i->first.c_str());
+			//Utility::Logger::getInstance()->log("\t\tCopying %s\n", i->first.c_str());
 			addAnimation(i->first, AnimationManager::getInstance()->getAnimation(i->first));
 		}
 

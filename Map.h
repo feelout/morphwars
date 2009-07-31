@@ -10,31 +10,32 @@
 
 namespace Core
 {
-    class Map
-    {
-        private:
-            Tile **tiles;
-            TileSet *tileset;
+	class Map
+	{
+		private:
+			Tile **tiles;
+			TileSet *tileset;
 
-            int width,height;
+			int width,height;
 
-            std::string author;
-            std::string name;
-            std::string version;
+			std::string author;
+			std::string name;
+			std::string version;
 
-            void calculateSurfaces();
-        public:
-            Map(int width, int height, std::string tilesetName);
-	    Map(TiXmlElement *xmlmap);
-            ~Map();
+			void calculateSurfaces();
+		public:
+			Map(int width, int height, std::string tilesetName);
+			Map(TiXmlElement *xmlmap);
+			~Map();
 
-            Tile* getTile(int x, int y);
+			Tile* getTile(int x, int y);
+			Tile* getTileByMouseCoords(int mx, int my, int dx, int dy);
 
-	    int getWidth() const;
-	    int getHeight() const;
+			int getWidth() const;
+			int getHeight() const;
 
-	    void draw(Graphics::Drawer *target, int x, int y, FieldOfView *fov);
-    };
+			void draw(Graphics::Drawer *target, int x, int y, FieldOfView *fov);
+	};
 }
 
 #endif //MAP_H
