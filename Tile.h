@@ -161,6 +161,8 @@ namespace Core
 			 */
 			std::vector< std::pair<int,int> > getNeighbours() const;
 
+			std::vector< std::pair<int,int> > getDiagonalNeighbours() const;
+
 			void draw(Graphics::Drawer *target, int x, int y, bool visible);
 
 			static std::pair<int, int> translateCoordinates(int x, int y, Direction direction);

@@ -80,7 +80,7 @@ void Map::calculateSurfaces()
 			/** Check neighbours **/
 			std::vector<Tile*> neighbours;
 
-			std::vector< std::pair<int, int> > neighbourPairs = currentTile->getNeighbours();
+			std::vector< std::pair<int, int> > neighbourPairs = currentTile->getDiagonalNeighbours();
 			std::vector< std::pair<int, int> >::iterator nb_iter;
 
 			for(nb_iter = neighbourPairs.begin(); nb_iter != neighbourPairs.end(); ++nb_iter)

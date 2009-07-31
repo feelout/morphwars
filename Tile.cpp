@@ -220,7 +220,8 @@ int Tile::getY() const
 	return y;
 }
 
-std::vector< std::pair<int, int> > Tile::getNeighbours() const
+//Returns 4 neighbours
+std::vector< std::pair<int, int> > Tile::getDiagonalNeighbours() const
 {
 	std::vector< std::pair<int, int> > result;
 
@@ -235,6 +236,35 @@ std::vector< std::pair<int, int> > Tile::getNeighbours() const
 	}
 
 	return result;
+}
+
+std::vector< std::pair<int, int> > Tile::getNeighbours() const
+{
+	using std::make_pair;
+
+	std::vector< std::pair<int, int> > results;
+
+	results.push_back(make_pair(x, y-2));
+	results.push_back(make_pair(x, y-1));
+	results.push_back(make_pair(x, y+1));
+	results.push_back(make_pair(x, y+2));
+
+	if(y % 2 == 0)
+	{
+		results.push_back(make_pair(x-1, y-1));
+		results.push_back(make_pair(x-1, y));
+		results.push_back(make_pair(x-1, y+1));
+		results.push_back(make_pair(x+1, y));
+	}
+	else
+	{
+		results.push_back(make_pair(x-1, y));
+		results.push_back(make_pair(x+1, y-1));
+		results.push_back(make_pair(x+1, y));
+		results.push_back(make_pair(x+1, y+1));
+	}
+
+	return results;
 }
 
 void Tile::draw(Graphics::Drawer *target, int x, int y, bool visible)

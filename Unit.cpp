@@ -118,8 +118,8 @@ Unit::Unit(UnitType *type, Tile *tile, Player *owner)
 
 bool Unit::changePosition(Tile *newPosition)
 {
-	Utility::Logger::getInstance()->log("Changing unit position from (%i,%i) to (%i,%i)\n",
-		tile->getX(), tile->getY(), newPosition->getX(), newPosition->getY());
+	/*Utility::Logger::getInstance()->log("Changing unit position from (%i,%i) to (%i,%i)\n",
+		tile->getX(), tile->getY(), newPosition->getX(), newPosition->getY());*/
 	if(newPosition == tile)
 		return false;
 	

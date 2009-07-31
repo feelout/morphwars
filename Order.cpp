@@ -87,6 +87,10 @@ bool MovementOrder::makePath()
 		std::vector< std::pair<int,int> > neighbourCoords = currentNode->getSource()->getNeighbours();
 		std::vector< std::pair<int,int> >::iterator nb_iter;
 
+		//DEBUG
+		Utility::Logger::getInstance()->log("Total neighbours: %i\n", neighbourCoords.size());
+		//ENDDEBUG
+
 		AStar::Node *minimumNode=NULL;
 
 		for(nb_iter = neighbourCoords.begin(); nb_iter != neighbourCoords.end(); ++nb_iter)
@@ -100,17 +104,33 @@ bool MovementOrder::makePath()
 				continue;
 			}
 
+			/* Checking if node is already in closed list */
+			std::vector<AStar::Node*>::iterator check;
+			bool alreadyInCList = false;
+
+			for(check = closedlist.begin(); check != closedlist.end(); ++check)
+			{
+				if( ((*check)->getSource()->getX() == nb_iter->first)
+						&& ((*check)->getSource()->getY() == nb_iter->second) )
+				{
+					alreadyInCList = true;
+					break;
+				}
+			}
+
+			if(alreadyInCList)
+			{
+				continue;
+			}
+
+			/* Everything is OK */
+
 			AStar::Node *node = new AStar::Node(currentNode, map->getTile(nbx, nby),
 					((UnitType*)(unit->getType()))->getMovementType(), target);
 
-			std::vector<AStar::Node*>::iterator check;
-			check = std::find(closedlist.begin(), closedlist.end(), node);
 
 			/* Finding minimum-cost node */
-			/* FIXME: CHECK FOR EXISTING IN CLOSED LIST TO AVOID INFINITE LOOPS */
-			/* SHIT, WHY DOESN`T IN WORK :P */
-			if((!minimumNode) || (minimumNode->getCost() >  node->getCost()) 
-				&& (check  == closedlist.end()) )
+			if((!minimumNode) || (minimumNode->getCost() >  node->getCost()))
 			{
 				// Free previous minimum
 				if(minimumNode)
@@ -132,7 +152,6 @@ bool MovementOrder::makePath()
 		closedlist.push_back(minimumNode);
 		currentNode = minimumNode;
 	}
-	//TODO :CONTINUE HERE
 	/* Constructing waypoint list from closed list */
 	std::vector<AStar::Node*>::iterator cl_iter;
 
@@ -164,8 +183,6 @@ bool MovementOrder::makePath()
 
 void MovementOrder::process()
 {
-	Utility::Logger::getInstance()->log("MovementOrder::process()\n");
-
 	if(done)
 	{
 		return;
@@ -174,7 +191,6 @@ void MovementOrder::process()
 	//STUB
 	while(unit->changePosition(*currentWaypoint++))
 	{
-		Utility::Logger::getInstance()->log("Moved to next waypoint\n");
 		if(unit->getTile() == target)
 		{
 			done = true;
