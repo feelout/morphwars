@@ -26,7 +26,7 @@ void OrderManager::processOrders()
 
 	for(i = orders.begin(); i != orders.end();)
 	{
-		Utility::Logger::getInstance()->log("Processing order\n");
+		//Utility::Logger::getInstance()->log("Processing order\n");
 		if((*i)->isDone())
 		{
 			Utility::Logger::getInstance()->log("Order is already done\n");

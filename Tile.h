@@ -33,6 +33,8 @@ namespace Core
 		WEST,
 	};
 
+	std::string DirectionToString(Direction direction);
+
 	/*enum Direction
 	  {
 	  CENTER = 0,
@@ -141,6 +143,7 @@ namespace Core
 			 */
 			int getDistance(Tile *dst) const;
 
+			bool canBeAdded(MapObject *object);
 			bool addObject(MapObject *object);
 			void removeObject(MapObject *object);
 			MapObject* getTopObject() const;

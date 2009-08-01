@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include <algorithm>
 
 using namespace Graphics;
 
@@ -53,3 +54,4 @@ void Renderer::shutdown()
 {
 	delete frameBuffer;
 }
+

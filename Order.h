@@ -38,6 +38,9 @@ namespace Core
 			std::vector<Tile*>::iterator currentWaypoint;
 
 			bool makePath();
+
+			int target_dx;
+			int target_dy;
 		public:
 			MovementOrder(Unit *unit, Tile *target, Map *map);
 

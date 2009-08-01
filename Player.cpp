@@ -38,7 +38,7 @@ void FieldOfView::clear()
 	}
 }
 
-bool FieldOfView::isTileVisible(int x, int y)
+bool FieldOfView::isTileVisible(int x, int y) const
 {
 	return tiles[x+y*w];
 }
@@ -142,4 +142,28 @@ bool Player::isDone() const
 void Player::setDone(bool done)
 {
 	this->done = done;
+}
+
+void Player::renderObjects(Graphics::Drawer *target, int xshift, int yshift, const FieldOfView *fov)
+{
+	//FIXME: Add buildings
+	std::vector<Unit*>::const_iterator i;
+
+	int dx,dy;
+	int tilex,tiley;
+
+	for(i = units.begin(); i != units.end(); ++i)
+	{
+		tilex = (*i)->getTile()->getX();
+		tiley = (*i)->getTile()->getY();
+
+		dx = (tiley % 2) * TILE_WIDTH/2;
+		dy = TILE_HEIGHT - TILE_TERRAIN_HEIGHT;
+
+		if(fov->isTileVisible(tilex, tiley))
+		{
+			(*i)->draw(target, xshift+dx+(tilex*TILE_WIDTH),
+				yshift+(tiley*(TILE_HEIGHT_OFFSET)-dy));
+		}
+	}
 }

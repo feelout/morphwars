@@ -65,6 +65,8 @@ namespace Core
 			 * Owner of an object
 			 */
 			Player *owner;
+
+			float dx,dy;
 		public:
 			/**
 			 * Main public constructor

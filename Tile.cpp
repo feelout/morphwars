@@ -7,6 +7,29 @@ using namespace Core;
 
 const float SHADOW_FACTOR=0.5;
 
+std::string DirectionToString(Direction direction)
+{
+	switch(direction)
+	{
+		case NORTHWEST:
+			return "NW";
+		case NORTH:
+			return "N";
+		case NORTHEAST:
+			return "NE";
+		case EAST:
+			return "E";
+		case SOUTHEAST:
+			return "SE";
+		case SOUTH:
+			return "S";
+		case SOUTHWEST:
+			return "SW";
+		case WEST:
+			return "W";
+	}
+}
+
 TileType::TileType(Graphics::Surface *src, int y, int priority, MovementCosts movementCosts)
 	: priority(priority), movementCosts(movementCosts)
 {
@@ -163,9 +186,14 @@ int Tile::getDistance(Tile *dst) const //FIXME, check from (1,1) to (2,3)
 	return distance;
 }
 
+bool Tile::canBeAdded(MapObject *object)
+{
+	return ( (objects.empty()) || (!isEnemy(object)) );
+}
+
 bool Tile::addObject(MapObject *object)
 {
-	if( (objects.empty()) || (!isEnemy(object)) )
+	if(canBeAdded(object))
 	{
 		objects.push_back(object);
 		//TODO: Sort objects, buildings first
@@ -272,10 +300,10 @@ void Tile::draw(Graphics::Drawer *target, int x, int y, bool visible)
 	if(visible)
 	{
 		image->blit(target->getTarget(), x, y);
-		for(std::vector<MapObject*>::iterator i = objects.begin(); i != objects.end(); ++i)
+		/*for(std::vector<MapObject*>::iterator i = objects.begin(); i != objects.end(); ++i)
 		{
 			(*i)->draw(target, x, y);
-		}
+		}*/
 	}
 	else
 	{

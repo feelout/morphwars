@@ -45,7 +45,13 @@ namespace Core
 			int defense;
 
 			/** Stupid anti-OOP hack **/
-			int dx, dy; //Drawing deltas
+			//int dx, dy; //Drawing deltas
+
+			bool moving;
+			int dxmodifier, dymodifier;
+			int dstdx, dstdy; 
+			Tile *dst;
+			unsigned int prevTime;
 		public:
 			// Add support for setting color of unit from player`s color.
 			// Or just change color of selection frame
@@ -72,6 +78,12 @@ namespace Core
 			 * @return True if movement occured
 			 */
 			bool moveTo(Tile *tile);
+
+			/**
+			 * Updates unit movement
+			 * @return true if movement done, false if movement in process
+			 */
+			bool updateMovement();
 	};
 }
 

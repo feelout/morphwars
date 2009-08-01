@@ -156,6 +156,7 @@ bool MovementOrder::makePath()
 	std::vector<AStar::Node*>::iterator cl_iter;
 
 	for(cl_iter = ++(closedlist.begin()); cl_iter != closedlist.end(); ++cl_iter)
+	//for(cl_iter = closedlist.begin(); cl_iter != closedlist.end(); ++cl_iter)
 	{
 		waypoints.push_back((*cl_iter)->getSource());
 		Utility::Logger::getInstance()->log("Waypoint: (%i,%i)\n", (*cl_iter)->getSource()->getX(),
@@ -183,18 +184,35 @@ bool MovementOrder::makePath()
 
 void MovementOrder::process()
 {
+	/*Utility::Logger::getInstance()->log("MovementOrder::process().Unit tile: %i,%i\n",
+		unit->getTile()->getX(), unit->getTile()->getY());*/
 	if(done)
 	{
 		return;
 	}
 
+
+	if(unit->updateMovement())
+	{
+		if(unit->getTile() == target)
+		{
+			Utility::Logger::getInstance()->log("MovementOrder done\n");
+			done = true;
+			return;
+		}
+		else
+		{
+			unit->moveTo(*currentWaypoint++);
+		}
+	}
+
 	//STUB
-	while(unit->changePosition(*currentWaypoint++))
+	/*while(unit->changePosition(*currentWaypoint++))
 	{
 		if(unit->getTile() == target)
 		{
 			done = true;
 			return;
 		}
-	}
+	}*/
 }

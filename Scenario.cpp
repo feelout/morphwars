@@ -173,6 +173,13 @@ void Scenario::draw(Graphics::Drawer *target, int x, int y)
 {
 	//FIXME: Add units nad other stuff..
 	map->draw(target, x, y, currentPlayer->getFieldOfView());
+
+	std::list<Player*>::const_iterator i;
+
+	for(i = players.begin(); i != players.end(); ++i)
+	{
+		(*i)->renderObjects(target, x, y, currentPlayer->getFieldOfView());
+	}
 }
 
 void Scenario::mouseMoved(int x, int y)
@@ -200,7 +207,7 @@ void Scenario::mouseLMBClicked(int x, int y)
 
 void Scenario::mouseRMBClicked(int x, int y)
 {
-	Utility::Logger::getInstance()->log("Mouse RMB clicked on (%i,%i)\n", x, y);
+	Utility::Logger::getInstance()->log("\nMouse RMB clicked on (%i,%i)\n", x, y);
 	Tile *clickedTile = map->getTileByMouseCoords(x, y, 0, 0);
 
 	if(!clickedTile)

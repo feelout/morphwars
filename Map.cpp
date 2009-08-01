@@ -159,7 +159,6 @@ void Map::draw(Graphics::Drawer *target, int x, int y, FieldOfView *fov)
 	for(int tiley=0; tiley < height; ++tiley)
 	{
 		dx = (tiley % 2) * TILE_WIDTH/2;
-		//dy = (dx != 0) ? TILE_HEIGHT_OFFSET : 0;
 		dy = TILE_HEIGHT - TILE_TERRAIN_HEIGHT;
 
 		//printf("Row %i: shift: %i, height: %i\n", tiley, dy, tiley*(TILE_TERRAIN_HEIGHT)-dy);

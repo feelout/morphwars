@@ -26,7 +26,8 @@ Node::Node(Node *parent, Tile *src, MovementType movementtype, Tile *target)
 	}
 
 	/* TODO: Check whether distinguishing between shifted rows is needed */
-	int h = abs(target->getX()-src->getX()) + abs(target->getY()-src->getY());
+	//int h = abs(target->getX()-src->getX()) + abs(target->getY()-src->getY());
+	int h = src->getDistance(target);
 	cost = g + h;
 }
 

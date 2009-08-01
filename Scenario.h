@@ -25,7 +25,7 @@ namespace Core
 
 			void switchTurn(Player *player);
 
-			void draw(Graphics::Drawer *target, int x, int y);
+			virtual void draw(Graphics::Drawer *target, int x, int y);
 
 			virtual void mouseMoved(int x, int y);
 			virtual void mouseLMBClicked(int x, int y);

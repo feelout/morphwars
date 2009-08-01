@@ -5,6 +5,7 @@
 #include <vector>
 #include "assist.h"
 #include "Force.h"
+#include "Drawer.h"
 
 namespace Core
 {
@@ -28,7 +29,7 @@ namespace Core
 		public:
 			FieldOfView(int w, int h);
 
-			bool isTileVisible(int x, int y);
+			bool isTileVisible(int x, int y) const;
 			void setTileVisible(int x, int y, bool visible);
 
 			void clear();
@@ -71,6 +72,8 @@ namespace Core
 			void setDone(bool done);
 
 			void updateFOV();
+
+			void renderObjects(Graphics::Drawer *target, int xshift, int yshift, const FieldOfView *fov);
 	};
 }
 
