@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Scenario.h"
 #include "Logger.h"
 #include "UnitTypeManager.h"
@@ -6,6 +7,7 @@
 using namespace Core;
 
 Scenario::Scenario(std::string path)
+	: currentPlayer(NULL), map(NULL)
 {
 	if(!loadFromFile(path))
 	{
@@ -148,12 +150,13 @@ bool Scenario::loadFromFile(std::string path)
 			//TODO: Create building
 		}
 
-		currentPlayer->setDone(false);
+		currentPlayer->setDone(true);
 		players.push_back(currentPlayer);
 	}
 
-	this->currentPlayer = *(players.begin());
-	this->currentPlayer->setDone(false);
+	switchTurn(*(players.begin()));
+	//this->currentPlayer = *(players.begin());
+	//this->currentPlayer->setDone(true);
 
 	//TODO: setup scripts
 	
@@ -164,9 +167,30 @@ bool Scenario::loadFromFile(std::string path)
 
 void Scenario::switchTurn(Player *player)
 {
-	currentPlayer->setDone(false);
+	Utility::Logger::getInstance()->log("Passing turn to player %s\n", player->getName().c_str());
+	if(currentPlayer)
+	{
+		currentPlayer->setDone(true);
+		currentPlayer->setCurrent(false);
+	}
+
 	currentPlayer = player;
-	currentPlayer->setDone(true);
+	currentPlayer->setDone(true); //not moving anything yet
+	currentPlayer->setCurrent(true);
+}
+
+void Scenario::nextTurn()
+{
+	if(!currentPlayer->isDone())
+		return;
+
+	std::list<Player*>::iterator i = std::find(players.begin(), players.end(), currentPlayer);
+
+	if(++i == players.end())
+		i = players.begin();
+
+	//currentPlayer = *i;
+	switchTurn(*i);
 }
 
 void Scenario::draw(Graphics::Drawer *target, int x, int y)
@@ -207,7 +231,7 @@ void Scenario::mouseLMBClicked(int x, int y)
 
 void Scenario::mouseRMBClicked(int x, int y)
 {
-	Utility::Logger::getInstance()->log("\nMouse RMB clicked on (%i,%i)\n", x, y);
+	//Utility::Logger::getInstance()->log("\nMouse RMB clicked on (%i,%i)\n", x, y);
 	Tile *clickedTile = map->getTileByMouseCoords(x, y, 0, 0);
 
 	if(!clickedTile)
@@ -218,6 +242,7 @@ void Scenario::mouseRMBClicked(int x, int y)
 	if(!selected)
 	{
 		Utility::Logger::getInstance()->log("Nothing clicked\n");
+		return;
 	}
 
 	Utility::Logger::getInstance()->log("Selected type: %s\n", selected->getType()->getType().c_str());
@@ -235,4 +260,10 @@ void Scenario::mouseRMBClicked(int x, int y)
 
 void Scenario::keyPressed(int key)
 {
+	switch(key)
+	{
+		case SDLK_e:
+			nextTurn();
+			break;
+	};
 }

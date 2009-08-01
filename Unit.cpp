@@ -208,6 +208,15 @@ bool Unit::moveTo(Tile *dst)
 
 		type->getGraphics()->changeToAnimation(type->getName()+"-"+Tile::DirectionToString(tile->getDirection(dst)));
 		type->getGraphics()->getCurrent()->start();
+
+		owner->setDone(false);
+
+		return true;
+	}
+	else
+	{
+		owner->setDone(true);
+		return false;
 	}
 }
 

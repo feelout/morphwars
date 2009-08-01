@@ -198,6 +198,7 @@ void MovementOrder::process()
 		{
 			Utility::Logger::getInstance()->log("MovementOrder done\n");
 			done = true;
+			unit->getOwner()->setDone(true);
 			return;
 		}
 		else

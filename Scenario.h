@@ -24,6 +24,7 @@ namespace Core
 			~Scenario();
 
 			void switchTurn(Player *player);
+			void nextTurn();
 
 			virtual void draw(Graphics::Drawer *target, int x, int y);
 

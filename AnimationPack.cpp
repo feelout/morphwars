@@ -92,14 +92,14 @@ void AnimationPack::addAnimation(std::string name, Animation *animation)
 
 void AnimationPack::changeToAnimation(std::string name)
 {
-	Utility::Logger::getInstance()->log("AnimationPack::changeToAnimation(%s)\n", name.c_str());
+	//Utility::Logger::getInstance()->log("AnimationPack::changeToAnimation(%s)\n", name.c_str());
 	//DEBUG
 	if(current)
 	{
 		current->stop();
 	}
 	//ENDDEBUG
-	Utility::Logger::getInstance()->log("Animations total: %i\n", animations.size());
+	//Utility::Logger::getInstance()->log("Animations total: %i\n", animations.size());
 
 	if(!animations[name])
 	{
@@ -113,8 +113,7 @@ void AnimationPack::changeToAnimation(std::string name)
 	}
 
 	current = animations[name];
-}
-
+} 
 Animation* AnimationPack::getCurrent() const
 {
 	return current;

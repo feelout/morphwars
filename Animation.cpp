@@ -59,7 +59,6 @@ Surface* Animation::getFrame(int framenum)
 
 void Animation::start()
 {
-	Utility::Logger::getInstance()->log("Animation::start()\n");
 	setCurrentFrame(0);
 	animating = true;
 }

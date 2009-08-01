@@ -50,7 +50,8 @@ namespace Core
 			Fraction fraction;
 			Force *force;
 
-			bool done;
+			bool done; //can end turn(no units are moving)
+			bool current;
 
 			FieldOfView *fov;
 		public:
@@ -70,6 +71,9 @@ namespace Core
 			/* Has player done his turn. Only one player can have is set to false at a time*/
 			bool isDone() const;
 			void setDone(bool done);
+			
+			bool isCurrent() const;
+			void setCurrent(bool current);
 
 			void updateFOV();
 

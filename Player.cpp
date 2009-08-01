@@ -84,7 +84,7 @@ void Player::updateFOV()
 }
 
 Player::Player(std::string name, Fraction fraction, Force *force, RGBColor color, int mapWidth, int mapHeight)
-	: name(name), fraction(fraction), force(force), color(color), energy(0), selected(NULL)
+	: name(name), fraction(fraction), force(force), color(color), energy(0), selected(NULL), done(true), current(false)
 {
 	fov = new FieldOfView(mapWidth, mapHeight);
 	force->addPlayer(this);
@@ -142,6 +142,16 @@ bool Player::isDone() const
 void Player::setDone(bool done)
 {
 	this->done = done;
+}
+
+bool Player::isCurrent() const
+{
+	return current;
+}
+
+void Player::setCurrent(bool current)
+{
+	this->current = current;
 }
 
 void Player::renderObjects(Graphics::Drawer *target, int xshift, int yshift, const FieldOfView *fov)

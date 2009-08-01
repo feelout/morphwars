@@ -57,7 +57,7 @@ MapObject::~MapObject()
 
 void MapObject::draw(Graphics::Drawer *target, int x, int y)
 {
-	if( (!owner->isDone()) && (owner->getSelectedObject() == this) )
+	if( (owner->isCurrent()) && (owner->getSelectedObject() == this) )
 	{
 		// FIXME: Cache map image!!!
 		Graphics::Surface selection = Graphics::Surface("Gfx/Selection.png");
