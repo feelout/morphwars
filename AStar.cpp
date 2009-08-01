@@ -3,6 +3,8 @@
 
 using namespace Core::AStar;
 
+const int DISTANCE_WEIGHT = 3;
+
 int abs(int n)
 {
 	if(n < 0)
@@ -27,7 +29,7 @@ Node::Node(Node *parent, Tile *src, MovementType movementtype, Tile *target)
 
 	/* TODO: Check whether distinguishing between shifted rows is needed */
 	//int h = abs(target->getX()-src->getX()) + abs(target->getY()-src->getY());
-	int h = src->getDistance(target);
+	int h = src->getDistance(target)*DISTANCE_WEIGHT;
 	cost = g + h;
 }
 
