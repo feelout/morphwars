@@ -19,6 +19,7 @@ namespace Core
 			Graphics::AnimationPack graphics;
 			bool enabled;
 			std::string type;
+			std::string name;
 
 			MapObjectType();
 		public:
@@ -46,6 +47,8 @@ namespace Core
 
 			// Big hole in the architecture
 			std::string getType() const;
+
+			std::string getName() const;
 	};
 	/**
 	 * MapObject is drawable object on the map

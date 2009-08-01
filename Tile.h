@@ -169,6 +169,7 @@ namespace Core
 			void draw(Graphics::Drawer *target, int x, int y, bool visible);
 
 			static std::pair<int, int> translateCoordinates(int x, int y, Direction direction);
+			static std::string DirectionToString(Direction direction);
 	};
 }
 

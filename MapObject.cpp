@@ -10,7 +10,7 @@ MapObjectType::MapObjectType()
 }
 
 MapObjectType::MapObjectType(std::string name, std::string type)
-	: type(type)
+	: name(name), type(type)
 {
 	Utility::Logger::getInstance()->log("MapObjectType::MapObjectType(%s, %s)", name.c_str(), type.c_str());
 }
@@ -39,11 +39,15 @@ std::string MapObjectType::getType() const
 	return type;
 }
 
-MapObject::MapObject(MapObjectType *type, Tile *tile, Player *owner)
-	: tile(tile), owner(owner), dx(0), dy(0)
+std::string MapObjectType::getName() const
 {
-	//Utility::Logger::getInstance()->log("MapObjectType::MapObjectType()\n");
-	this->type = type->clone();
+	return name;
+}
+
+MapObject::MapObject(MapObjectType *type, Tile *tile, Player *owner)
+	: tile(tile), owner(owner), dx(0), dy(0), type(type->clone())
+{
+	//Utility::Logger::getInstance()->log("MapObject::MapObject: %s\n", this->type->getName().c_str());
 	tile->addObject(this);
 }
 

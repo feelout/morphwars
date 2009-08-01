@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <cmath>
 #include "Unit.h"
 #include "Logger.h"
@@ -15,7 +14,7 @@ const float MOVEMENT_Y_UNIT = 2 / MOVEMENT_X_UNIT; //TODO: Find out, why 2, not 
 UnitType::UnitType(std::string typeName)
 	: MapObjectType(typeName, "Unit")
 {
-	Utility::Logger::getInstance()->log("UnitType::UnitType(%s)\n", typeName.c_str());
+	//Utility::Logger::getInstance()->log("UnitType::UnitType(%s)\n", typeName.c_str());
 
 	FILE *f_def = fopen(("Objects/Units/"+typeName+"/definition").c_str(),"r");
 
@@ -54,9 +53,11 @@ UnitType::UnitType()
 
 UnitType* UnitType::clone()
 {
+	//Utility::Logger::getInstance()->log("UnitType::clone()\n");
 	UnitType *result = new UnitType();
 
 	result->name = name;
+	//Utility::Logger::getInstance()->log("Result->name == %s\n", result->name.c_str());
 	result->type = type;
 	result->maxhp = maxhp;
 	result->maxsp = maxsp;
@@ -115,6 +116,7 @@ Unit::Unit(UnitType *type, Tile *tile, Player *owner)
 	: MapObject(type, tile, owner), moving(false), dxmodifier(0),
 		dymodifier(0), dstdx(0), dstdy(0), dst(NULL)
 {
+	//Utility::Logger::getInstance()->log("Unit::Unit: %s\n", this->type->getName().c_str());
 	hp = type->getMaxHP();
 	mp = type->getMaxMP();
 	sp = type->getMaxSP();
@@ -158,7 +160,7 @@ bool Unit::moveTo(Tile *dst)
 	//FIXME Add mp check
 	if(dst->canBeAdded(this))
 	{
-		Utility::Logger::getInstance()->log("Unit can be added to tile\n");
+		//Utility::Logger::getInstance()->log("Unit can be added to tile\n");
 		switch(tile->getDirection(dst))
 		{
 			case NORTH:
@@ -198,11 +200,14 @@ bool Unit::moveTo(Tile *dst)
 		dstdx = (TILE_WIDTH / 2) * dxmodifier;
 		dstdy = TILE_HEIGHT_OFFSET * dymodifier;
 
-		Utility::Logger::getInstance()->log("Params: %i,%i,%i,%i\n", dxmodifier, dymodifier, dstdx, dstdy);
+		//Utility::Logger::getInstance()->log("Params: %i,%i,%i,%i\n", dxmodifier, dymodifier, dstdx, dstdy);
 
 		moving = true;
 		prevTime = Utility::Timer::currentTicks();
 		this->dst = dst;
+
+		type->getGraphics()->changeToAnimation(type->getName()+"-"+Tile::DirectionToString(tile->getDirection(dst)));
+		type->getGraphics()->getCurrent()->start();
 	}
 }
 
@@ -219,13 +224,13 @@ bool Unit::updateMovement()
 
 	prevTime = Utility::Timer::currentTicks();
 
-	Utility::Logger::getInstance()->log("dxm = %i, dym = %i, xu = %f, yu = %f\n", dxmodifier, dymodifier,
-			MOVEMENT_X_UNIT, MOVEMENT_Y_UNIT);
+	//Utility::Logger::getInstance()->log("dxm = %i, dym = %i, xu = %f, yu = %f\n", dxmodifier, dymodifier,
+			//MOVEMENT_X_UNIT, MOVEMENT_Y_UNIT);
 
 	dx += (float(dxmodifier) * MOVEMENT_X_UNIT);
 	dy += (float(dymodifier) * MOVEMENT_Y_UNIT);
 
-	Utility::Logger::getInstance()->log("Dx = %f, Dy = %f\n", dx, dy);
+	//Utility::Logger::getInstance()->log("Dx = %f, Dy = %f\n", dx, dy);
 
 	if( (abs(dx) >= abs(dstdx)) && (abs(dy) >= abs(dstdy)) )
 	{
@@ -240,6 +245,7 @@ bool Unit::updateMovement()
 			dstdy = 0;
 			dst = NULL;
 			moving = false;
+			type->getGraphics()->getCurrent()->stop();
 			return true;
 		}
 		else //Stop sprite moving, wait for another chance MAYBE NOT NEEDED

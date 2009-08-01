@@ -7,28 +7,6 @@ using namespace Core;
 
 const float SHADOW_FACTOR=0.5;
 
-std::string DirectionToString(Direction direction)
-{
-	switch(direction)
-	{
-		case NORTHWEST:
-			return "NW";
-		case NORTH:
-			return "N";
-		case NORTHEAST:
-			return "NE";
-		case EAST:
-			return "E";
-		case SOUTHEAST:
-			return "SE";
-		case SOUTH:
-			return "S";
-		case SOUTHWEST:
-			return "SW";
-		case WEST:
-			return "W";
-	}
-}
 
 TileType::TileType(Graphics::Surface *src, int y, int priority, MovementCosts movementCosts)
 	: priority(priority), movementCosts(movementCosts)
@@ -356,5 +334,28 @@ std::pair<int, int> Tile::translateCoordinates(int x, int y, Direction direction
 				return std::make_pair(x, y+1);
 			else
 				return std::make_pair(x-1, y+1);
+	}
+}
+
+std::string Tile::DirectionToString(Direction direction)
+{
+	switch(direction)
+	{
+		case NORTHWEST:
+			return "NW";
+		case NORTH:
+			return "N";
+		case NORTHEAST:
+			return "NE";
+		case EAST:
+			return "E";
+		case SOUTHEAST:
+			return "SE";
+		case SOUTH:
+			return "S";
+		case SOUTHWEST:
+			return "SW";
+		case WEST:
+			return "W";
 	}
 }

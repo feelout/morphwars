@@ -2,6 +2,7 @@
 #include "Logger.h"
 #include "Renderer.h"
 #include "OrderManager.h"
+#include "AnimationManager.h"
 
 Engine *Engine::instance = NULL;
 
@@ -67,6 +68,7 @@ void Engine::runGameCycle()
 			Core::OrderManager::getInstance()->processOrders();
 			currentScenario->draw(&drawer, 0, 0);
 		}
+		AnimationManager::getInstance()->updateAnimations();
 		Renderer::getInstance()->flipBuffers();
 		equalizer->frameEnded();
 	}

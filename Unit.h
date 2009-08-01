@@ -8,7 +8,6 @@ namespace Core
 	class UnitType: public MapObjectType
 	{
 		protected:
-			std::string name;
 			int maxhp; 	// Hit points
 			int maxmp;	// Movement points
 			int maxsp;	// Skill points
@@ -37,7 +36,7 @@ namespace Core
 	class Unit : public MapObject
 	{
 		protected:
-			UnitType *type;
+			//UnitType *type;
 			int hp;
 			int mp;
 			int sp;
