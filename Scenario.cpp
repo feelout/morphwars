@@ -249,9 +249,6 @@ void Scenario::mouseRMBClicked(int x, int y)
 
 	if(selected->getType()->getType() == "Unit") //ugh, hate it
 	{
-		/*Utility::Logger::getInstance()->log("Distance from (%i,%i) to (%i,%i): %i\n",
-			selected->getTile()->getX(), selected->getTile()->getY(),
-			clickedTile->getX(), clickedTile->getY(), selected->getTile()->getDistance(clickedTile));*/
 		Utility::Logger::getInstance()->log("Moving unit\n");
 		Unit *target = static_cast<Unit*>(selected);
 		MovementOrder *order = new MovementOrder(target, clickedTile, map);

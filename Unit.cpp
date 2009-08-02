@@ -246,6 +246,7 @@ bool Unit::updateMovement()
 		Utility::Logger::getInstance()->log("Movement complete\n");
 		if(changePosition(dst))
 		{
+			Utility::Logger::getInstance()->log("Changed position\n");
 			dx = 0;
 			dy = 0;
 			dxmodifier = 0;
@@ -259,8 +260,7 @@ bool Unit::updateMovement()
 		}
 		else //Stop sprite moving, wait for another chance MAYBE NOT NEEDED
 		{
-			dxmodifier = 0;
-			dymodifier = 0;
+			Utility::Logger::getInstance()->log("Cannot change position\n");
 			return false;
 		}
 	}

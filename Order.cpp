@@ -10,14 +10,14 @@ using namespace Core;
 Order::Order(Unit *unit)
 	: unit(unit), done(false)
 {
-	Utility::Logger::getInstance()->log("Order::Order\n");
+	//Utility::Logger::getInstance()->log("Order::Order\n");
 	OrderManager::getInstance()->addOrder(this);
 }
 
 //DEBUG
 Order::~Order()
 {
-	Utility::Logger::getInstance()->log("Order destructor called\n");
+	//Utility::Logger::getInstance()->log("Order destructor called\n");
 }
 //ENDDEBUG
 
@@ -35,14 +35,17 @@ bool Order::isDone() const
 MovementOrder::MovementOrder(Unit *unit, Tile *target, Map *map)
 	: Order(unit), target(target), map(map)
 {
-	Utility::Logger::getInstance()->log("MovementOrder::MovementOrder\n");
+	//Utility::Logger::getInstance()->log("MovementOrder::MovementOrder\n");
 
-	if(target->isEnemy(unit))
+	if(unit->getOwner()->getFieldOfView()->isTileVisible(target->getX(), target->getY()))
 	{
-		Utility::Logger::getInstance()->log("Occupied by enemy\n");
-		// Can`t move to tile occupied by enemy
-		done = true;
-		return;
+		if(target->isEnemy(unit))
+		{
+			Utility::Logger::getInstance()->log("Occupied by enemy\n");
+			// Can`t move to tile occupied by enemy
+			done = true;
+			return;
+		}
 	}
 	
 	if(!makePath())
@@ -86,10 +89,6 @@ bool MovementOrder::makePath()
 		/* Adding neighbours to open list */
 		std::vector< std::pair<int,int> > neighbourCoords = currentNode->getSource()->getNeighbours();
 		std::vector< std::pair<int,int> >::iterator nb_iter;
-
-		//DEBUG
-		Utility::Logger::getInstance()->log("Total neighbours: %i\n", neighbourCoords.size());
-		//ENDDEBUG
 
 		AStar::Node *minimumNode=NULL;
 
@@ -145,8 +144,6 @@ bool MovementOrder::makePath()
 				// Free unneeded node
 				delete node;
 			}
-
-			//openlist.push_back(node); //just to destroy nodes after pathfinding
 		}
 
 		closedlist.push_back(minimumNode);
@@ -165,9 +162,6 @@ bool MovementOrder::makePath()
 
 	currentWaypoint = waypoints.begin();
 
-	/*std::vector<AStar::Node*> nodes;
-	nodes.resize(closedlist.size() + openlist.size());*/
-
 	/* Free list members*/
 	// Shit, closed nodes are also in openlist
 	for(cl_iter = closedlist.begin(); cl_iter != closedlist.end(); ++cl_iter)
@@ -175,10 +169,6 @@ bool MovementOrder::makePath()
 		delete (*cl_iter);
 	}
 
-	/*for(cl_iter = openlist.begin(); cl_iter != openlist.begin(); ++cl_iter)
-	{
-		delete (*cl_iter);
-	}*/
 	return true;
 }
 
@@ -203,17 +193,15 @@ void MovementOrder::process()
 		}
 		else
 		{
-			unit->moveTo(*currentWaypoint++);
+			if(!(*currentWaypoint)->isEnemy(unit))
+			{
+				unit->moveTo(*currentWaypoint++);
+			}
+			else
+			{
+				unit->getOwner()->setDone(true);
+				done = true;
+			}
 		}
 	}
-
-	//STUB
-	/*while(unit->changePosition(*currentWaypoint++))
-	{
-		if(unit->getTile() == target)
-		{
-			done = true;
-			return;
-		}
-	}*/
 }

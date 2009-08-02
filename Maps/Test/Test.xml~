@@ -52,6 +52,7 @@
 		<player name="Margo" fraction="Hand" force="1" r="0" g="0" b="255" controller="local">
 			<units>
 				<!-- <unit type="Lord" x="3" y="3" /> -->
+				<unit type="Borsika" x="3" y="3" />
 			</units>
 			<buildings>
 				<building type="Watchtower" id="BLUE_WT" x="4" y="2" />
