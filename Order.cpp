@@ -122,6 +122,12 @@ bool MovementOrder::makePath()
 				continue;
 			}
 
+			if((unit->getOwner()->getFieldOfView()->isTileVisible(nbx, nby))
+						&& (map->getTile(nbx, nby)->isEnemy(unit)))
+			{
+				continue;
+			}
+
 			/* Everything is OK */
 
 			AStar::Node *node = new AStar::Node(currentNode, map->getTile(nbx, nby),
