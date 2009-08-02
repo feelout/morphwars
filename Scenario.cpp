@@ -177,6 +177,7 @@ void Scenario::switchTurn(Player *player)
 	currentPlayer = player;
 	currentPlayer->setDone(true); //not moving anything yet
 	currentPlayer->setCurrent(true);
+	currentPlayer->onTurnBegin();
 }
 
 void Scenario::nextTurn()

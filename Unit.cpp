@@ -61,6 +61,7 @@ UnitType* UnitType::clone()
 	result->type = type;
 	result->maxhp = maxhp;
 	result->maxsp = maxsp;
+	result->maxmp = maxmp;
 	result->attack = attack;
 	result->defense = defense;
 	result->cost = cost;
@@ -126,6 +127,11 @@ Unit::Unit(UnitType *type, Tile *tile, Player *owner)
 	//this->type = type->clone();
 }
 
+UnitType* Unit::getType() const
+{
+	return static_cast<UnitType*>(type);
+}
+
 bool Unit::changePosition(Tile *newPosition)
 {
 	/*Utility::Logger::getInstance()->log("Changing unit position from (%i,%i) to (%i,%i)\n",
@@ -150,7 +156,7 @@ bool Unit::changePosition(Tile *newPosition)
 
 bool Unit::moveTo(Tile *dst)
 {
-	Utility::Logger::getInstance()->log("Unit::moveTo (%i,%i)\n", dst->getX(), dst->getY());
+	//Utility::Logger::getInstance()->log("Unit::moveTo (%i,%i)\n", dst->getX(), dst->getY());
 	if(tile == dst)
 		return false;
 
@@ -158,7 +164,7 @@ bool Unit::moveTo(Tile *dst)
 		return false;
 
 	//FIXME Add mp check
-	if(dst->canBeAdded(this))
+	if((dst->canBeAdded(this)) && (mp >= dst->getType()->getMovementCost(getType()->getMovementType())))
 	{
 		//Utility::Logger::getInstance()->log("Unit can be added to tile\n");
 		switch(tile->getDirection(dst))
@@ -210,6 +216,8 @@ bool Unit::moveTo(Tile *dst)
 		type->getGraphics()->getCurrent()->start();
 
 		owner->setDone(false);
+
+		mp -= dst->getType()->getMovementCost(getType()->getMovementType());
 
 		return true;
 	}
@@ -265,4 +273,40 @@ bool Unit::updateMovement()
 		}
 	}
 	return false;
+}
+
+int Unit::getHP() const
+{
+	return hp;
+}
+
+int Unit::getSP() const
+{
+	return sp;
+}
+
+int Unit::getMP() const
+{
+	return mp;
+}
+
+void Unit::setHP(int hp)
+{
+	this->hp = hp;
+}
+
+void Unit::setSP(int sp)
+{
+	this->sp = sp;
+}
+
+void Unit::setMP(int mp)
+{
+	this->mp = mp;
+}
+
+void Unit::onTurnBegin()
+{
+	//TODO: Introduce MP and HP regen
+	setMP(getType()->getMaxMP());
 }

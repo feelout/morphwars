@@ -56,11 +56,7 @@ namespace Core
 			// Or just change color of selection frame
 			Unit(UnitType *type, Tile *tile, Player *owner);
 
-			//virtual void draw(Graphics::Drawer *target, int x, int y);
-
-			void setDeltas(int dx, int dy);
-			int getXDelta() const;
-			int getYDelta() const;
+			UnitType* getType() const;
 			
 			/**
 			 * Changes unit position unconditionally (unless tile is occypied by enemy
@@ -83,6 +79,15 @@ namespace Core
 			 * @return true if movement done, false if movement in process
 			 */
 			bool updateMovement();
+
+			int getHP() const;
+			int getSP() const;
+			int getMP() const;
+			void setHP(int hp);
+			void setSP(int sp);
+			void setMP(int mp);
+
+			void onTurnBegin();
 	};
 }
 

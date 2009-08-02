@@ -77,6 +77,8 @@ namespace Core
 
 			void updateFOV();
 
+			void onTurnBegin();
+
 			void renderObjects(Graphics::Drawer *target, int xshift, int yshift, const FieldOfView *fov);
 	};
 }

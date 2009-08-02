@@ -154,6 +154,16 @@ void Player::setCurrent(bool current)
 	this->current = current;
 }
 
+void Player::onTurnBegin()
+{
+	std::vector<Unit*>::iterator i;
+
+	for(i = units.begin(); i != units.end(); ++i)
+	{
+		(*i)->onTurnBegin();
+	}
+}
+
 void Player::renderObjects(Graphics::Drawer *target, int xshift, int yshift, const FieldOfView *fov)
 {
 	//FIXME: Add buildings

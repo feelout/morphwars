@@ -62,6 +62,7 @@ bool MovementOrder::makePath()
 {
 	Utility::Logger::getInstance()->log("Calculating path from (%i,%i) to (%i,%i)\n", unit->getTile()->getX(),
 		unit->getTile()->getY(), target->getX(), target->getY());
+	Utility::Logger::getInstance()->log("Unit MP: %i\n", unit->getMP());
 
 	int distance = unit->getTile()->getDistance(target);
 
@@ -180,8 +181,8 @@ bool MovementOrder::makePath()
 
 void MovementOrder::process()
 {
-	/*Utility::Logger::getInstance()->log("MovementOrder::process().Unit tile: %i,%i\n",
-		unit->getTile()->getX(), unit->getTile()->getY());*/
+	/*Utility::Logger::getInstance()->log("MovementOrder::process().Unit tile: %i,%i. Unit MP: %i",
+		unit->getTile()->getX(), unit->getTile()->getY(), unit->getMP());*/
 	if(done)
 	{
 		return;
@@ -201,7 +202,10 @@ void MovementOrder::process()
 		{
 			if(!(*currentWaypoint)->isEnemy(unit))
 			{
-				unit->moveTo(*currentWaypoint++);
+				if(unit->moveTo(*currentWaypoint))
+				{
+					currentWaypoint++;
+				}
 			}
 			else
 			{
