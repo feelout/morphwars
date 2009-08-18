@@ -1,0 +1,150 @@
+Log started on 0
+Engine created: 16x11284072
+Renderer init succeeded
+Loading scenario Maps/Test/Test.xml
+
+Loading map
+Map dimensions: 5x4
+3 tile types detected
+Couldn`t load Tileset Default
+Calculating map surfaces.
+
+Loading object types
+UnitTypeManager::getType(Boriska)
+	Not found in collection
+MapObjectType::MapObjectType(Boriska, Unit)Loading animation pack Objects/Units/Boriska/Animations.xml
+
+Loading players
+
+New player
+Force number = 0
+Creating force 0
+Player Decluh created.
+Adding units to player
+Type : Boriska
+UnitTypeManager::getType(Boriska)
+Total objects on tile (1,1): 1
+Loading buildings
+
+New player
+Force number = 1
+Creating force 1
+Player Margo created.
+Adding units to player
+Type : Boriska
+UnitTypeManager::getType(Boriska)
+Total objects on tile (3,3): 1
+Loading buildings
+Passing turn to player Decluh
+Scenario loaded
+
+Object selected by player Decluh
+Selected type: Unit
+Moving unit
+OrderManager::addOrder()
+Calculating path from (1,1) to (3,3)
+Unit MP: 10
+Iteration: currentNode = (1,1)
+Iteration: currentNode = (2,2)
+Iteration: currentNode = (2,3)
+Waypoint: (2,2)
+Waypoint: (2,3)
+Waypoint: (3,3)
+Movement complete
+Total objects on tile (2,2): 1
+Changed position
+Movement complete
+Total objects on tile (2,3): 1
+Changed position
+Order is already done
+Orders remaining: 0
+Selected type: Unit
+Moving unit
+OrderManager::addOrder()
+Calculating path from (2,3) to (3,1)
+Unit MP: 4
+Iteration: currentNode = (2,3)
+Iteration: currentNode = (2,1)
+Waypoint: (2,1)
+Waypoint: (3,1)
+Movement complete
+Total objects on tile (2,1): 1
+Changed position
+Passing turn to player Margo
+Object selected by player Margo
+Selected type: Unit
+Moving unit
+OrderManager::addOrder()
+Calculating path from (3,3) to (1,2)
+Unit MP: 10
+Iteration: currentNode = (3,3)
+Iteration: currentNode = (2,3)
+Iteration: currentNode = (2,2)
+Waypoint: (2,3)
+Waypoint: (2,2)
+Waypoint: (1,2)
+Movement complete
+Total objects on tile (2,3): 1
+Changed position
+Movement complete
+Total objects on tile (2,2): 1
+Changed position
+Movement complete
+Total objects on tile (1,2): 1
+Changed position
+MovementOrder done
+Order is already done
+Orders remaining: 1
+Selected type: Unit
+Moving unit
+OrderManager::addOrder()
+Calculating path from (1,2) to (0,1)
+Unit MP: 0
+Iteration: currentNode = (1,2)
+Waypoint: (0,1)
+Passing turn to player Decluh
+Movement complete
+Total objects on tile (3,1): 1
+Changed position
+MovementOrder done
+Order is already done
+Orders remaining: 1
+Selected type: Unit
+Moving unit
+OrderManager::addOrder()
+Calculating path from (3,1) to (4,3)
+Unit MP: 6
+Iteration: currentNode = (3,1)
+Iteration: currentNode = (4,1)
+Waypoint: (4,1)
+Waypoint: (4,3)
+Movement complete
+Total objects on tile (4,1): 1
+Changed position
+Selected type: Unit
+Moving unit
+OrderManager::addOrder()
+Calculating path from (4,1) to (4,3)
+Unit MP: 3
+Iteration: currentNode = (4,1)
+Waypoint: (4,3)
+Passing turn to player Margo
+Movement complete
+Total objects on tile (0,1): 1
+Changed position
+MovementOrder done
+Order is already done
+Orders remaining: 2
+Passing turn to player Decluh
+Movement complete
+Total objects on tile (4,3): 1
+Changed position
+MovementOrder done
+MovementOrder done
+Order is already done
+Orders remaining: 1
+Order is already done
+Orders remaining: 0
+Stopping engine
+Log closed on 19893
+

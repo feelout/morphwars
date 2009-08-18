@@ -22,6 +22,7 @@ namespace Graphics
 			bool init(int width, int height, bool fullscreen);
 			Surface *getBuffer();
 			void flipBuffers();
+			void clear();
 			void shutdown();
 	};
 }

@@ -55,7 +55,6 @@ void Engine::runGameCycle()
 
 	while(!quit)
 	{
-		Renderer::getInstance()->clear();
 		equalizer->frameStarted();
 		// Event processing
 		while(SDL_PollEvent(&event))

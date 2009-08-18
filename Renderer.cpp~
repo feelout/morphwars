@@ -50,7 +50,7 @@ void Renderer::flipBuffers()
 	SDL_Flip(frameBufferSDL);
 }
 
-void Renderer::clear()
+void Render::clear()
 {
 	SDL_FillRect(frameBufferSDL, NULL, 0);
 }
