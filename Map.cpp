@@ -152,7 +152,7 @@ int Map::getHeight() const
 	return height;
 }
 
-void Map::draw(Graphics::Drawer *target, int x, int y, FieldOfView *fov)
+void Map::draw(Graphics::Drawer *target, FieldOfView *fov)
 {
 	int dx=0,dy=0;
 	
@@ -165,8 +165,8 @@ void Map::draw(Graphics::Drawer *target, int x, int y, FieldOfView *fov)
 
 		for(int tilex=0; tilex < width; ++tilex)
 		{
-			getTile(tilex, tiley)->draw(target, x+dx+(tilex*TILE_WIDTH),
-					y+(tiley*(TILE_HEIGHT_OFFSET)-dy), fov->isTileVisible(tilex, tiley));
+			getTile(tilex, tiley)->draw(target, dx+(tilex*TILE_WIDTH),
+					(tiley*(TILE_HEIGHT_OFFSET)-dy), fov->isTileVisible(tilex, tiley));
 		}
 	}
 }

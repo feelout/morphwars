@@ -3,11 +3,12 @@
 #include "Logger.h"
 #include "UnitTypeManager.h"
 #include "Order.h"
+#include "OrderManager.h"
 
 using namespace Core;
 
 Scenario::Scenario(std::string path)
-	: currentPlayer(NULL), map(NULL)
+	: EngineState("Scenario"), currentPlayer(NULL), map(NULL)
 {
 	if(!loadFromFile(path))
 	{
@@ -194,17 +195,22 @@ void Scenario::nextTurn()
 	switchTurn(*i);
 }
 
-void Scenario::draw(Graphics::Drawer *target, int x, int y)
+void Scenario::draw(Graphics::Drawer *target)
 {
 	//FIXME: Add units nad other stuff..
-	map->draw(target, x, y, currentPlayer->getFieldOfView());
+	map->draw(target, currentPlayer->getFieldOfView());
 
 	std::list<Player*>::const_iterator i;
 
 	for(i = players.begin(); i != players.end(); ++i)
 	{
-		(*i)->renderObjects(target, x, y, currentPlayer->getFieldOfView());
+		(*i)->renderObjects(target, currentPlayer->getFieldOfView());
 	}
+}
+
+void Scenario::process()
+{
+	OrderManager::getInstance()->processOrders();
 }
 
 void Scenario::mouseMoved(int x, int y)

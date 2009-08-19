@@ -164,7 +164,7 @@ void Player::onTurnBegin()
 	}
 }
 
-void Player::renderObjects(Graphics::Drawer *target, int xshift, int yshift, const FieldOfView *fov)
+void Player::renderObjects(Graphics::Drawer *target, const FieldOfView *fov)
 {
 	//FIXME: Add buildings
 	std::vector<Unit*>::const_iterator i;
@@ -182,8 +182,8 @@ void Player::renderObjects(Graphics::Drawer *target, int xshift, int yshift, con
 
 		if(fov->isTileVisible(tilex, tiley))
 		{
-			(*i)->draw(target, xshift+dx+(tilex*TILE_WIDTH),
-				yshift+(tiley*(TILE_HEIGHT_OFFSET)-dy));
+			(*i)->draw(target,dx+(tilex*TILE_WIDTH),
+				(tiley*(TILE_HEIGHT_OFFSET)-dy));
 		}
 	}
 }

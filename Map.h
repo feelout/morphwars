@@ -34,7 +34,7 @@ namespace Core
 			int getWidth() const;
 			int getHeight() const;
 
-			void draw(Graphics::Drawer *target, int x, int y, FieldOfView *fov);
+			void draw(Graphics::Drawer *target, FieldOfView *fov);
 	};
 }
 

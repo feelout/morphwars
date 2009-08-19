@@ -3,18 +3,16 @@
 
 using namespace Graphics;
 
-Renderer* Renderer::instance = NULL;
-
 Renderer::Renderer()
 {
 }
 
-Renderer* Renderer::getInstance()
+Renderer::~Renderer()
 {
-	if(!instance)
-		instance = new Renderer();
-	return instance;
+	delete frameBuffer;
+	SDL_Quit();
 }
+
 
 bool Renderer::init(int width, int height, bool fullscreen)
 {
@@ -23,7 +21,7 @@ bool Renderer::init(int width, int height, bool fullscreen)
 		return false;
 	}
 
-	int flags = SDL_SWSURFACE;
+	int flags = SDL_SWSURFACE | SDL_SRCALPHA;
 
 	if(fullscreen)
 	{
@@ -53,10 +51,5 @@ void Renderer::flipBuffers()
 void Renderer::clear()
 {
 	SDL_FillRect(frameBufferSDL, NULL, 0);
-}
-
-void Renderer::shutdown()
-{
-	delete frameBuffer;
 }
 

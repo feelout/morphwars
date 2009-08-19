@@ -35,7 +35,9 @@ void Drawer::drawRect(Rect rect, RGBColor color)
 
 void Drawer::fillRect(Rect rect, RGBColor color)
 {
-	boxRGBA(target->getSurface(), rect.x, rect.y, rect.x+rect.w, rect.y+rect.h, color.r, color.g, color.b, 255);
+	//boxRGBA(target->getSurface(), rect.x, rect.y, rect.x+rect.w, rect.y+rect.h, color.r, color.g, color.b, color.a);
+	SDL_Rect sdlrect = {rect.x, rect.y, rect.w, rect.h};
+	SDL_FillRect(target->getSurface(), &sdlrect, SDL_MapRGB(target->getSurface()->format, color.r, color.b, color.b));
 }
 
 Surface* Drawer::getTarget() const

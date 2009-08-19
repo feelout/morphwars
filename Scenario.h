@@ -6,11 +6,11 @@
 #include "Map.h"
 #include "Player.h"
 #include "Drawer.h"
-#include "EventDispatcher.h"
+#include "EngineState.h"
 
 namespace Core
 {
-	class Scenario : public IEventListener
+	class Scenario : public EngineState
 	{
 		private:
 			/** Pass <map> TiXMLNode to Map class **/
@@ -26,7 +26,8 @@ namespace Core
 			void switchTurn(Player *player);
 			void nextTurn();
 
-			virtual void draw(Graphics::Drawer *target, int x, int y);
+			virtual void draw(Graphics::Drawer *target);
+			virtual void process();
 
 			virtual void mouseMoved(int x, int y);
 			virtual void mouseLMBClicked(int x, int y);

@@ -79,7 +79,7 @@ namespace Core
 
 			void onTurnBegin();
 
-			void renderObjects(Graphics::Drawer *target, int xshift, int yshift, const FieldOfView *fov);
+			void renderObjects(Graphics::Drawer *target, const FieldOfView *fov);
 	};
 }
 

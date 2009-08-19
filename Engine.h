@@ -5,6 +5,10 @@
 #include "EventDispatcher.h"
 #include "FPSEqualizer.h"
 #include "Scenario.h"
+#include "Button.h"
+#include "Renderer.h"
+#include "StateStack.h"
+#include "Menu.h"
 
 /**
  * Engine coordinates all subsystems and game cycle
@@ -22,14 +26,13 @@ class Engine
 		 */
 		bool quit;
 
-		/**
-		 * Dispatches events to all present subsytems
-		 */
+		Graphics::Renderer *renderer;
 		EventDispatcher *dispatcher;
-
 		Utility::FPSEqualizer *equalizer;
-
 		Core::Scenario *currentScenario;
+		Core::StateStack *stateStack;
+
+		Core::MenuState *menu; //TODO : maybe move out of class definition
 
 		/**
 		 * Constructs window and initializes subsystems
@@ -42,11 +45,6 @@ class Engine
 		 * Destructor - performs cleanup
 		 */
 		~Engine(); //cleanup
-
-		/**
-		 * Initializes SDL and sets video mode
-		 */
-		bool setupSDL();
 	public:
 		/**
 		 * Initialize Engine with given parametres
@@ -71,6 +69,7 @@ class Engine
 
 		//DEBUG
 		bool loadScenario(std::string path);
+		void changeState(Core::EngineState *newState);
 };
 
 #endif // ENGINE_H

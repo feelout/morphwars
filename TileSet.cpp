@@ -54,6 +54,8 @@ bool TileSet::loadTileSet(std::string name)
 
 	fclose(f_def);
 	delete f_map;
+
+	return true;
 }
 
 TileType* TileSet::getType(int n) const

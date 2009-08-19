@@ -13,17 +13,13 @@ namespace Graphics
 			SDL_Surface *frameBufferSDL;
 			Surface *frameBuffer;
 
-			static Renderer *instance;
-
-			Renderer();
 		public:
-			static Renderer* getInstance();
-
+			Renderer();
+			~Renderer();
 			bool init(int width, int height, bool fullscreen);
 			Surface *getBuffer();
 			void flipBuffers();
 			void clear();
-			void shutdown();
 	};
 }
 

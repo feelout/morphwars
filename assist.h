@@ -41,6 +41,11 @@ struct Rect
 		return ( (px <= x+w) && (px >= x) && (py <= y+h) && (py >= y) );
 	}
 
+	bool isRectInRect(const Rect& other)
+	{
+		return ( (other.x >= x) && (other.x+other.w <= x+w) && (other.y >= y) && (other.y+other.h <= y+h) );
+	}
+
 	SDL_Rect toSDLRect() const
 	{
 		SDL_Rect rect;
@@ -86,4 +91,5 @@ struct RGBColor
 		return ( (r == other.r) && (g == other.g) && (b == other.b) );
 	}
 };
+
 #endif //ASSIST_H

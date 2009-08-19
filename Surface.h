@@ -15,6 +15,8 @@ namespace Graphics
 	{
 		private:
 			SDL_Surface *surface;
+
+			SDL_Surface* createEmptySurface(int width, int height);
 		public:
 			/**
 			 * Creates a surface from given SDL_Surface
@@ -53,7 +55,7 @@ namespace Graphics
 			 * @param x x coord of blit point
 			 * @param y y coord of blit point
 			 */
-			void blit(Surface *target, int x, int y);
+			void blit(Surface *target, int x, int y) const;
 			/**
 			 * Blits part of surface to target
 			 * @param target Surface to blit to
@@ -61,7 +63,9 @@ namespace Graphics
 			 * @param x x coord of blit point
 			 * @param y y coord of blit point
 			 */
-			void blit(Surface *target, Rect *clip, int x, int y);
+			void blit(Surface *target, Rect *clip, int x, int y) const;
+
+			Surface& operator=(const Surface& other); //Copy surface, not pointer
 
 			/**
 			 * Splits surface into frames
