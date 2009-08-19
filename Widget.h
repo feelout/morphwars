@@ -12,6 +12,11 @@ namespace Gui
 			Rect frame;
 			bool active;
 			bool focused;
+
+			/**
+			 * Is called, when widget frame changes
+			 */
+			virtual void frameUpdated();
 		public:
 			Widget(Rect frame);
 

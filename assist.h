@@ -5,6 +5,8 @@
  */
 
 #include <SDL/SDL.h>
+#include <list>
+#include <string>
 
 /**
  * Creates SDL_Surface
@@ -91,5 +93,7 @@ struct RGBColor
 		return ( (r == other.r) && (g == other.g) && (b == other.b) );
 	}
 };
+
+std::list<std::string> ListFilesInFolder(std::string dirname);
 
 #endif //ASSIST_H

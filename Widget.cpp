@@ -3,7 +3,12 @@
 using namespace Gui;
 
 Widget::Widget(Rect frame)
-	: frame(frame), active(true), focused(false)
+	: active(true), focused(false)
+{
+	setFrame(frame);
+}
+
+void Widget::frameUpdated()
 {
 }
 

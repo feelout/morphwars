@@ -1,4 +1,6 @@
+#include <dirent.h>
 #include "assist.h"
+#include "Logger.h"
 
 RGBColor RGBColor::RED = RGBColor(255, 0, 0);
 RGBColor RGBColor::YELLOW = RGBColor(255, 255, 0);
@@ -24,3 +26,26 @@ SDL_Surface *createSurface(int w, int h)
 #endif
 	return SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_SRCCOLORKEY, w , h, rmask, 32, gmask, bmask, amask);
 }
+
+std::list<std::string> ListFilesInFolder(std::string dirname)
+{
+	std::list<std::string> result;
+
+	DIR *dp;
+	dirent *dirp;
+	
+	if( (dp = opendir(dirname.c_str())) == NULL )
+	{
+		Utility::Logger::getInstance()->log("Failed to open folder %s\n", dirname.c_str());
+		return result;
+	}
+
+	while( (dirp = readdir(dp)) != NULL)
+	{
+		result.push_back(std::string(dirp->d_name));
+	}
+
+	closedir(dp);
+	return result;
+}
+
