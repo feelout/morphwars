@@ -1,4 +1,5 @@
 #include "List.h"
+#include "FontSystem.h"
 
 using namespace Gui;
 
@@ -60,5 +61,7 @@ void List::draw(Graphics::Drawer *target)
 			color = RGBColor(30, 30, 30);
 		}
 		target->fillRect(Rect(frame.x, frame.y+i*ITEM_HEIGHT, frame.w, ITEM_HEIGHT), color);
+
+		Graphics::FontSystem::getInstance()->print(target, items[i], frame.x, frame.y+i*ITEM_HEIGHT, RGBColor(255,0,0));	
 	}
 }

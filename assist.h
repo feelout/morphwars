@@ -84,6 +84,12 @@ struct RGBColor
 	{
 		RGBColor(0, 0, 0);
 	}
+	
+	SDL_Color toSDLColor()
+	{
+		SDL_Color result = {r, g, b, 0};
+		return result;
+	}
 
 	bool operator==(RGBColor& other)
 	{
