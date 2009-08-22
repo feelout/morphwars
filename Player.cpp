@@ -50,6 +50,24 @@ void FieldOfView::setTileVisible(int x, int y, bool visible)
 	tiles[x+y*w] = visible;
 }
 
+FieldOfView& FieldOfView::operator = (const FieldOfView& other)
+{
+	for(int i=0; i < w*h; ++i)
+	{
+		tiles[i] = other.tiles[i];
+	}
+}
+
+bool FieldOfView::operator == (const FieldOfView& other)
+{
+	for(int i=0; i < w*h; ++i)
+	{
+		if(tiles[i] != other.tiles[i]) return false;
+	}
+
+	return true;
+}
+
 void Player::updateFOV()
 {
 	fov->clear();

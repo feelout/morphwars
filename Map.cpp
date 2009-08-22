@@ -16,7 +16,7 @@ bool CompareTiles(Tile *t1, Tile *t2)
 }
 
 Map::Map(int width, int height, std::string tilesetname)
-	: width(width), height(height)
+	: width(width), height(height), cached(NULL)
 {
 	tiles = new Tile*[width*height];
 	tileset = new TileSet(tilesetname);
@@ -29,9 +29,14 @@ Map::Map(int width, int height, std::string tilesetname)
 			tiles[x+y*width]->setImage(tiles[x+y*width]->getType()->getTileImage(CENTER));
 		}
 	}
+
+	//width+1 because of tile shift
+	cached = new Graphics::Surface((width+1)*TILE_WIDTH, height*TILE_HEIGHT);
+	lastFov = new FieldOfView(width, height);
 }
 
 Map::Map(TiXmlElement *xmlmap)
+	: cached(NULL)
 {
 	xmlmap->QueryIntAttribute("width", &width);
 	xmlmap->QueryIntAttribute("height", &height);
@@ -58,6 +63,8 @@ Map::Map(TiXmlElement *xmlmap)
 	}
 
 	calculateSurfaces();
+	cached = new Graphics::Surface((width+1)*TILE_WIDTH, height*TILE_HEIGHT);
+	lastFov = new FieldOfView(width, height); 
 }
 
 void Map::calculateSurfaces()
@@ -128,6 +135,7 @@ Map::~Map()
 	}
 	delete[] tiles;
 	delete tileset;
+	delete cached;
 }
 
 Tile* Map::getTile(int x, int y)
@@ -156,19 +164,27 @@ void Map::draw(Graphics::Drawer *target, FieldOfView *fov)
 {
 	int dx=0,dy=0;
 	
-	for(int tiley=0; tiley < height; ++tiley)
+	if(!(*lastFov == *fov)) //update cache, maybe it`s not so effective(FOV must be cloned)
 	{
-		dx = (tiley % 2) * TILE_WIDTH/2;
-		dy = TILE_HEIGHT - TILE_TERRAIN_HEIGHT;
-
-		//printf("Row %i: shift: %i, height: %i\n", tiley, dy, tiley*(TILE_TERRAIN_HEIGHT)-dy);
-
-		for(int tilex=0; tilex < width; ++tilex)
+		Utility::Logger::getInstance()->log("Rebuilding map cache\n");
+		Graphics::Drawer cachedDrawer(cached);
+		for(int tiley=0; tiley < height; ++tiley)
 		{
-			getTile(tilex, tiley)->draw(target, dx+(tilex*TILE_WIDTH),
-					(tiley*(TILE_HEIGHT_OFFSET)-dy), fov->isTileVisible(tilex, tiley));
+			dx = (tiley % 2) * TILE_WIDTH/2;
+			dy = TILE_HEIGHT - TILE_TERRAIN_HEIGHT;
+
+			//printf("Row %i: shift: %i, height: %i\n", tiley, dy, tiley*(TILE_TERRAIN_HEIGHT)-dy);
+
+			for(int tilex=0; tilex < width; ++tilex)
+			{
+				getTile(tilex, tiley)->draw(&cachedDrawer, dx+(tilex*TILE_WIDTH),
+						(tiley*(TILE_HEIGHT_OFFSET)-dy), fov->isTileVisible(tilex, tiley));
+			}
 		}
+
+		*lastFov = *fov;
 	}
+	cached->blit(target->getTarget(), 0, 0);
 }
 
 Tile* Map::getTileByMouseCoords(int mx, int my, int dx, int dy)

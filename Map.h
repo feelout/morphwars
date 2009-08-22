@@ -6,6 +6,7 @@
 #include "TileSet.h"
 #include "Drawer.h"
 #include "Player.h"
+#include "Widget.h"
 #include "tinyxml.h"
 
 namespace Core
@@ -17,12 +18,18 @@ namespace Core
 			TileSet *tileset;
 
 			int width,height;
+			//FIXME: work on this one
+			Rect clip;
 
 			std::string author;
 			std::string name;
 			std::string version;
 
 			void calculateSurfaces();
+
+			//Cache
+			FieldOfView *lastFov;
+			Graphics::Surface *cached;
 		public:
 			Map(int width, int height, std::string tilesetName);
 			Map(TiXmlElement *xmlmap);

@@ -84,17 +84,15 @@ void List::draw(Graphics::Drawer *target)
 	RGBColor color;
 	for(int i=topItem; i < lastItem; ++i)
 	{
-		//FIXME: Write item`s string itself
 		if(i == currentItem)
 		{
-			//Utility::Logger::getInstance()->log("It is current item\n");
 			color = RGBColor(30, 80, 120);
 			//FIXME: why doesn`t RGBColor::GREEN work?
 		}
 		else
 		{
-			//Utility::Logger::getInstance()->log("It is not current item\n");
 			color = RGBColor(30, 30, 30);
+			//color = RGBColor::YELLOW;
 		}
 		target->fillRect(Rect(frame.x, frame.y+i*ITEM_HEIGHT, frame.w, ITEM_HEIGHT), color);
 		target->drawRect(Rect(frame.x, frame.y+i*ITEM_HEIGHT, frame.w, ITEM_HEIGHT), RGBColor::WHITE);

@@ -33,6 +33,9 @@ namespace Core
 			void setTileVisible(int x, int y, bool visible);
 
 			void clear();
+
+			FieldOfView& operator = (const FieldOfView& other);
+			bool operator == (const FieldOfView& other);
 	};
 
 	class Player
