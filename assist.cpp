@@ -27,9 +27,9 @@ SDL_Surface *createSurface(int w, int h)
 	return SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_SRCCOLORKEY, w , h, rmask, 32, gmask, bmask, amask);
 }
 
-std::list<std::string> ListFilesInFolder(std::string dirname)
+std::vector<std::string> ListFilesInFolder(std::string dirname)
 {
-	std::list<std::string> result;
+	std::vector<std::string> result;
 
 	DIR *dp;
 	dirent *dirp;
@@ -42,6 +42,9 @@ std::list<std::string> ListFilesInFolder(std::string dirname)
 
 	while( (dirp = readdir(dp)) != NULL)
 	{
+		// Remove '.' and '..'
+		if(dirp->d_name[0] == '.') continue;
+
 		result.push_back(std::string(dirp->d_name));
 	}
 

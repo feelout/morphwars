@@ -135,3 +135,8 @@ void Engine::changeState(Core::EngineState *newState)
 	dispatcher->attachListener(newState);
 	stateStack->push(newState);
 }
+
+Graphics::Renderer* Engine::getRenderer() const
+{
+	return renderer;
+}

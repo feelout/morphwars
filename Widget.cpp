@@ -1,4 +1,5 @@
 #include "Widget.h"
+#include "Logger.h"
 
 using namespace Gui;
 
@@ -10,6 +11,7 @@ Widget::Widget(Rect frame)
 
 void Widget::frameUpdated()
 {
+	Utility::Logger::getInstance()->log("Widget::frameUpdated()\n");
 }
 
 Rect Widget::getFrame() const
@@ -19,7 +21,10 @@ Rect Widget::getFrame() const
 
 void Widget::setFrame(Rect frame)
 {
+	Utility::Logger::getInstance()->log("Widget::setFrame()\n");
 	this->frame = frame;
+
+	frameUpdated();
 }
 
 bool Widget::isFocused() const

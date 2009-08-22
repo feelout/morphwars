@@ -34,6 +34,9 @@ bool Renderer::init(int width, int height, bool fullscreen)
 		return false;
 		
 	frameBuffer = new Surface(frameBufferSDL);
+
+	this->width = width;
+	this->height = height;
 	
 	return true;
 }
@@ -53,3 +56,12 @@ void Renderer::clear()
 	SDL_FillRect(frameBufferSDL, NULL, 0);
 }
 
+int Renderer::getWidth() const
+{
+	return width;
+}
+
+int Renderer::getHeight() const
+{
+	return height;
+}

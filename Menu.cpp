@@ -1,6 +1,7 @@
 #include "Menu.h"
 #include "Engine.h"
 #include "Logger.h"
+#include "ScenarioSelector.h"
 #include <stdio.h>
 
 using namespace Core;
@@ -16,7 +17,9 @@ void CampaignButtonCallback()
 
 void ScenarioButtonCallback()
 {
-	Engine::getInstance()->loadScenario("Maps\\Test\\Test.xml");
+	//Engine::getInstance()->loadScenario("Maps\\Test\\Test.xml");
+	Graphics::Renderer *renderer = Engine::getInstance()->getRenderer();
+	Engine::getInstance()->changeState(new ScenarioSelectingState(renderer->getWidth(), renderer->getHeight()));
 }
 
 void LoadButtonCallback()

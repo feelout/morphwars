@@ -12,6 +12,7 @@ namespace Graphics
 		private:
 			SDL_Surface *frameBufferSDL;
 			Surface *frameBuffer;
+			int width, height;
 
 		public:
 			Renderer();
@@ -20,6 +21,9 @@ namespace Graphics
 			Surface *getBuffer();
 			void flipBuffers();
 			void clear();
+
+			int getWidth() const;
+			int getHeight() const;
 	};
 }
 

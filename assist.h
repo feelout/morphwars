@@ -5,7 +5,7 @@
  */
 
 #include <SDL/SDL.h>
-#include <list>
+#include <vector>
 #include <string>
 
 /**
@@ -100,6 +100,6 @@ struct RGBColor
 	}
 };
 
-std::list<std::string> ListFilesInFolder(std::string dirname);
+std::vector<std::string> ListFilesInFolder(std::string dirname);
 
 #endif //ASSIST_H
