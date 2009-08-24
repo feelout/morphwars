@@ -2,6 +2,7 @@
 #include "Drawer.h"
 #include "Logger.h"
 #include <SDL/SDL_image.h>
+#include <SDL_rotozoom.h>
 
 using namespace Graphics;
 
@@ -115,6 +116,13 @@ Surface& Surface::operator=(const Surface& other)
 	this->surface = createEmptySurface(other.getWidth(), other.getHeight());		
 	other.blit(this, 0, 0);
 	return *this;
+}
+
+Surface* Surface::zoom(double x_factor, double y_factor, bool antialias)
+{
+	Utility::Logger::getInstance()->log("Zooming surface: xf = %d, yf = %d\n", x_factor, y_factor);
+	SDL_Surface *result = zoomSurface(surface, x_factor, y_factor, antialias ? 1 : 0);
+	return new Surface(result);
 }
 
 std::vector<Surface*> Surface::splitSpriteStrip(Surface *strip, int frameWidth, int frameHeight)

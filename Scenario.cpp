@@ -4,8 +4,11 @@
 #include "UnitTypeManager.h"
 #include "Order.h"
 #include "OrderManager.h"
+#include "Engine.h"
 
 using namespace Core;
+
+const int PANEL_WIDTH = 150;
 
 Scenario::Scenario(std::string path)
 	: EngineState("Scenario"), currentPlayer(NULL), map(NULL)
@@ -38,7 +41,10 @@ bool Scenario::loadFromFile(std::string path)
 
 	/** Map and tileset **/
 	Utility::Logger::getInstance()->log("\nLoading map\n");
-	map = new Map(root->FirstChildElement("map"));
+
+	Graphics::Renderer *renderer = Engine::getInstance()->getRenderer();
+	map = new Map(Rect(5,5, renderer->getWidth()-PANEL_WIDTH-10, renderer->getHeight()-10),
+		       	root->FirstChildElement("map"));
 
 	Utility::Logger::getInstance()->log("\nLoading object types\n");
 	/** Unit and Building types **/
@@ -198,13 +204,14 @@ void Scenario::nextTurn()
 void Scenario::draw(Graphics::Drawer *target)
 {
 	//FIXME: Add units nad other stuff..
+	//FIXME: Shift units
 	map->draw(target, currentPlayer->getFieldOfView());
 
 	std::list<Player*>::const_iterator i;
 
 	for(i = players.begin(); i != players.end(); ++i)
 	{
-		(*i)->renderObjects(target, currentPlayer->getFieldOfView());
+		(*i)->renderObjects(target, currentPlayer->getFieldOfView(), map);
 	}
 }
 
@@ -219,7 +226,7 @@ void Scenario::mouseMoved(int x, int y)
 
 void Scenario::mouseLMBClicked(int x, int y)
 {
-	Tile *clickedTile = map->getTileByMouseCoords(x, y, 0, 0);
+	Tile *clickedTile = map->getTileByMouseCoords(x, y);
 
 	if(!clickedTile)
 		return;
@@ -239,7 +246,7 @@ void Scenario::mouseLMBClicked(int x, int y)
 void Scenario::mouseRMBClicked(int x, int y)
 {
 	//Utility::Logger::getInstance()->log("\nMouse RMB clicked on (%i,%i)\n", x, y);
-	Tile *clickedTile = map->getTileByMouseCoords(x, y, 0, 0);
+	Tile *clickedTile = map->getTileByMouseCoords(x, y);
 
 	if(!clickedTile)
 		return;

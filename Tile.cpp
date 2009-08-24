@@ -281,7 +281,7 @@ void Tile::draw(Graphics::Drawer *target, int x, int y, bool visible)
 		/*for(std::vector<MapObject*>::iterator i = objects.begin(); i != objects.end(); ++i)
 		{
 			(*i)->draw(target, x, y);
-		}*/
+		}*/ //Can`t use because of map caching
 	}
 	else
 	{

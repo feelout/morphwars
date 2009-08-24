@@ -59,12 +59,10 @@ void FontSystem::print(Drawer *target, std::string text, int x, int y, RGBColor 
 	SDL_Surface *rendered = NULL;
 	if(quality == BLENDED)
 	{
-		Utility::Logger::getInstance()->log("Printing blended text.\n");
 		rendered = TTF_RenderText_Blended(fonts[info], text.c_str(), color.toSDLColor());
 	}
 	else if(quality ==  SOLID)
 	{
-		Utility::Logger::getInstance()->log("Printing solid text.\n");
 		rendered = TTF_RenderText_Solid(fonts[info], text.c_str(), color.toSDLColor());
 	}
 

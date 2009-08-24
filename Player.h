@@ -13,6 +13,7 @@ namespace Core
 	class Unit;
 	class Building;
 	class MapObject;
+	class Map;
 
 	enum Fraction
 	{
@@ -82,7 +83,7 @@ namespace Core
 
 			void onTurnBegin();
 
-			void renderObjects(Graphics::Drawer *target, const FieldOfView *fov);
+			void renderObjects(Graphics::Drawer *target, const FieldOfView *fov, const Map *map);
 	};
 }
 

@@ -67,6 +67,8 @@ namespace Graphics
 
 			Surface& operator=(const Surface& other); //Copy surface, not pointer
 
+			Surface* zoom(double x_factor, double y_factor, bool antialias=false);
+
 			/**
 			 * Splits surface into frames
 			 * @param strip Source surface

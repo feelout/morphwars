@@ -3,6 +3,7 @@
 #include "Logger.h"
 #include "Tile.h"
 #include "Unit.h"
+#include "Map.h"
 
 using namespace Core;
 
@@ -182,7 +183,7 @@ void Player::onTurnBegin()
 	}
 }
 
-void Player::renderObjects(Graphics::Drawer *target, const FieldOfView *fov)
+void Player::renderObjects(Graphics::Drawer *target, const FieldOfView *fov, const Map *map)
 {
 	//FIXME: Add buildings
 	std::vector<Unit*>::const_iterator i;
@@ -195,8 +196,12 @@ void Player::renderObjects(Graphics::Drawer *target, const FieldOfView *fov)
 		tilex = (*i)->getTile()->getX();
 		tiley = (*i)->getTile()->getY();
 
-		dx = (tiley % 2) * TILE_WIDTH/2;
-		dy = TILE_HEIGHT - TILE_TERRAIN_HEIGHT;
+		if(!map->getClipping().isPointInRect(tilex, tiley))
+			continue;
+
+		//FIXME: Change coordinates when shifted
+		dx = (tiley % 2) * TILE_WIDTH/2 + map->getFrame().x - map->getClipping().x * TILE_WIDTH;
+		dy = TILE_HEIGHT - TILE_TERRAIN_HEIGHT - map->getFrame().y + map->getClipping().y * (TILE_HEIGHT / 2);
 
 		if(fov->isTileVisible(tilex, tiley))
 		{

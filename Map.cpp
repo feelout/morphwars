@@ -15,8 +15,8 @@ bool CompareTiles(Tile *t1, Tile *t2)
 	return t1->getType()->getPriority() > t2->getType()->getPriority();
 }
 
-Map::Map(int width, int height, std::string tilesetname)
-	: width(width), height(height), cached(NULL)
+Map::Map(Rect frame, int width, int height, std::string tilesetname)
+	: width(width), height(height), cached(NULL), clip(0,0,0,0)
 {
 	tiles = new Tile*[width*height];
 	tileset = new TileSet(tilesetname);
@@ -33,10 +33,12 @@ Map::Map(int width, int height, std::string tilesetname)
 	//width+1 because of tile shift
 	cached = new Graphics::Surface((width+1)*TILE_WIDTH, height*TILE_HEIGHT);
 	lastFov = new FieldOfView(width, height);
+
+	setFrame(frame);
 }
 
-Map::Map(TiXmlElement *xmlmap)
-	: cached(NULL)
+Map::Map(Rect frame, TiXmlElement *xmlmap)
+	: cached(NULL), clip(0,0,0,0)
 {
 	xmlmap->QueryIntAttribute("width", &width);
 	xmlmap->QueryIntAttribute("height", &height);
@@ -65,6 +67,14 @@ Map::Map(TiXmlElement *xmlmap)
 	calculateSurfaces();
 	cached = new Graphics::Surface((width+1)*TILE_WIDTH, height*TILE_HEIGHT);
 	lastFov = new FieldOfView(width, height); 
+
+	setFrame(frame);
+}
+
+void Map::recalculateClipping()
+{
+	clip.w = frame.w / TILE_WIDTH;
+	clip.h = frame.h / TILE_HEIGHT;
 }
 
 void Map::calculateSurfaces()
@@ -160,48 +170,77 @@ int Map::getHeight() const
 	return height;
 }
 
-void Map::draw(Graphics::Drawer *target, FieldOfView *fov)
+void Map::setFrame(Rect frame)
+{
+	this->frame = frame;
+	recalculateClipping();
+}
+
+Rect Map::getFrame() const
+{
+	return frame;
+}
+
+void Map::setPointOfView(int x, int y)
+{
+	clip.x = x;
+	clip.y = y;
+}
+
+Rect Map::getClipping() const
+{
+	return clip;
+}
+
+void Map::draw(Graphics::Drawer *target, FieldOfView *fov, bool drawframe)
 {
 	int dx=0,dy=0;
 	
 	if(!(*lastFov == *fov)) //update cache, maybe it`s not so effective(FOV must be cloned)
 	{
 		Utility::Logger::getInstance()->log("Rebuilding map cache\n");
+
+		int max_tilex = (width < clip.w) ? width : (clip.x + clip.w);
+		int max_tiley = (height < clip.h) ? height : (clip.y + clip.h);
+		Utility::Logger::getInstance()->log("max_tilex = %i, max_tiley = %i\n", max_tilex, max_tiley);
+		Utility::Logger::getInstance()->log("Clipping rect: %i, %i, %i, %i\n", clip.x, clip.y, clip.w, clip.h);
+
 		Graphics::Drawer cachedDrawer(cached);
-		for(int tiley=0; tiley < height; ++tiley)
+		//for(int tiley=0; tiley < height; ++tiley)
+		for(int tiley=clip.y; tiley < max_tiley; ++tiley)
 		{
 			dx = (tiley % 2) * TILE_WIDTH/2;
 			dy = TILE_HEIGHT - TILE_TERRAIN_HEIGHT;
 
 			//printf("Row %i: shift: %i, height: %i\n", tiley, dy, tiley*(TILE_TERRAIN_HEIGHT)-dy);
 
-			for(int tilex=0; tilex < width; ++tilex)
+			//for(int tilex=0; tilex < width; ++tilex)
+			for(int tilex=clip.x; tilex < max_tilex; ++tilex)
 			{
-				getTile(tilex, tiley)->draw(&cachedDrawer, dx+(tilex*TILE_WIDTH),
-						(tiley*(TILE_HEIGHT_OFFSET)-dy), fov->isTileVisible(tilex, tiley));
+				getTile(tilex, tiley)->draw(&cachedDrawer, frame.x + dx+(tilex*TILE_WIDTH),
+						frame.y + (tiley*(TILE_HEIGHT_OFFSET)-dy), fov->isTileVisible(tilex, tiley));
 			}
 		}
 
 		*lastFov = *fov;
 	}
 	cached->blit(target->getTarget(), 0, 0);
+
+	if(drawframe)
+	{
+		target->drawRect(frame, RGBColor::WHITE);
+	}
 }
 
-Tile* Map::getTileByMouseCoords(int mx, int my, int dx, int dy)
+Tile* Map::getTileByMouseCoords(int mx, int my)
 {
 	Graphics::Surface coordFinder("Gfx/CoordFinder.png");
 
-	int rectX = (mx-dx) / coordFinder.getWidth();
-	int rectY = (my-dy) / coordFinder.getHeight() * 2;
+	int rectX = (mx-frame.x) / coordFinder.getWidth();
+	int rectY = (my-frame.y) / coordFinder.getHeight() * 2;
 
-	/*if(rectY % 2 == 1)
-	{
-		++rectX;
-	}*/
-	int cf_x = (mx-dx) % coordFinder.getWidth();
-	int cf_y = (my-dy) % coordFinder.getHeight();
-
-	//Utility::Logger::getInstance()->log("%i, %i, %i, %i\n", rectX, rectY, cf_x, cf_y);
+	int cf_x = (mx-frame.x) % coordFinder.getWidth();
+	int cf_y = (my-frame.y) % coordFinder.getHeight();
 
 	int tilex, tiley;
 
@@ -233,6 +272,10 @@ Tile* Map::getTileByMouseCoords(int mx, int my, int dx, int dy)
 		tilex = rectX;
 		tiley = rectY+1;
 	}
+
+	/* Handle shifting */
+	tilex += clip.x;
+	tiley += clip.y;
 
 	if( (tilex > width) || (tilex < 0) || (tiley > height) || (tiley < 0) )
 	{
