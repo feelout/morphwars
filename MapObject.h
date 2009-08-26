@@ -9,7 +9,7 @@
 
 namespace Core
 {
-	class Player; //FIXME: Write player
+	class Player;
 	/**
 	 * Prototype for map objects. To be subclassed.
 	 */

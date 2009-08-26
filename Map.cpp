@@ -187,6 +187,11 @@ void Map::setPointOfView(int x, int y)
 	clip.y = y;
 }
 
+void Map::setClipping(Rect clip)
+{
+	this->clip = clip;
+}
+
 Rect Map::getClipping() const
 {
 	return clip;

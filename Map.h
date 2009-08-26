@@ -53,6 +53,7 @@ namespace Core
 			Rect getFrame() const;
 
 			void setPointOfView(int x, int y);
+			void setClipping(Rect clip);
 			Rect getClipping() const;
 
 			void draw(Graphics::Drawer *target, FieldOfView *fov, bool drawframe=true);

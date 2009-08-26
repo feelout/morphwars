@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Drawer.h"
 #include "EngineState.h"
+#include "SidePanel.h"
 
 namespace Core
 {
@@ -19,6 +20,8 @@ namespace Core
 			std::list<Player*> players;
 			Map *map;
 			Player *currentPlayer;
+
+			Gui::SidePanel *sidepanel;
 		public:
 			Scenario(std::string path);
 			~Scenario();

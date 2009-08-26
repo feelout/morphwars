@@ -18,7 +18,7 @@ namespace Gui
 			 * @param string If true, container will not allow
 			 *  adding children outside of container`s frame
 			 */
-			Container(Rect frame, bool strict);
+			Container(Rect frame, bool strict=false);
 
 			bool addChild(Widget *child);
 			bool removeChild(Widget *child);

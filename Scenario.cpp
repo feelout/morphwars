@@ -8,15 +8,19 @@
 
 using namespace Core;
 
-const int PANEL_WIDTH = 150;
-
 Scenario::Scenario(std::string path)
 	: EngineState("Scenario"), currentPlayer(NULL), map(NULL)
 {
 	if(!loadFromFile(path))
 	{
 		Utility::Logger::getInstance()->log("Failed to load scenario %s\n", path.c_str());
+		return;
 	}
+
+	int screen_width = Engine::getInstance()->getRenderer()->getWidth();
+	int screen_height = Engine::getInstance()->getRenderer()->getHeight();
+	sidepanel = new Gui::SidePanel(Rect(screen_width-Gui::SidePanel::SIDE_PANEL_WIDTH-5, 5,
+				Gui::SidePanel::SIDE_PANEL_WIDTH, screen_height-10), map);
 }
 
 Scenario::~Scenario()
@@ -43,7 +47,7 @@ bool Scenario::loadFromFile(std::string path)
 	Utility::Logger::getInstance()->log("\nLoading map\n");
 
 	Graphics::Renderer *renderer = Engine::getInstance()->getRenderer();
-	map = new Map(Rect(5,5, renderer->getWidth()-PANEL_WIDTH-10, renderer->getHeight()-10),
+	map = new Map(Rect(5,5, renderer->getWidth()-Gui::SidePanel::SIDE_PANEL_WIDTH-15, renderer->getHeight()-10),
 		       	root->FirstChildElement("map"));
 
 	Utility::Logger::getInstance()->log("\nLoading object types\n");
@@ -203,9 +207,8 @@ void Scenario::nextTurn()
 
 void Scenario::draw(Graphics::Drawer *target)
 {
-	//FIXME: Add units nad other stuff..
-	//FIXME: Shift units
 	map->draw(target, currentPlayer->getFieldOfView());
+	sidepanel->draw(target);
 
 	std::list<Player*>::const_iterator i;
 
