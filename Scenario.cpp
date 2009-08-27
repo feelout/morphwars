@@ -106,6 +106,8 @@ bool Scenario::loadFromFile(std::string path)
 		child->ToElement()->QueryIntAttribute("g", &g);
 		child->ToElement()->QueryIntAttribute("b", &b);
 
+
+
 		int forcenum = 0;
 		child->ToElement()->QueryIntAttribute("force", &forcenum);
 
@@ -131,6 +133,27 @@ bool Scenario::loadFromFile(std::string path)
 
 		currentPlayer = new Player(child->ToElement()->Attribute("name"),  fraction, force, RGBColor(r,g,b), 
 				map->getWidth(), map->getHeight());
+
+		/** Adding controller **/
+		PlayerController *currentController = NULL;
+		std::string s_controller = child->ToElement()->Attribute("controller");
+
+		// TODO: Make using factory
+		if(s_controller == "local")
+		{
+			currentController = new LocalPlayerController(currentPlayer, map);
+		}
+		else if(s_controller == "ai")
+		{
+			currentController = new AIPlayerController(currentPlayer);
+		}	
+		else
+		{
+			Utility::Logger::getInstance()->log("Unknown controller type: %s\n", s_controller.c_str());
+		}
+
+		//TODO: maybe hold players/controllers in map, or list of pairs
+		controllers.push_back(currentController);
 
 		section = child->FirstChildElement("units");
 
@@ -229,6 +252,7 @@ void Scenario::mouseMoved(int x, int y)
 
 void Scenario::mouseLMBClicked(int x, int y)
 {
+	// FIXME: KILL IT
 	Tile *clickedTile = map->getTileByMouseCoords(x, y);
 
 	if(!clickedTile)
@@ -248,6 +272,7 @@ void Scenario::mouseLMBClicked(int x, int y)
 
 void Scenario::mouseRMBClicked(int x, int y)
 {
+	//FIXME: KILL IT, moved to LocalPlayerController
 	//Utility::Logger::getInstance()->log("\nMouse RMB clicked on (%i,%i)\n", x, y);
 	Tile *clickedTile = map->getTileByMouseCoords(x, y);
 

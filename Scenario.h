@@ -8,6 +8,7 @@
 #include "Drawer.h"
 #include "EngineState.h"
 #include "SidePanel.h"
+#include "PlayerController.h"
 
 namespace Core
 {
@@ -18,6 +19,7 @@ namespace Core
 			bool loadFromFile(std::string path);
 
 			std::list<Player*> players;
+			std::list<PlayerController*> controllers;
 			Map *map;
 			Player *currentPlayer;
 
