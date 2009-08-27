@@ -35,10 +35,10 @@ namespace Core
 			virtual void draw(Graphics::Drawer *target);
 			virtual void process();
 
-			virtual void mouseMoved(int x, int y);
-			virtual void mouseLMBClicked(int x, int y);
-			virtual void mouseRMBClicked(int x, int y);
-			virtual void keyPressed(int key);
+			virtual bool mouseMoved(int x, int y);
+			virtual bool mouseLMBClicked(int x, int y);
+			virtual bool mouseRMBClicked(int x, int y);
+			virtual bool keyPressed(int key);
 	};
 }
 

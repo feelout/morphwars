@@ -255,14 +255,15 @@ void Scenario::process()
 	OrderManager::getInstance()->processOrders();
 }
 
-void Scenario::mouseMoved(int x, int y)
+bool Scenario::mouseMoved(int x, int y)
 {
+	return false;
 }
 
-void Scenario::mouseLMBClicked(int x, int y)
+bool Scenario::mouseLMBClicked(int x, int y)
 {
 	// FIXME: KILL IT
-	Tile *clickedTile = map->getTileByMouseCoords(x, y);
+	/*Tile *clickedTile = map->getTileByMouseCoords(x, y);
 
 	if(!clickedTile)
 		return;
@@ -276,14 +277,16 @@ void Scenario::mouseLMBClicked(int x, int y)
 		{
 			currentPlayer->selectObject(topobject);
 		}
-	}
+	}*/
+	//FIXME: when sidepanel is completed, check if it will accept click
+	return false;
 }
 
-void Scenario::mouseRMBClicked(int x, int y)
+bool Scenario::mouseRMBClicked(int x, int y)
 {
 	//FIXME: KILL IT, moved to LocalPlayerController
 	//Utility::Logger::getInstance()->log("\nMouse RMB clicked on (%i,%i)\n", x, y);
-	Tile *clickedTile = map->getTileByMouseCoords(x, y);
+	/*Tile *clickedTile = map->getTileByMouseCoords(x, y);
 
 	if(!clickedTile)
 		return;
@@ -303,10 +306,11 @@ void Scenario::mouseRMBClicked(int x, int y)
 		Utility::Logger::getInstance()->log("Moving unit\n");
 		Unit *target = static_cast<Unit*>(selected);
 		MovementOrder *order = new MovementOrder(target, clickedTile, map);
-	}
+	}*/
+	return false;
 }
 
-void Scenario::keyPressed(int key)
+bool Scenario::keyPressed(int key)
 {
 	switch(key)
 	{
@@ -314,4 +318,6 @@ void Scenario::keyPressed(int key)
 			nextTurn();
 			break;
 	};
+
+	return true;
 }

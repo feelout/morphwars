@@ -96,12 +96,12 @@ void ScenarioSelectingState::draw(Graphics::Drawer *target)
 	Graphics::FontSystem::getInstance()->print(target, info, preview->getWidth()+10, 5, RGBColor(255, 0, 0));
 }
 
-void ScenarioSelectingState::mouseMoved(int x, int y)
+bool ScenarioSelectingState::mouseMoved(int x, int y)
 {
-	selector->mouseMoved(x,y);
+	return selector->mouseMoved(x,y);
 }
 
-void ScenarioSelectingState::mouseLMBClicked(int x, int y)
+bool ScenarioSelectingState::mouseLMBClicked(int x, int y)
 {
-	selector->mouseLMBClicked(x,y);
+	return selector->mouseLMBClicked(x,y);
 }

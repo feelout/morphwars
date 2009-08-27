@@ -71,6 +71,7 @@ class Engine
 		bool loadScenario(std::string path);
 		void changeState(Core::EngineState *newState);
 		Graphics::Renderer* getRenderer() const;
+		EventDispatcher *getEventDispatcher() const;
 };
 
 #endif // ENGINE_H

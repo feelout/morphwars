@@ -38,7 +38,8 @@ void EventDispatcher::passEvent(SDL_Event event)
 
 				for(i = listeners.begin(); i != listeners.end(); i++)
 				{
-					(*i)->keyPressed(event.key.keysym.sym);
+					if((*i)->keyPressed(event.key.keysym.sym))
+						return;
 				}
 			}
 			break;
@@ -48,23 +49,33 @@ void EventDispatcher::passEvent(SDL_Event event)
 
 				for(i = listeners.begin(); i != listeners.end(); i++)
 				{
-					(*i)->mouseMoved(event.motion.x, event.motion.y);
+					if((*i)->mouseMoved(event.motion.x, event.motion.y))
+						return;
 				}
 			}
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			{
+				Utility::Logger::getInstance()->log("Mouse button down\n");
+				Utility::Logger::getInstance()->log("Total listeners: %i\n", listeners.size());
 				std::vector<IEventListener*>::iterator i;
+
+				//DEBUG
+				int k=0;
+				//ENDDEBUG
 
 				for(i = listeners.begin(); i != listeners.end(); i++)
 				{
+					Utility::Logger::getInstance()->log("%i\n", k++);
 					if(event.button.button == SDL_BUTTON_LEFT)
 					{
-						(*i)->mouseLMBClicked(event.button.x, event.button.y);
+						if((*i)->mouseLMBClicked(event.button.x, event.button.y))
+							return;
 					}
 					else if(event.button.button == SDL_BUTTON_RIGHT)
 					{
-						(*i)->mouseRMBClicked(event.button.x, event.button.y);
+						if((*i)->mouseRMBClicked(event.button.x, event.button.y))
+							return;
 					}
 				}
 			}

@@ -37,18 +37,22 @@ void Widget::setFocused(bool focused)
 	this->focused = focused;
 }
 
-void Widget::mouseMoved(int x, int y)
+bool Widget::mouseMoved(int x, int y)
 {
+	return false;
 }
 
-void Widget::mouseLMBClicked(int x, int y)
+bool Widget::mouseLMBClicked(int x, int y)
 {
+	return false;
 }
 
-void Widget::mouseRMBClicked(int x, int y)
+bool Widget::mouseRMBClicked(int x, int y)
 {
+	return false;
 }
 
-void Widget::keyPressed(int key)
+bool Widget::keyPressed(int key)
 {
+	return false;
 }

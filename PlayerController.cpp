@@ -3,6 +3,7 @@
 #include "MapObject.h"
 #include "Unit.h"
 #include "Order.h"
+#include "Engine.h"
 
 using namespace Core;
 
@@ -12,27 +13,44 @@ PlayerController::PlayerController(Player *target)
 {
 }
 
+PlayerController::~PlayerController()
+{
+}
+
+void PlayerController::newTurn()
+{
+}
+
 /* LocalPlayerController */
 LocalPlayerController::LocalPlayerController(Player *target, Map *map)
 	: PlayerController(target), map(map)
 {
+	Utility::Logger::getInstance()->log("LocalPlayerController created for %s\n", target->getName().c_str());
+	Engine::getInstance()->getEventDispatcher()->attachListener(this);
 }
 
-void LocalPlayerController::mouseMoved(int x, int y)
+LocalPlayerController::~LocalPlayerController()
 {
-	if(!target->isCurrent())
-		return;
+	Engine::getInstance()->getEventDispatcher()->detachListener(this);
 }
 
-void LocalPlayerController::mouseLMBClicked(int x, int y)
+bool LocalPlayerController::mouseMoved(int x, int y)
 {
 	if(!target->isCurrent())
-		return;
+		return false;
+
+	return true;
+}
+
+bool LocalPlayerController::mouseLMBClicked(int x, int y)
+{
+	if(!target->isCurrent())
+		return false;
 
 	Tile *clickedTile = map->getTileByMouseCoords(x, y);
 
 	if(!clickedTile)
-		return;
+		return false;
 	
 	MapObject *topobject = NULL;
 	topobject = clickedTile->getTopObject();
@@ -43,25 +61,30 @@ void LocalPlayerController::mouseLMBClicked(int x, int y)
 		{
 			target->selectObject(topobject);
 		}
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 
-void LocalPlayerController::mouseRMBClicked(int x, int y)
+bool LocalPlayerController::mouseRMBClicked(int x, int y)
 {
 	if(!target->isCurrent())
-		return;
+		return false;
 
 	Tile *clickedTile = map->getTileByMouseCoords(x, y);
 
 	if(!clickedTile)
-		return;
+		return false;
 
 	MapObject *selected = target->getSelectedObject();
 
 	if(!selected)
 	{
 		Utility::Logger::getInstance()->log("Nothing clicked\n");
-		return;
+		return false;
 	}
 
 	Utility::Logger::getInstance()->log("Selected type: %s\n", selected->getType()->getType().c_str());
@@ -73,14 +96,25 @@ void LocalPlayerController::mouseRMBClicked(int x, int y)
 		Unit *targetUnit = static_cast<Unit*>(selected);
 		MovementOrder *order = new MovementOrder(targetUnit, clickedTile, map);
 	}
+	return true;
 }
 
-void LocalPlayerController::keyPressed(int key)
+bool LocalPlayerController::keyPressed(int key)
 {
+	return false;
 }
 
 /* AIPlayerController */
 AIPlayerController::AIPlayerController(Player *target)
 	: PlayerController(target)
 {
+}
+
+AIPlayerController::~AIPlayerController()
+{
+}
+
+void AIPlayerController::newTurn()
+{
+	//STUB
 }

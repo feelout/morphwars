@@ -112,6 +112,7 @@ Engine::~Engine()
 
 bool Engine::loadScenario(std::string path)
 {
+	Utility::Logger::getInstance()->log("Engine::loadScenario(%s)\n", path.c_str());
 	// FIXME: shutdown current scenario
 	if(currentScenario)
 	{
@@ -128,6 +129,7 @@ bool Engine::loadScenario(std::string path)
 //TEMPORATY - May include duplicating states
 void Engine::changeState(Core::EngineState *newState)
 {
+	Utility::Logger::getInstance()->log("State changed to %s\n", newState->getName().c_str());
 	if(stateStack->top())
 	{
 		dispatcher->detachListener(stateStack->top());
@@ -139,4 +141,9 @@ void Engine::changeState(Core::EngineState *newState)
 Graphics::Renderer* Engine::getRenderer() const
 {
 	return renderer;
+}
+
+EventDispatcher* Engine::getEventDispatcher() const
+{
+	return dispatcher;
 }

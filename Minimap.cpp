@@ -55,9 +55,12 @@ Minimap::Minimap(Rect frame, Core::Map *owner)
 	minimap = nonScaledMinimap.zoom(aspect_ratio, aspect_ratio, false);
 }
 
-void Minimap::mouseLMBClicked(int x, int y)
+bool Minimap::mouseLMBClicked(int x, int y)
 {
+	if(!frame.isPointInRect(x, y))
+		return false;
 	//Shift map clipping rect
+	return false;
 }
 
 void Minimap::draw(Graphics::Drawer *target)

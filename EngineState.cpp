@@ -29,6 +29,11 @@ void EngineState::setDrawingState(bool drawing)
 	this->drawing = drawing;
 }
 
+std::string EngineState::getName() const
+{
+	return name;
+}
+
 void EngineState::pause()
 {
 	enabled = false;
@@ -41,18 +46,22 @@ void EngineState::resume()
 	drawing = true;
 }
 
-void EngineState::mouseMoved(int x, int y)
+bool EngineState::mouseMoved(int x, int y)
 {
+	return false;
 }
 
-void EngineState::mouseLMBClicked(int x, int y)
+bool EngineState::mouseLMBClicked(int x, int y)
 {
+	return false;
 }
 
-void EngineState::mouseRMBClicked(int x, int y)
+bool EngineState::mouseRMBClicked(int x, int y)
 {
+	return false;
 }
 
-void EngineState::keyPressed(int key)
+bool EngineState::keyPressed(int key)
 {
+	return false;
 }

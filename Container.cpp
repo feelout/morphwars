@@ -51,42 +51,54 @@ void Container::draw(Graphics::Drawer *target)
 	}
 }
 
-void Container::mouseMoved(int x, int y)
+bool Container::mouseMoved(int x, int y)
 {
 	std::list<Widget*>::iterator i;
 
 	for(i = children.begin(); i != children.end(); ++i)
 	{
-		(*i)->mouseMoved(x, y);
+		if((*i)->mouseMoved(x, y))
+			return true;
 	}
+	
+	return false;
 }
 
-void Container::mouseLMBClicked(int x, int y)
+bool Container::mouseLMBClicked(int x, int y)
 {
 	std::list<Widget*>::iterator i;
 
 	for(i = children.begin(); i != children.end(); ++i)
 	{
-		(*i)->mouseLMBClicked(x, y);
+		if((*i)->mouseLMBClicked(x, y))
+			return true;
 	}
+
+	return false;
 }
 
-void Container::mouseRMBClicked(int x, int y)
+bool Container::mouseRMBClicked(int x, int y)
 {
 	std::list<Widget*>::iterator i;
 
 	for(i = children.begin(); i != children.end(); ++i)
 	{
-		(*i)->mouseRMBClicked(x, y);
+		if((*i)->mouseRMBClicked(x, y))
+			return true;
 	}
+
+	return false;
 }
 
-void Container::keyPressed(int key)
+bool Container::keyPressed(int key)
 {
 	std::list<Widget*>::iterator i;
 
 	for(i = children.begin(); i != children.end(); ++i)
 	{
-		(*i)->keyPressed(key);
+		if((*i)->keyPressed(key))
+			return true;
 	}
+
+	return false;
 }

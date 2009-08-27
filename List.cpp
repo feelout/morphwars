@@ -57,22 +57,24 @@ void List::setOnCurrentItemChanged(ListCurrentItemChangedCallback cb)
 	itemChangedCb = cb;
 }*/
 
-void List::mouseMoved(int x, int y)
+bool List::mouseMoved(int x, int y)
 {
 	if(!frame.isPointInRect(x, y))
-		return;
+		return false;
 
 	setCurrentItem((y - frame.y) / ITEM_HEIGHT);
+	return true;
 }
 
-void List::mouseLMBClicked(int x, int y)
+bool List::mouseLMBClicked(int x, int y)
 {
 	if(!frame.isPointInRect(x, y))
-		return;
+		return false;
 
 	itemSelected(currentItem);
 	/*if(clickedCb)
 		clickedCb(items[currentItem]);*/
+	return true;
 }
 
 void List::draw(Graphics::Drawer *target)

@@ -15,25 +15,25 @@ class IEventListener
 		 * @param x x coordinate of mouse
 		 * @param y y coordinate of mouse
 		 */
-		virtual void mouseMoved(int x,int y)=0;
+		virtual bool mouseMoved(int x,int y)=0;
 		/**
 		 * Fired when mouse left button was clicked
 		 * @param x x coordinate of mouse
 		 * @param y y coordinate of mouse
 		 */
-		virtual void mouseLMBClicked(int x,int y)=0;
+		virtual bool mouseLMBClicked(int x,int y)=0;
 		/**
 		 * Fired when mouse right button was clicked
 		 * @param x x coordinate of mouse
 		 * @param y y coordinate of mouse
 		 */
-		virtual void mouseRMBClicked(int x,int y)=0;
+		virtual bool mouseRMBClicked(int x,int y)=0;
 
 		/**
 		 * Fired when key was pressed
 		 * @param key key code
 		 */
-		virtual void keyPressed(int key)=0;
+		virtual bool keyPressed(int key)=0;
 };
 
 /**

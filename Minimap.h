@@ -19,7 +19,7 @@ namespace Gui
 		public:
 			Minimap(Rect frame, Core::Map *owner);
 
-			virtual void mouseLMBClicked(int x, int y);
+			virtual bool mouseLMBClicked(int x, int y);
 			virtual void draw(Graphics::Drawer *target);
 	};
 }

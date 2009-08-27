@@ -13,12 +13,15 @@ void Button::setOnClicked(ButtonClickCallback cb)
 	this->callback = cb;
 }
 
-void Button::mouseLMBClicked(int x, int y)
+bool Button::mouseLMBClicked(int x, int y)
 {
 	if(frame.isPointInRect(x,y))
 	{
 		callback();
+		return true;
 	}
+
+	return false;
 }
 
 ImageButton::ImageButton(Rect frame, Graphics::Surface surface)

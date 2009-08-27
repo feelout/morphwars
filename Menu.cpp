@@ -82,10 +82,13 @@ void MenuState::process()
 {
 }
 
-void MenuState::mouseLMBClicked(int x, int y)
+bool MenuState::mouseLMBClicked(int x, int y)
 {
 	for(int i=0; i < BUTTONS_NUM; ++i)
 	{
-		buttons[i]->mouseLMBClicked(x,y);
+		if(buttons[i]->mouseLMBClicked(x,y))
+			return true;
 	}
+
+	return false;
 }

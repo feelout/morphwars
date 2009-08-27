@@ -41,8 +41,8 @@ namespace Core
 			virtual void process();
 			virtual void draw(Graphics::Drawer *target);
 
-			virtual void mouseMoved(int x, int y);
-			virtual void mouseLMBClicked(int x, int y);
+			virtual bool mouseMoved(int x, int y);
+			virtual bool mouseLMBClicked(int x, int y);
 	};
 };
 

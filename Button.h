@@ -16,7 +16,7 @@ namespace Gui
 			Button(Rect frame);
 
 			void setOnClicked(ButtonClickCallback cb);
-			virtual void mouseLMBClicked(int x, int y);
+			virtual bool mouseLMBClicked(int x, int y);
 			virtual void draw(Graphics::Drawer *target)=0;
 	};
 
