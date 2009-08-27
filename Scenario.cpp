@@ -153,7 +153,7 @@ bool Scenario::loadFromFile(std::string path)
 		}
 
 		//TODO: maybe hold players/controllers in map, or list of pairs
-		controllers.push_back(currentController);
+		//controllers.push_back(currentController);
 
 		section = child->FirstChildElement("units");
 
@@ -185,10 +185,12 @@ bool Scenario::loadFromFile(std::string path)
 		}
 
 		currentPlayer->setDone(true);
-		players.push_back(currentPlayer);
+		//players.push_back(currentPlayer);
+		players.push_back(std::make_pair(currentPlayer, currentController));
 	}
 
-	switchTurn(*(players.begin()));
+	//switchTurn(*(players.begin()));
+	switchTurn( players.begin()->first );
 	//this->currentPlayer = *(players.begin());
 	//this->currentPlayer->setDone(true);
 
@@ -219,13 +221,20 @@ void Scenario::nextTurn()
 	if(!currentPlayer->isDone())
 		return;
 
-	std::list<Player*>::iterator i = std::find(players.begin(), players.end(), currentPlayer);
+	//std::list<Player*>::iterator i = std::find(players.begin(), players.end(), currentPlayer);
+	
+	std::list< std::pair<Player*, PlayerController*> >::iterator i;
+
+	for(i = players.begin(); i != players.end(); ++i)
+	{
+		if(i->first == currentPlayer) break;
+	}
 
 	if(++i == players.end())
 		i = players.begin();
 
 	//currentPlayer = *i;
-	switchTurn(*i);
+	switchTurn(i->first);
 }
 
 void Scenario::draw(Graphics::Drawer *target)
@@ -233,11 +242,11 @@ void Scenario::draw(Graphics::Drawer *target)
 	map->draw(target, currentPlayer->getFieldOfView());
 	sidepanel->draw(target);
 
-	std::list<Player*>::const_iterator i;
+	std::list< std::pair<Player*, PlayerController*> >::const_iterator i;
 
 	for(i = players.begin(); i != players.end(); ++i)
 	{
-		(*i)->renderObjects(target, currentPlayer->getFieldOfView(), map);
+		i->first->renderObjects(target, currentPlayer->getFieldOfView(), map);
 	}
 }
 

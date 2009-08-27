@@ -3,6 +3,7 @@
 
 #include <string>
 #include <list>
+#include <utility>
 #include "Map.h"
 #include "Player.h"
 #include "Drawer.h"
@@ -18,7 +19,7 @@ namespace Core
 			/** Pass <map> TiXMLNode to Map class **/
 			bool loadFromFile(std::string path);
 
-			std::list<Player*> players;
+			std::list< std::pair<Player*, PlayerController*> > players;
 			std::list<PlayerController*> controllers;
 			Map *map;
 			Player *currentPlayer;
