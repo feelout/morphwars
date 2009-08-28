@@ -3,6 +3,8 @@
 #include "Logger.h"
 #include "Player.h"
 #include "Timer.h"
+#include "Order.h"
+#include "MouseSelector.h"
 
 using namespace Core;
 
@@ -308,4 +310,11 @@ void Unit::onTurnBegin()
 {
 	//TODO: Introduce MP and HP regen
 	setMP(getType()->getMaxMP());
+}
+
+void Unit::defaultTargetOrder(Tile *target, Map *map)
+{
+	MovementOrder *order = new MovementOrder(this, target, map);
+	MouseState::getInstance()->setActionType(MouseState::SELECT);
+	//if there is something, make AttackOrder
 }

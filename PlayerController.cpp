@@ -4,6 +4,7 @@
 #include "Unit.h"
 #include "Order.h"
 #include "Engine.h"
+#include "MouseSelector.h"
 
 using namespace Core;
 
@@ -34,6 +35,23 @@ LocalPlayerController::~LocalPlayerController()
 	Engine::getInstance()->getEventDispatcher()->detachListener(this);
 }
 
+bool LocalPlayerController::objectTargeted(Tile *clickedTile)
+{
+	if(!clickedTile)
+		return false;
+
+	MapObject *selected = target->getSelectedObject();
+
+	if(!selected)
+	{
+		return false;
+	}
+
+	selected->defaultTargetOrder(clickedTile, map);
+
+	return true;
+}
+
 bool LocalPlayerController::mouseMoved(int x, int y)
 {
 	if(!target->isCurrent())
@@ -47,26 +65,35 @@ bool LocalPlayerController::mouseLMBClicked(int x, int y)
 	if(!target->isCurrent())
 		return false;
 
-	Tile *clickedTile = map->getTileByMouseCoords(x, y);
-
-	if(!clickedTile)
-		return false;
-	
-	MapObject *topobject = NULL;
-	topobject = clickedTile->getTopObject();
-
-	if(topobject)
+	if(MouseState::getInstance()->getActionType() == MouseState::SELECT)
 	{
-		if(topobject->getOwner() == target)
+		Tile *clickedTile = map->getTileByMouseCoords(x, y);
+
+		if(!clickedTile)
+			return false;
+
+		MapObject *topobject = NULL;
+		topobject = clickedTile->getTopObject();
+
+		if(topobject)
 		{
-			target->selectObject(topobject);
+			if(topobject->getOwner() == target)
+			{
+				target->selectObject(topobject);
+			}
+			return true;
 		}
-		return true;
+		else
+		{
+			return false;
+		}
 	}
-	else
+	else if(MouseState::getInstance()->getActionType() == MouseState::MOVE)
 	{
-		return false;
+		return objectTargeted(map->getTileByMouseCoords(x,y));
 	}
+
+	return false;
 }
 
 bool LocalPlayerController::mouseRMBClicked(int x, int y)
@@ -74,33 +101,34 @@ bool LocalPlayerController::mouseRMBClicked(int x, int y)
 	if(!target->isCurrent())
 		return false;
 
-	Tile *clickedTile = map->getTileByMouseCoords(x, y);
-
-	if(!clickedTile)
-		return false;
-
-	MapObject *selected = target->getSelectedObject();
-
-	if(!selected)
-	{
-		Utility::Logger::getInstance()->log("Nothing clicked\n");
-		return false;
-	}
-
-	Utility::Logger::getInstance()->log("Selected type: %s\n", selected->getType()->getType().c_str());
-
-	//FIXME : Move to MapObject, something like "DefaultRMBOrder"
-	if(selected->getType()->getType() == "Unit") //ugh, hate it
-	{
-		Utility::Logger::getInstance()->log("Moving unit\n");
-		Unit *targetUnit = static_cast<Unit*>(selected);
-		MovementOrder *order = new MovementOrder(targetUnit, clickedTile, map);
-	}
-	return true;
+	return objectTargeted(map->getTileByMouseCoords(x,y));
 }
 
 bool LocalPlayerController::keyPressed(int key)
 {
+	switch(key)
+	{
+		case SDLK_m:
+			//MOVE;
+			if(target->getSelectedObject())
+				MouseState::getInstance()->setActionType(MouseState::MOVE);
+			return true;
+		case SDLK_a:
+			//ATTACK
+			if(target->getSelectedObject())
+				MouseState::getInstance()->setActionType(MouseState::ATTACK);
+			return true;
+		case SDLK_s:
+			//STOP
+			if(target->getSelectedObject())
+				MouseState::getInstance()->setActionType(MouseState::SELECT);
+			return true;
+		case SDLK_k:
+			// SKILL
+			if(target->getSelectedObject())
+				MouseState::getInstance()->setActionType(MouseState::SKILL);
+			return true;
+	}
 	return false;
 }
 

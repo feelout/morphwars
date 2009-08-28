@@ -88,6 +88,8 @@ namespace Core
 			void setMP(int mp);
 
 			void onTurnBegin();
+
+			virtual void defaultTargetOrder(Tile *target, Map *map);
 	};
 }
 

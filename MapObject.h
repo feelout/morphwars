@@ -10,6 +10,7 @@
 namespace Core
 {
 	class Player;
+	class Map;
 	/**
 	 * Prototype for map objects. To be subclassed.
 	 */
@@ -92,6 +93,7 @@ namespace Core
 
 			bool isEnemy(MapObject *other) const;
 
+			virtual void defaultTargetOrder(Tile *target, Map *map)=0;
 	};
 }
 

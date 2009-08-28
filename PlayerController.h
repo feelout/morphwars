@@ -22,6 +22,8 @@ namespace Core
 	{
 		protected:
 			Map *map;
+
+			bool objectTargeted(Tile *clickedTile);
 		public:
 			LocalPlayerController(Player *target, Map *map);
 			virtual ~LocalPlayerController();
