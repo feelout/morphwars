@@ -61,7 +61,7 @@ void MapObject::draw(Graphics::Drawer *target, int x, int y)
 	{
 		// FIXME: Cache map image!!!
 		Graphics::Surface selection = Graphics::Surface("Gfx/Selection.png");
-		selection.blit(target->getTarget(), x+dx, y+dy);
+		selection.blit(target->getTarget(), x+int(dx), y+int(dy));
 	}
 	type->getGraphics()->getCurrent()->draw(target, x+int(dx), y+int(dy));
 }

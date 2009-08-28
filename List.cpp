@@ -59,6 +59,7 @@ void List::setOnCurrentItemChanged(ListCurrentItemChangedCallback cb)
 
 bool List::mouseMoved(int x, int y)
 {
+	Utility::Logger::getInstance()->log("List::mouseMoved\n");
 	if(!frame.isPointInRect(x, y))
 		return false;
 

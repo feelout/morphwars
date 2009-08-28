@@ -5,6 +5,7 @@
 #include "Order.h"
 #include "OrderManager.h"
 #include "Engine.h"
+#include "MouseSelector.h"
 
 using namespace Core;
 
@@ -262,51 +263,11 @@ bool Scenario::mouseMoved(int x, int y)
 
 bool Scenario::mouseLMBClicked(int x, int y)
 {
-	// FIXME: KILL IT
-	/*Tile *clickedTile = map->getTileByMouseCoords(x, y);
-
-	if(!clickedTile)
-		return;
-	
-	MapObject *topobject = NULL;
-	topobject = clickedTile->getTopObject();
-
-	if(topobject)
-	{
-		if(topobject->getOwner() == currentPlayer)
-		{
-			currentPlayer->selectObject(topobject);
-		}
-	}*/
-	//FIXME: when sidepanel is completed, check if it will accept click
 	return false;
 }
 
 bool Scenario::mouseRMBClicked(int x, int y)
 {
-	//FIXME: KILL IT, moved to LocalPlayerController
-	//Utility::Logger::getInstance()->log("\nMouse RMB clicked on (%i,%i)\n", x, y);
-	/*Tile *clickedTile = map->getTileByMouseCoords(x, y);
-
-	if(!clickedTile)
-		return;
-
-	MapObject *selected = currentPlayer->getSelectedObject();
-
-	if(!selected)
-	{
-		Utility::Logger::getInstance()->log("Nothing clicked\n");
-		return;
-	}
-
-	Utility::Logger::getInstance()->log("Selected type: %s\n", selected->getType()->getType().c_str());
-
-	if(selected->getType()->getType() == "Unit") //ugh, hate it
-	{
-		Utility::Logger::getInstance()->log("Moving unit\n");
-		Unit *target = static_cast<Unit*>(selected);
-		MovementOrder *order = new MovementOrder(target, clickedTile, map);
-	}*/
 	return false;
 }
 
@@ -316,8 +277,8 @@ bool Scenario::keyPressed(int key)
 	{
 		case SDLK_e:
 			nextTurn();
-			break;
+			return true;
 	};
 
-	return true;
+	return false;
 }

@@ -2,6 +2,7 @@
 #include "Logger.h"
 #include "OrderManager.h"
 #include "AnimationManager.h"
+#include "MouseSelector.h"
 
 Engine *Engine::instance = NULL;
 
@@ -52,6 +53,7 @@ Engine::Engine(int w, int h, bool fs)
 	//stateStack->push(menu);
 	//dispatcher->attachListener(menu);
 	changeState(menu);
+	Core::MouseState::getInstance()->setActionType(Core::MouseState::SELECT);
 }
 
 void Engine::runGameCycle()
@@ -81,6 +83,7 @@ void Engine::runGameCycle()
 			stateStack->top()->draw(&drawer);
 		}
 		AnimationManager::getInstance()->updateAnimations();
+		Core::MouseState::getInstance()->draw(&drawer);
 		renderer->flipBuffers();
 		equalizer->frameEnded();
 	}

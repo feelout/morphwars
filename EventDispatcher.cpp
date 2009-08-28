@@ -1,6 +1,7 @@
 #include "EventDispatcher.h"
 #include "Engine.h"
 #include "Logger.h"
+#include "MouseSelector.h"
 
 EventDispatcher::EventDispatcher()
 {
@@ -45,6 +46,7 @@ void EventDispatcher::passEvent(SDL_Event event)
 			break;
 		case SDL_MOUSEMOTION:
 			{
+				Core::MouseState::getInstance()->mouseMoved(event.motion.x, event.motion.y);
 				std::vector<IEventListener*>::iterator i;
 
 				for(i = listeners.begin(); i != listeners.end(); i++)

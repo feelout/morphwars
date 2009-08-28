@@ -7,7 +7,6 @@
 using namespace Core;
 
 const int MOVEMENT_DELAY = 50;
-const int MOVEMENT_PATH = sqrt( (TILE_WIDTH / 2) * (TILE_WIDTH / 2) + (TILE_TERRAIN_HEIGHT * TILE_TERRAIN_HEIGHT) );
 const float MOVEMENT_X_UNIT = (TILE_WIDTH / 2) / float(TILE_HEIGHT_OFFSET);
 const float MOVEMENT_Y_UNIT = 2 / MOVEMENT_X_UNIT; //TODO: Find out, why 2, not 1
 
@@ -249,7 +248,7 @@ bool Unit::updateMovement()
 
 	//Utility::Logger::getInstance()->log("Dx = %f, Dy = %f\n", dx, dy);
 
-	if( (abs(dx) >= abs(dstdx)) && (abs(dy) >= abs(dstdy)) )
+	if( (abs(int(dx)) >= abs(dstdx)) && (abs(int(dy)) >= abs(dstdy)) )
 	{
 		Utility::Logger::getInstance()->log("Movement complete\n");
 		if(changePosition(dst))
