@@ -202,6 +202,7 @@ void MovementOrder::process()
 		{
 			if(!(*currentWaypoint)->isEnemy(unit))
 			{
+				Utility::Logger::getInstance()->log("Moving unit to next waypoint\n");
 				if(unit->moveTo(*currentWaypoint))
 				{
 					currentWaypoint++;
@@ -209,6 +210,7 @@ void MovementOrder::process()
 			}
 			else
 			{
+				Utility::Logger::getInstance()->log("Next waypoint is hostile\n");
 				unit->getOwner()->setDone(true);
 				done = true;
 			}

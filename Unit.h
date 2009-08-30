@@ -3,6 +3,7 @@
 
 #include "MapObject.h"
 
+//TODO: make getType() virtual, so it could result subclasses, when needed
 namespace Core
 {
 	class UnitType: public MapObjectType
@@ -12,6 +13,9 @@ namespace Core
 			int maxmp;	// Movement points
 			int maxsp;	// Skill points
 			int attack;	// Attack
+			int hits;	// Number of hits
+			int distance;	// Attack distance
+			bool enemyRetaliates;	// true if enemy can retaliate 1 hit
 			int defense;	// Defense
 			int cost;	// Cost in energy
 			MovementType movementType;
@@ -28,6 +32,9 @@ namespace Core
 			int getMaxMP() const;
 			int getMaxSP() const;
 			int getAttack() const;
+			int getHitCount() const;
+			int getAttackDistance() const;
+			bool doesEnemyRetaliate() const;
 			int getDefense() const;
 			int getCost() const;
 			MovementType getMovementType() const;
@@ -42,6 +49,10 @@ namespace Core
 			int sp;
 			int attack;
 			int defense;
+			//Unit can retaliate only once in turn
+			bool canRetaliate;
+			// true if unit is currently attacking - disables retaliation
+			bool attackingState;
 
 			/** Stupid anti-OOP hack **/
 			//int dx, dy; //Drawing deltas
@@ -73,6 +84,15 @@ namespace Core
 			 * @return True if movement occured
 			 */
 			bool moveTo(Tile *tile);
+
+			/**
+			 * Attacks unit within attack range
+			 * @param tile Tile to attack
+			 * @return True if enemy destroyed (also moves unit to tile)
+			 */
+			bool performAttack(Tile *tile);
+			// True if enemy destroyed
+			bool damage(int damage, Unit *source);
 
 			/**
 			 * Updates unit movement

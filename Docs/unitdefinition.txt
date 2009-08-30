@@ -3,6 +3,9 @@ Boriska	#name
 4	#mp
 20	#sp
 6	#attack
+2	#number of hits
+1	#attack distance (1 - melee)
+1	#1 if enemy can retaliate
 1	#defense
 100	#cost
 0	#movementtype

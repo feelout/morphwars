@@ -45,7 +45,7 @@ std::string MapObjectType::getName() const
 }
 
 MapObject::MapObject(MapObjectType *type, Tile *tile, Player *owner)
-	: tile(tile), owner(owner), dx(0), dy(0), type(type->clone())
+	: tile(tile), owner(owner), dx(0), dy(0), type(type->clone()), dead(false)
 {
 	//Utility::Logger::getInstance()->log("MapObject::MapObject: %s\n", this->type->getName().c_str());
 	tile->addObject(this);

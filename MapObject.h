@@ -71,6 +71,8 @@ namespace Core
 			Player *owner;
 
 			float dx,dy;
+
+			bool dead;
 		public:
 			/**
 			 * Main public constructor

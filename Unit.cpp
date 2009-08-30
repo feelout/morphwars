@@ -27,10 +27,12 @@ UnitType::UnitType(std::string typeName)
 
 	char name_buf[255];
 	int mt;
-	fscanf(f_def, "%s\n%i\n%i\n%i\n%i\n%i\n%i\n%i", name_buf, &maxhp, &maxmp, &maxsp, &attack, &defense,
-			&cost, &mt);
+	int retaliation;
+	fscanf(f_def, "%s\n%i\n%i\n%i\n%i\n%i\n%i\n%i", name_buf, &maxhp, &maxmp, &maxsp, &attack,
+		       &hits, &distance, &retaliation, &defense, &cost, &mt);
 
 	movementType = (MovementType)mt;
+	enemyRetaliates = (retaliation == 1);
 
 	Graphics::Surface *strip = new Graphics::Surface("Objects/Units/"+typeName+"/Gfx.png");
 	std::string xmlpath = "Opjects/Units/"+typeName+"/Animations.xml";
@@ -64,6 +66,9 @@ UnitType* UnitType::clone()
 	result->maxsp = maxsp;
 	result->maxmp = maxmp;
 	result->attack = attack;
+	result->hits = hits;
+	result->distance = distance;
+	result->enemyRetaliates = enemyRetaliates;
 	result->defense = defense;
 	result->cost = cost;
 	result->movementType = movementType;
@@ -99,6 +104,21 @@ int UnitType::getAttack() const
 	return attack;
 }
 
+int UnitType::getHitCount() const
+{
+	return hits;
+}
+
+int UnitType::getAttackDistance() const
+{
+	return distance;
+}
+
+bool UnitType::doesEnemyRetaliate() const
+{
+	return enemyRetaliates;
+}
+
 int UnitType::getDefense() const
 {
 	return defense;
@@ -115,7 +135,7 @@ MovementType UnitType::getMovementType() const
 }
 
 Unit::Unit(UnitType *type, Tile *tile, Player *owner)
-	: MapObject(type, tile, owner), moving(false), dxmodifier(0),
+	: MapObject(type, tile, owner), moving(false), canRetaliate(true), attackingState(false), dxmodifier(0),
 		dymodifier(0), dstdx(0), dstdy(0), dst(NULL)
 {
 	//Utility::Logger::getInstance()->log("Unit::Unit: %s\n", this->type->getName().c_str());
@@ -229,6 +249,66 @@ bool Unit::moveTo(Tile *dst)
 	}
 }
 
+bool Unit::performAttack(Tile *tile)
+{
+	if(this->tile == tile)
+		return false;
+
+	if(this->tile->getDistance(tile) > static_cast<UnitType*>(type)->getAttackDistance())
+		return false;
+
+	if(tile->isEnemy(this))
+	{
+		Direction dir = this->tile->getDirection(tile);
+
+		type->getGraphics()->changeToAnimation(type->getName()+"Attack-"+Tile::DirectionToString(tile->getDirection(dst)));
+		type->getGraphics()->getCurrent()->start();
+
+		attackingState = true;
+		bool fightResult = false;
+
+		for(int i=0; i < static_cast<UnitType*>(type)->getHitCount(); ++i)
+		{
+			fightResult = tile->getTopObject()->damage(attack, this);
+		}
+
+		attackingState = false;
+		if(fightResult && !tile->isEnemy(this))
+		{
+			moveTo(tile);
+		}
+		return fightResult;
+	}
+	else
+	{
+		return moveTo(tile);
+	}
+}
+
+bool Unit::damage(int damage, Unit *source)
+{
+	int resulting_damage = damage - static_cast<UnitType*>(type)->getDefense();
+	if(resulting_damage < 1)
+		resulting_damage = 1;
+	hp -= resulting_damage;
+
+	if(hp <= 0)
+	{
+		dead = true;
+		return true;
+	}
+	else
+	{
+		// Retaliation
+		if(canRetaliate && !attackingState && source->getType()->doesEnemyRetaliate())
+		{
+			source->damage(static_cast<UnitType*>(type)->getAttack(), this);
+			canRetaliate = false;
+		}
+		return false;
+	}
+}
+
 bool Unit::updateMovement()
 {
 	//Utility::Logger::getInstance()->log("Unit::updateMovement()\n");
@@ -308,8 +388,9 @@ void Unit::setMP(int mp)
 
 void Unit::onTurnBegin()
 {
-	//TODO: Introduce MP and HP regen
+	//TODO: Introduce SP and HP regen
 	setMP(getType()->getMaxMP());
+	canRetaliate = true;
 }
 
 void Unit::defaultTargetOrder(Tile *target, Map *map)
