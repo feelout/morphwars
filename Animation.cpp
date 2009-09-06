@@ -22,7 +22,7 @@ void Animation::setFrameTime(unsigned int frameTime)
 	this->frameTime = frameTime;
 }
 
-unsigned int Animation::getFrameTime()
+unsigned int Animation::getFrameTime() const
 {
 	return frameTime;
 }
@@ -32,12 +32,12 @@ void Animation::setLooped(bool looped)
 	this->loop = looped;
 }
 
-bool Animation::isLooped()
+bool Animation::isLooped() const
 {
 	return loop;
 }
 
-int Animation::getCurrentFrame()
+int Animation::getCurrentFrame() const
 {
 	return currentFrame;
 }
@@ -52,7 +52,7 @@ void Animation::setCurrentFrame(int frame)
 	lastFrameTime = Utility::Timer::currentTicks();
 }
 
-Surface* Animation::getFrame(int framenum)
+Surface* Animation::getFrame(int framenum) const
 {
 	return surfaces[framenum];
 }
@@ -79,7 +79,7 @@ void Animation::resume()
 	animating = true;
 }
 
-void Animation::draw(Drawer *target, int x, int y)
+void Animation::draw(Drawer *target, int x, int y) const
 {
 	//Ugly. TODO: Think about moving blit to Drawer
 	getFrame(getCurrentFrame())->blit(target->getTarget(), x, y);

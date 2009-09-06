@@ -21,21 +21,21 @@ namespace Graphics
 			Animation(Animation *tocopy);
 
 			void setFrameTime(unsigned int frameTime);
-			unsigned int getFrameTime();
+			unsigned int getFrameTime() const;
 
 			void setLooped(bool looped);
-			bool isLooped();
+			bool isLooped() const;
 
-			int getCurrentFrame();
+			int getCurrentFrame() const;
 			void setCurrentFrame(int frame);
-			Surface *getFrame(int framenum);
+			Surface *getFrame(int framenum) const;
 
 			void start();
 			void stop();
 			void pause();
 			void resume();
 
-			void draw(Drawer *target, int x, int y);
+			void draw(Drawer *target, int x, int y) const;
 			void update();
 	};
 }

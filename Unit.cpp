@@ -404,7 +404,13 @@ void Unit::onTurnBegin()
 
 void Unit::defaultTargetOrder(Tile *target, Map *map)
 {
-	MovementOrder *order = new MovementOrder(this, target, map);
+	if(!(target->isEnemy(this) && owner->getFieldOfView()->isTileVisible(target->getX(), target->getY())))
+	{
+		MovementOrder *order = new MovementOrder(this, target, map);
+	}
+	else
+	{
+	}
 	MouseState::getInstance()->setActionType(MouseState::SELECT);
 	//if there is something, make AttackOrder
 }

@@ -128,14 +128,14 @@ bool MovementOrder::makePath()
 			if((unit->getOwner()->getFieldOfView()->isTileVisible(nbx, nby))
 						&& (map->getTile(nbx, nby)->isEnemy(unit)))
 			{
-				//Utility::Logger::getInstance()->log("Enemy in view\n");
+				Utility::Logger::getInstance()->log("Enemy in view\n");
 				continue;
 			}
 
 			/* Everything is OK */
 
 			AStar::Node *node = new AStar::Node(currentNode, map->getTile(nbx, nby),
-					((UnitType*)(unit->getType()))->getMovementType(), target);
+					unit->getType()->getMovementType(), target);
 
 
 			/* Finding minimum-cost node */
