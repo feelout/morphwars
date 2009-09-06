@@ -62,7 +62,7 @@ bool MovementOrder::makePath()
 {
 	Utility::Logger::getInstance()->log("Calculating path from (%i,%i) to (%i,%i)\n", unit->getTile()->getX(),
 		unit->getTile()->getY(), target->getX(), target->getY());
-	Utility::Logger::getInstance()->log("Unit MP: %i\n", unit->getMP());
+	//Utility::Logger::getInstance()->log("Unit MP: %i\n", unit->getMP());
 
 	int distance = unit->getTile()->getDistance(target);
 
@@ -76,7 +76,7 @@ bool MovementOrder::makePath()
 	std::vector<AStar::Node*> closedlist;
 
 	AStar::Node* srcNode = new AStar::Node(NULL, unit->getTile(),
-			((UnitType*)(unit->getType()))->getMovementType(), target);
+			unit->getType()->getMovementType(), target);
 	AStar::Node* currentNode = srcNode;
 
 	closedlist.push_back(srcNode);
@@ -85,8 +85,8 @@ bool MovementOrder::makePath()
 
 	while(currentNode->getSource() != target)
 	{
-		Utility::Logger::getInstance()->log("Iteration: currentNode = (%i,%i)\n",
-			currentNode->getSource()->getX(), currentNode->getSource()->getY());
+		//Utility::Logger::getInstance()->log("Iteration: currentNode = (%i,%i)\n",
+			//currentNode->getSource()->getX(), currentNode->getSource()->getY());
 		/* Adding neighbours to open list */
 		std::vector< std::pair<int,int> > neighbourCoords = currentNode->getSource()->getNeighbours();
 		std::vector< std::pair<int,int> >::iterator nb_iter;
@@ -120,12 +120,15 @@ bool MovementOrder::makePath()
 
 			if(alreadyInCList)
 			{
+				//Utility::Logger::getInstance()->log("Node (%i,%i) already in closed list\n",
+						//nb_iter->first, nb_iter->second);
 				continue;
 			}
 
 			if((unit->getOwner()->getFieldOfView()->isTileVisible(nbx, nby))
 						&& (map->getTile(nbx, nby)->isEnemy(unit)))
 			{
+				//Utility::Logger::getInstance()->log("Enemy in view\n");
 				continue;
 			}
 
@@ -144,6 +147,8 @@ bool MovementOrder::makePath()
 					delete minimumNode;
 				}
 
+				//Utility::Logger::getInstance()->log("New minimum node: %i,%i with cost %i\n",
+					//node->getSource()->getX(), node->getSource()->getY(), node->getCost());
 				minimumNode = node;
 			}
 			else
@@ -202,7 +207,7 @@ void MovementOrder::process()
 		{
 			if(!(*currentWaypoint)->isEnemy(unit))
 			{
-				Utility::Logger::getInstance()->log("Moving unit to next waypoint\n");
+				//Utility::Logger::getInstance()->log("Moving unit to next waypoint\n");
 				if(unit->moveTo(*currentWaypoint))
 				{
 					currentWaypoint++;

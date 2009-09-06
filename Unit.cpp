@@ -28,10 +28,11 @@ UnitType::UnitType(std::string typeName)
 	char name_buf[255];
 	int mt;
 	int retaliation;
-	fscanf(f_def, "%s\n%i\n%i\n%i\n%i\n%i\n%i\n%i", name_buf, &maxhp, &maxmp, &maxsp, &attack,
+	fscanf(f_def, "%s\n%i\n%i\n%i\n%i\n%i\n%i\n%i\n%i\n%i\n%i", name_buf, &maxhp, &maxmp, &maxsp, &attack,
 		       &hits, &distance, &retaliation, &defense, &cost, &mt);
 
 	movementType = (MovementType)mt;
+	Utility::Logger::getInstance()->log("MT: %i\n", mt);
 	enemyRetaliates = (retaliation == 1);
 
 	Graphics::Surface *strip = new Graphics::Surface("Objects/Units/"+typeName+"/Gfx.png");
@@ -285,8 +286,10 @@ bool Unit::performAttack(Tile *tile)
 	}
 }
 
-bool Unit::damage(int damage, Unit *source)
+bool Unit::damage(int damage, MapObject *source)
 {
+	Unit *unit_source = static_cast<Unit*>(source);
+
 	int resulting_damage = damage - static_cast<UnitType*>(type)->getDefense();
 	if(resulting_damage < 1)
 		resulting_damage = 1;
@@ -294,19 +297,25 @@ bool Unit::damage(int damage, Unit *source)
 
 	if(hp <= 0)
 	{
-		dead = true;
+		kill();
 		return true;
 	}
 	else
 	{
 		// Retaliation
-		if(canRetaliate && !attackingState && source->getType()->doesEnemyRetaliate())
+		if(canRetaliate && !attackingState && unit_source->getType()->doesEnemyRetaliate())
 		{
-			source->damage(static_cast<UnitType*>(type)->getAttack(), this);
+			unit_source->damage(static_cast<UnitType*>(type)->getAttack(), this);
 			canRetaliate = false;
 		}
 		return false;
 	}
+}
+
+void Unit::kill()
+{
+	dead = true;
+	tile->removeObject(this);
 }
 
 bool Unit::updateMovement()

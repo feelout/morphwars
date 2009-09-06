@@ -94,6 +94,7 @@ namespace Core
 			MapObjectType *getType() const;
 
 			bool isEnemy(MapObject *other) const;
+			virtual bool damage(int damage, MapObject *source)=0;
 
 			virtual void defaultTargetOrder(Tile *target, Map *map)=0;
 	};

@@ -3,7 +3,7 @@
 
 using namespace Core::AStar;
 
-const int DISTANCE_WEIGHT = 3;
+const int DISTANCE_WEIGHT = 10;
 
 int abs(int n)
 {
@@ -20,7 +20,6 @@ int abs(int n)
 Node::Node(Node *parent, Tile *src, MovementType movementtype, Tile *target) 
 	: src(src), parent(parent)
 {
-	//Utility::Logger::getInstance()->log("AStar::Node created on (%i,%i)\n", src->getX(), src->getY());
 	int g = src->getType()->getMovementCost(movementtype);
 	if(parent)
 	{
@@ -31,6 +30,7 @@ Node::Node(Node *parent, Tile *src, MovementType movementtype, Tile *target)
 	//int h = abs(target->getX()-src->getX()) + abs(target->getY()-src->getY());
 	int h = src->getDistance(target)*DISTANCE_WEIGHT;
 	cost = g + h;
+	//Utility::Logger::getInstance()->log("Cost = %i\n", cost);
 }
 
 int Node::getCost() const

@@ -2,7 +2,7 @@
 #define LIST_H
 
 #include <vector>
-#include <String>
+#include <string>
 #include "Widget.h"
 
 namespace Gui

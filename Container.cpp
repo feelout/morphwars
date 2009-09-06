@@ -1,5 +1,6 @@
 #include "Container.h"
 #include "Logger.h"
+#include <algorithm>
 
 using namespace Gui;
 

@@ -161,6 +161,8 @@ int Tile::getDistance(Tile *dst) const //FIXME, check from (1,1) to (2,3)
 		++distance;
 	}
 
+	/*Utility::Logger::getInstance()->log("Distance from (%i,%i) to (%i,%i) = %i\n", x, y,
+			dst->x, dst->y, distance);*/
 	return distance;
 }
 
@@ -208,8 +210,11 @@ MapObject* Tile::getTopObject() const
 
 bool Tile::isEnemy(MapObject *object) const
 {
+	//Utility::Logger::getInstance()->log("(%i,%i)->isEnemy()\n", x, y);
 	if(objects.size() != 0)
 	{
+		if(object->isEnemy(objects[0]))
+				Utility::Logger::getInstance()->log("Enemy!!!\n");
 		return (object->isEnemy(objects[0]));
 	}
 

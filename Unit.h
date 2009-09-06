@@ -92,7 +92,8 @@ namespace Core
 			 */
 			bool performAttack(Tile *tile);
 			// True if enemy destroyed
-			bool damage(int damage, Unit *source);
+			virtual bool damage(int damage, MapObject *source);
+			void kill();
 
 			/**
 			 * Updates unit movement

@@ -57,6 +57,8 @@ MapObject::~MapObject()
 
 void MapObject::draw(Graphics::Drawer *target, int x, int y)
 {
+	if(dead)
+		return;
 	if( (owner->isCurrent()) && (owner->getSelectedObject() == this) )
 	{
 		// FIXME: Cache map image!!!
