@@ -89,6 +89,8 @@ namespace Core
 			 */
 			void draw(Graphics::Drawer *target, int x, int y);
 
+			virtual void drawInfoPanel(Graphics::Drawer *target, int x, int y)=0;
+
 			Tile *getTile() const;
 			Player *getOwner() const;
 			MapObjectType *getType() const;

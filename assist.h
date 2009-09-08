@@ -101,5 +101,6 @@ struct RGBColor
 };
 
 std::vector<std::string> ListFilesInFolder(std::string dirname);
+std::string br_itoa(int n);
 
 #endif //ASSIST_H

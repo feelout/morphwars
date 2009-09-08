@@ -5,6 +5,7 @@
 #include "Timer.h"
 #include "Order.h"
 #include "MouseSelector.h"
+#include "FontSystem.h"
 
 using namespace Core;
 
@@ -413,4 +414,29 @@ void Unit::defaultTargetOrder(Tile *target, Map *map)
 	}
 	MouseState::getInstance()->setActionType(MouseState::SELECT);
 	//if there is something, make AttackOrder
+}
+
+void Unit::drawInfoPanel(Graphics::Drawer *target, int x, int y)
+{
+	Utility::Logger::getInstance()->log("Drawing info panel\n");
+	Graphics::Animation *image = getType()->getGraphics()->getCurrent();
+	image->draw(target, x+5, y+5);
+	// wb = with_border
+	int image_width_wb = image->getFrame(image->getCurrentFrame())->getWidth() + 10;
+	int image_height_wb = image->getFrame(image->getCurrentFrame())->getHeight() + 10;
+	target->drawRect(Rect(x+5, y+5, image_width_wb-10, image_height_wb-10), RGBColor::WHITE);
+	//strings type, name
+	//Name of unit
+	Graphics::FontSystem::getInstance()->print(target, getType()->getName(), x+5,
+		y+image_height_wb, RGBColor::GREEN);
+	//Hp/MaxHP
+	Graphics::FontSystem::getInstance()->print(target, br_itoa(hp) + "/" + br_itoa(getType()->getMaxHP()), 
+		x+image_width_wb, y+5, RGBColor::RED);
+	//Sp/MaxSP
+	Graphics::FontSystem::getInstance()->print(target, br_itoa(sp) + "/" + br_itoa(getType()->getMaxSP()),
+		x+image_width_wb, y+20, RGBColor::RED);
+	//Mp/MaxMP
+	Graphics::FontSystem::getInstance()->print(target, br_itoa(mp) + "/" + br_itoa(getType()->getMaxMP()),
+		x+image_width_wb, y+ 35, RGBColor::RED);
+
 }

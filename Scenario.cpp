@@ -10,7 +10,7 @@
 using namespace Core;
 
 Scenario::Scenario(std::string path)
-	: EngineState("Scenario"), currentPlayer(NULL), map(NULL)
+	: EngineState("Scenario"), currentPlayer(NULL), map(NULL), sidepanel(NULL)
 {
 	if(!loadFromFile(path))
 	{
@@ -18,10 +18,6 @@ Scenario::Scenario(std::string path)
 		return;
 	}
 
-	int screen_width = Engine::getInstance()->getRenderer()->getWidth();
-	int screen_height = Engine::getInstance()->getRenderer()->getHeight();
-	sidepanel = new Gui::SidePanel(Rect(screen_width-Gui::SidePanel::SIDE_PANEL_WIDTH-5, 5,
-				Gui::SidePanel::SIDE_PANEL_WIDTH, screen_height-10), map);
 }
 
 Scenario::~Scenario()
@@ -190,6 +186,12 @@ bool Scenario::loadFromFile(std::string path)
 		players.push_back(std::make_pair(currentPlayer, currentController));
 	}
 
+	int screen_width = Engine::getInstance()->getRenderer()->getWidth();
+	int screen_height = Engine::getInstance()->getRenderer()->getHeight();
+
+	sidepanel = new Gui::SidePanel(Rect(screen_width-Gui::SidePanel::SIDE_PANEL_WIDTH-5, 5,
+				Gui::SidePanel::SIDE_PANEL_WIDTH, screen_height-10), map);
+
 	//switchTurn(*(players.begin()));
 	switchTurn( players.begin()->first );
 	//this->currentPlayer = *(players.begin());
@@ -198,6 +200,7 @@ bool Scenario::loadFromFile(std::string path)
 	//TODO: setup scripts
 	
 	Utility::Logger::getInstance()->log("Scenario loaded\n\n");
+
 
 	return true;
 }
@@ -215,6 +218,10 @@ void Scenario::switchTurn(Player *player)
 	currentPlayer->setDone(true); //not moving anything yet
 	currentPlayer->setCurrent(true);
 	currentPlayer->onTurnBegin();
+	if(sidepanel)
+	{
+		sidepanel->setCurrentPlayer(currentPlayer);
+	}
 }
 
 void Scenario::nextTurn()

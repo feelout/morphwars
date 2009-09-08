@@ -1,4 +1,6 @@
 #include "SidePanel.h"
+#include "MapObject.h"
+#include "Logger.h"
 
 using namespace Gui;
 
@@ -44,13 +46,20 @@ SidePanel::~SidePanel()
 
 void SidePanel::setCurrentPlayer(Core::Player *player)
 {
+	Utility::Logger::getInstance()->log("SidePanel::setCurrentPlayer\n");
 	currentPlayer = player;
 	resources->setCurrentPlayer(player);
 }
 
 void SidePanel::draw(Graphics::Drawer *target)
 {
+	Utility::Logger::getInstance()->log("Drawing Side Panel\n");
 	Container::draw(target);
 
+	if(currentPlayer && currentPlayer->getSelectedObject())
+	{
+		currentPlayer->getSelectedObject()->drawInfoPanel(target, frame.x, 
+			frame.y+ResourceBar::RESOURCE_BAR_HEIGHT+10 + minimap->getFrame().h);
+	}
 	target->drawRect(frame, RGBColor::WHITE);
 }
