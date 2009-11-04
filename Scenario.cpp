@@ -149,9 +149,6 @@ bool Scenario::loadFromFile(std::string path)
 			Utility::Logger::getInstance()->log("Unknown controller type: %s\n", s_controller.c_str());
 		}
 
-		//TODO: maybe hold players/controllers in map, or list of pairs
-		//controllers.push_back(currentController);
-
 		section = child->FirstChildElement("units");
 
 		Utility::Logger::getInstance()->log("Adding units to player\n");
@@ -182,8 +179,7 @@ bool Scenario::loadFromFile(std::string path)
 		}
 
 		currentPlayer->setDone(true);
-		//players.push_back(currentPlayer);
-		players.push_back(std::make_pair(currentPlayer, currentController));
+		players.push_back(currentPlayer);
 	}
 
 	int screen_width = Engine::getInstance()->getRenderer()->getWidth();
@@ -192,8 +188,7 @@ bool Scenario::loadFromFile(std::string path)
 	sidepanel = new Gui::SidePanel(Rect(screen_width-Gui::SidePanel::SIDE_PANEL_WIDTH-5, 5,
 				Gui::SidePanel::SIDE_PANEL_WIDTH, screen_height-10), map);
 
-	//switchTurn(*(players.begin()));
-	switchTurn( players.begin()->first );
+	switchTurn(*(players.begin()));
 	//this->currentPlayer = *(players.begin());
 	//this->currentPlayer->setDone(true);
 
@@ -229,20 +224,13 @@ void Scenario::nextTurn()
 	if(!currentPlayer->isDone())
 		return;
 
-	//std::list<Player*>::iterator i = std::find(players.begin(), players.end(), currentPlayer);
+	std::list<Player*>::iterator i = std::find(players.begin(), players.end(), currentPlayer);
 	
-	std::list< std::pair<Player*, PlayerController*> >::iterator i;
-
-	for(i = players.begin(); i != players.end(); ++i)
-	{
-		if(i->first == currentPlayer) break;
-	}
-
 	if(++i == players.end())
 		i = players.begin();
 
 	//currentPlayer = *i;
-	switchTurn(i->first);
+	switchTurn(*i);
 }
 
 void Scenario::draw(Graphics::Drawer *target)
@@ -250,11 +238,11 @@ void Scenario::draw(Graphics::Drawer *target)
 	map->draw(target, currentPlayer->getFieldOfView());
 	sidepanel->draw(target);
 
-	std::list< std::pair<Player*, PlayerController*> >::const_iterator i;
+	std::list<Player*>::const_iterator i;
 
 	for(i = players.begin(); i != players.end(); ++i)
 	{
-		i->first->renderObjects(target, currentPlayer->getFieldOfView(), map);
+		(*i)->renderObjects(target, currentPlayer->getFieldOfView(), map);
 	}
 }
 

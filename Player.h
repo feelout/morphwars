@@ -58,6 +58,8 @@ namespace Core
 			bool current;
 
 			FieldOfView *fov;
+
+			PlayerController *controller;
 		public:
 			Player(std::string name, Fraction fraction, Force *force, RGBColor color, 
 					int mapWidth, int mapHeight);
@@ -82,6 +84,9 @@ namespace Core
 			void updateFOV();
 
 			void onTurnBegin();
+
+			void setController(PlayerController *controller);
+			PlayerController *getController() const;
 
 			void renderObjects(Graphics::Drawer *target, const FieldOfView *fov, const Map *map);
 	};

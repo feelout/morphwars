@@ -19,8 +19,8 @@ namespace Core
 			/** Pass <map> TiXMLNode to Map class **/
 			bool loadFromFile(std::string path);
 
-			std::list< std::pair<Player*, PlayerController*> > players;
-			std::list<PlayerController*> controllers;
+			//std::list< std::pair<Player*, PlayerController*> > players;
+			std::list<Player*> players;
 			Map *map;
 			Player *currentPlayer;
 

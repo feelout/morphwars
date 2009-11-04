@@ -12,6 +12,7 @@ using namespace Core;
 PlayerController::PlayerController(Player *target)
 	: target(target)
 {
+	target->setController(this);
 }
 
 PlayerController::~PlayerController()

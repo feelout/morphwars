@@ -183,6 +183,16 @@ void Player::onTurnBegin()
 	}
 }
 
+void Player::setController(PlayerController *controller)
+{
+	this->controller = controller;
+}
+
+PlayerController* Player::getController() const
+{
+	return controller;
+}
+
 void Player::renderObjects(Graphics::Drawer *target, const FieldOfView *fov, const Map *map)
 {
 	//FIXME: Add buildings
