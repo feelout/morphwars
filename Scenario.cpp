@@ -270,6 +270,7 @@ bool Scenario::mouseMoved(int x, int y)
 
 bool Scenario::mouseLMBClicked(int x, int y)
 {
+	sidepanel->mouseLMBClicked(x,y);
 	return false;
 }
 

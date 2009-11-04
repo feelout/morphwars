@@ -25,7 +25,7 @@ namespace Gui
 	class SidePanel : public Container
 	{
 		public:
-			static const int SIDE_PANEL_WIDTH = 150;
+			static const int SIDE_PANEL_WIDTH = 200;
 		private:
 			Minimap *minimap;
 			Core::Player *currentPlayer;

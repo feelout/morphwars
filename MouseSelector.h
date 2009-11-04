@@ -32,6 +32,6 @@ namespace Core
 
 			bool mouseMoved(int x, int y);
 	};
-}
+};
 
 #endif //MOUSE_SELECTOR_H

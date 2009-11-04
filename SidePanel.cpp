@@ -1,11 +1,13 @@
 #include "SidePanel.h"
 #include "MapObject.h"
 #include "Logger.h"
+#include "OrderPack.h"
 
 using namespace Gui;
 
 const int SidePanel::SIDE_PANEL_WIDTH;
 const int ResourceBar::RESOURCE_BAR_HEIGHT;
+const int UNIT_BAR_HEIGHT = 80;
 
 /* ResourceBar class */
 ResourceBar::ResourceBar(Rect frame)
@@ -31,11 +33,21 @@ SidePanel::SidePanel(Rect frame, Core::Map *map)
 	: Container(frame), minimap(NULL), currentPlayer(NULL), resources(NULL),
 	actions(NULL), tileobjects(NULL), buttons(NULL)
 {
-	resources = new ResourceBar(Rect(frame.x+5, frame.y+5, SIDE_PANEL_WIDTH-10, ResourceBar::RESOURCE_BAR_HEIGHT));
-	minimap = new Minimap(Rect(frame.x+5, frame.y+ResourceBar::RESOURCE_BAR_HEIGHT+10, SIDE_PANEL_WIDTH-10, 
-				SIDE_PANEL_WIDTH-10), map);
+	Rect rb_frame(frame.x+5, frame.y+5, SIDE_PANEL_WIDTH-10, ResourceBar::RESOURCE_BAR_HEIGHT);
+	resources = new ResourceBar(rb_frame);
+	rb_frame.y += rb_frame.h+10;
+	// Keep the minimap square
+	rb_frame.w = SIDE_PANEL_WIDTH-10;
+	rb_frame.h = SIDE_PANEL_WIDTH-10;
+	minimap = new Minimap(rb_frame, map);
+	
+	rb_frame.y += rb_frame.h + 10 + UNIT_BAR_HEIGHT;
+	rb_frame.h = OrderPack::ORDER_BUTTON_HEIGHT+10;
+	actions = new OrderPack(rb_frame);
+
 	addChild(resources);
 	addChild(minimap);
+	addChild(actions);
 }
 
 SidePanel::~SidePanel()
@@ -53,7 +65,6 @@ void SidePanel::setCurrentPlayer(Core::Player *player)
 
 void SidePanel::draw(Graphics::Drawer *target)
 {
-	Utility::Logger::getInstance()->log("Drawing Side Panel\n");
 	Container::draw(target);
 
 	if(currentPlayer && currentPlayer->getSelectedObject())

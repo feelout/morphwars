@@ -418,7 +418,6 @@ void Unit::defaultTargetOrder(Tile *target, Map *map)
 
 void Unit::drawInfoPanel(Graphics::Drawer *target, int x, int y)
 {
-	Utility::Logger::getInstance()->log("Drawing info panel\n");
 	Graphics::Animation *image = getType()->getGraphics()->getCurrent();
 	image->draw(target, x+5, y+5);
 	// wb = with_border
