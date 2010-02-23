@@ -3,6 +3,7 @@
 #include "OrderManager.h"
 #include "AnimationManager.h"
 #include "MouseSelector.h"
+#include "Drawer.h"
 
 Engine *Engine::instance = NULL;
 
@@ -59,7 +60,8 @@ Engine::Engine(int w, int h, bool fs)
 void Engine::runGameCycle()
 {
 	SDL_Event event;
-	Drawer drawer(renderer->getBuffer());
+	//Drawer drawer(renderer->getBuffer());
+	Surface *buffer = renderer->getBuffer();
 
 	while(!quit)
 	{
@@ -80,10 +82,10 @@ void Engine::runGameCycle()
 		if(stateStack->top())
 		{
 			stateStack->top()->process();
-			stateStack->top()->draw(&drawer);
+			stateStack->top()->draw(buffer);
 		}
 		AnimationManager::getInstance()->updateAnimations();
-		Core::MouseState::getInstance()->draw(&drawer);
+		Core::MouseState::getInstance()->draw(buffer);
 		renderer->flipBuffers();
 		equalizer->frameEnded();
 	}

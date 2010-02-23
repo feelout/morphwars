@@ -20,7 +20,7 @@ namespace Gui
 			Minimap(Rect frame, Core::Map *owner);
 
 			virtual bool mouseLMBClicked(int x, int y);
-			virtual void draw(Graphics::Drawer *target);
+			virtual void draw(Graphics::Surface *target);
 	};
 }
 

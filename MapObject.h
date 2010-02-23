@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 #include "Tile.h"
-#include "Drawer.h"
+#include "Surface.h"
 #include "AnimationPack.h"
 
 namespace Core
@@ -87,9 +87,9 @@ namespace Core
 			 * Draws object
 			 * @param target
 			 */
-			void draw(Graphics::Drawer *target, int x, int y);
+			void draw(Graphics::Surface *target, int x, int y);
 
-			virtual void drawInfoPanel(Graphics::Drawer *target, int x, int y)=0;
+			virtual void drawInfoPanel(Graphics::Surface *target, int x, int y)=0;
 
 			Tile *getTile() const;
 			Player *getOwner() const;

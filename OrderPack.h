@@ -16,7 +16,7 @@ namespace Gui
 		public:
 			OrderPack(Rect frame);
 
-			virtual void draw(Graphics::Drawer *target);
+			virtual void draw(Graphics::Surface *target);
 	};
 };
 

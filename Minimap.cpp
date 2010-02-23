@@ -1,5 +1,6 @@
 #include "Minimap.h"
 #include "Map.h"
+#include "Drawer.h"
 
 using namespace Gui;
 
@@ -8,7 +9,7 @@ Minimap::Minimap(Rect frame, Core::Map *owner)
 {
 	// Rendering map to temp surface
 	Graphics::Surface nonScaledMinimap((owner->getWidth()+1)*Core::TILE_WIDTH, (owner->getHeight() / 2)*Core::TILE_HEIGHT);
-	Graphics::Drawer nonScaledDrawer(&nonScaledMinimap);
+	//Graphics::Drawer nonScaledDrawer(&nonScaledMinimap);
 	// Disable fog of war
 	Core::FieldOfView empty_fov(owner->getWidth(), owner->getHeight());
 
@@ -32,7 +33,8 @@ Minimap::Minimap(Rect frame, Core::Map *owner)
 
 	//owner->setFrame(new_frame);
 	owner->setClipping(clip);
-	owner->draw(&nonScaledDrawer, &empty_fov, false);
+	//owner->draw(&nonScaledDrawer, &empty_fov, false);
+	owner->draw(&nonScaledMinimap, &empty_fov, false);
 	owner->setClipping(true_clip);
 	//owner->setFrame(true_frame);
 
@@ -63,9 +65,9 @@ bool Minimap::mouseLMBClicked(int x, int y)
 	return false;
 }
 
-void Minimap::draw(Graphics::Drawer *target)
+void Minimap::draw(Graphics::Surface *target)
 {
 	// Draw minimap, then clipping rect
-	minimap->blit(target->getTarget(), frame.x, frame.y);
-	target->drawRect(frame, RGBColor::WHITE);
+	minimap->blit(target, frame.x, frame.y);
+	Graphics::Drawer(target).drawRect(frame, RGBColor::WHITE);
 }

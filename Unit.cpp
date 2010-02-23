@@ -6,6 +6,7 @@
 #include "Order.h"
 #include "MouseSelector.h"
 #include "FontSystem.h"
+#include "Drawer.h"
 
 using namespace Core;
 
@@ -416,14 +417,14 @@ void Unit::defaultTargetOrder(Tile *target, Map *map)
 	//if there is something, make AttackOrder
 }
 
-void Unit::drawInfoPanel(Graphics::Drawer *target, int x, int y)
+void Unit::drawInfoPanel(Graphics::Surface *target, int x, int y)
 {
 	Graphics::Animation *image = getType()->getGraphics()->getCurrent();
 	image->draw(target, x+5, y+5);
 	// wb = with_border
 	int image_width_wb = image->getFrame(image->getCurrentFrame())->getWidth() + 10;
 	int image_height_wb = image->getFrame(image->getCurrentFrame())->getHeight() + 10;
-	target->drawRect(Rect(x+5, y+5, image_width_wb-10, image_height_wb-10), RGBColor::WHITE);
+	Graphics::Drawer(target).drawRect(Rect(x+5, y+5, image_width_wb-10, image_height_wb-10), RGBColor::WHITE);
 	//strings type, name
 	//Name of unit
 	Graphics::FontSystem::getInstance()->print(target, getType()->getName(), x+5,

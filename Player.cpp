@@ -193,7 +193,7 @@ PlayerController* Player::getController() const
 	return controller;
 }
 
-void Player::renderObjects(Graphics::Drawer *target, const FieldOfView *fov, const Map *map)
+void Player::renderObjects(Graphics::Surface *target, const FieldOfView *fov, const Map *map)
 {
 	//FIXME: Add buildings
 	std::vector<Unit*>::const_iterator i;

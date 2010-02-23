@@ -23,7 +23,7 @@ namespace Gui
 			bool addChild(Widget *child);
 			bool removeChild(Widget *child);
 
-			virtual void draw(Graphics::Drawer *target);
+			virtual void draw(Graphics::Surface *target);
 			virtual bool mouseMoved(int x, int y);
 			virtual bool mouseLMBClicked(int x, int y);
 			virtual bool mouseRMBClicked(int x, int y);

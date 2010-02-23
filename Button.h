@@ -17,7 +17,7 @@ namespace Gui
 
 			void setOnClicked(ButtonClickCallback cb);
 			virtual bool mouseLMBClicked(int x, int y);
-			virtual void draw(Graphics::Drawer *target)=0;
+			virtual void draw(Graphics::Surface *target)=0;
 	};
 
 	class ImageButton : public Button
@@ -27,7 +27,7 @@ namespace Gui
 		public:
 			ImageButton(Rect frame, Graphics::Surface surface);
 
-			virtual void draw(Graphics::Drawer *target);
+			virtual void draw(Graphics::Surface *target);
 	};
 }
 

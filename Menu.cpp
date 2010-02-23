@@ -70,7 +70,7 @@ MenuState::MenuState(int screen_w, int screen_h)
 	buttons[QUIT]->setOnClicked(QuitButtonCallback);
 }
 
-void MenuState::draw(Graphics::Drawer *target)
+void MenuState::draw(Graphics::Surface *target)
 {
 	for(int i=0; i < BUTTONS_NUM; ++i)
 	{

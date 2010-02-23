@@ -2,7 +2,7 @@
 #define WIDGET_H
 
 #include "EventDispatcher.h"
-#include "Drawer.h"
+#include "Surface.h"
 
 namespace Gui
 {
@@ -26,7 +26,7 @@ namespace Gui
 			bool isFocused() const;
 			void setFocused(bool focused);
 
-			virtual void draw(Graphics::Drawer *target)=0;
+			virtual void draw(Graphics::Surface *target)=0;
 
 			virtual bool mouseMoved(int x, int y);
 			virtual bool mouseLMBClicked(int x, int y);

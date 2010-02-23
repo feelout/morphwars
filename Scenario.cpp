@@ -233,7 +233,7 @@ void Scenario::nextTurn()
 	switchTurn(*i);
 }
 
-void Scenario::draw(Graphics::Drawer *target)
+void Scenario::draw(Graphics::Surface *target)
 {
 	map->draw(target, currentPlayer->getFieldOfView());
 	sidepanel->draw(target);

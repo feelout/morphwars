@@ -4,7 +4,6 @@
 #include <SDL/SDL.h>
 #include <utility>
 #include "Surface.h"
-#include "Drawer.h"
 
 namespace Core
 {
@@ -166,7 +165,7 @@ namespace Core
 
 			std::vector< std::pair<int,int> > getDiagonalNeighbours() const;
 
-			void draw(Graphics::Drawer *target, int x, int y, bool visible);
+			void draw(Graphics::Surface *target, int x, int y, bool visible);
 
 			static std::pair<int, int> translateCoordinates(int x, int y, Direction direction);
 			static std::string DirectionToString(Direction direction);

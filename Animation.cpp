@@ -79,10 +79,10 @@ void Animation::resume()
 	animating = true;
 }
 
-void Animation::draw(Drawer *target, int x, int y) const
+void Animation::draw(Surface *target, int x, int y) const
 {
 	//Ugly. TODO: Think about moving blit to Drawer
-	getFrame(getCurrentFrame())->blit(target->getTarget(), x, y);
+	getFrame(getCurrentFrame())->blit(target, x, y);
 }
 
 void Animation::update()

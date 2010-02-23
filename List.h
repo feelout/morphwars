@@ -52,7 +52,7 @@ namespace Gui
 			virtual bool mouseMoved(int x, int y);
 			virtual bool mouseLMBClicked(int x, int y);
 
-			virtual void draw(Graphics::Drawer *target);
+			virtual void draw(Graphics::Surface *target);
 	};
 }
 

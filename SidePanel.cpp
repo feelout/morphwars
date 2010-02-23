@@ -2,6 +2,7 @@
 #include "MapObject.h"
 #include "Logger.h"
 #include "OrderPack.h"
+#include "Drawer.h"
 
 using namespace Gui;
 
@@ -20,9 +21,9 @@ void ResourceBar::setCurrentPlayer(Core::Player *player)
 	currentPlayer = player;
 }
 
-void ResourceBar::draw(Graphics::Drawer *target)
+void ResourceBar::draw(Graphics::Surface *target)
 {
-	target->drawRect(frame, RGBColor::WHITE);
+	Graphics::Drawer(target).drawRect(frame, RGBColor::WHITE);
 	if(!currentPlayer)
 		return;
 	//FIXME:STUB, fix when resources are done
@@ -63,7 +64,7 @@ void SidePanel::setCurrentPlayer(Core::Player *player)
 	resources->setCurrentPlayer(player);
 }
 
-void SidePanel::draw(Graphics::Drawer *target)
+void SidePanel::draw(Graphics::Surface *target)
 {
 	Container::draw(target);
 
@@ -72,5 +73,5 @@ void SidePanel::draw(Graphics::Drawer *target)
 		currentPlayer->getSelectedObject()->drawInfoPanel(target, frame.x, 
 			frame.y+ResourceBar::RESOURCE_BAR_HEIGHT+10 + minimap->getFrame().h);
 	}
-	target->drawRect(frame, RGBColor::WHITE);
+	Graphics::Drawer(target).drawRect(frame, RGBColor::WHITE);
 }

@@ -4,7 +4,7 @@
 #include <string>
 #include "Tile.h"
 #include "TileSet.h"
-#include "Drawer.h"
+#include "Surface.h"
 #include "Player.h"
 #include "Widget.h"
 #include "Minimap.h"
@@ -56,7 +56,7 @@ namespace Core
 			void setClipping(Rect clip);
 			Rect getClipping() const;
 
-			void draw(Graphics::Drawer *target, FieldOfView *fov, bool drawframe=true);
+			void draw(Graphics::Surface *target, FieldOfView *fov, bool drawframe=true);
 	};
 }
 

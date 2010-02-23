@@ -38,9 +38,9 @@ MouseState* MouseState::getInstance()
 	return instance;
 }
 
-void MouseState::draw(Graphics::Drawer *target)
+void MouseState::draw(Graphics::Surface *target)
 {
-	cursor[currentType]->blit(target->getTarget(), x, y);
+	cursor[currentType]->blit(target, x, y);
 }
 
 void MouseState::setActionType(ActionType type)

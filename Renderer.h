@@ -3,7 +3,6 @@
 
 #include <SDL/SDL.h>
 #include "Surface.h"
-#include "Drawer.h"
 
 namespace Graphics
 {

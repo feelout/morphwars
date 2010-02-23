@@ -43,7 +43,7 @@ FontSystem* FontSystem::getInstance()
 	return instance;
 }
 
-void FontSystem::print(Drawer *target, std::string text, int x, int y, RGBColor color, 
+void FontSystem::print(Surface *target, std::string text, int x, int y, RGBColor color, 
 		FontInfo info, RenderQuality quality)
 {
 	std::map<FontInfo, TTF_Font*>::iterator i;
@@ -67,7 +67,7 @@ void FontSystem::print(Drawer *target, std::string text, int x, int y, RGBColor 
 	}
 
 	SDL_Rect targetRect = {x, y, rendered->w, rendered->h};
-	SDL_BlitSurface(rendered, NULL, target->getTarget()->getSurface(), &targetRect);
+	SDL_BlitSurface(rendered, NULL, target->getSurface(), &targetRect);
 
 	SDL_FreeSurface(rendered);
 }

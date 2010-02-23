@@ -6,7 +6,7 @@
 #include <map>
 #include <utility>
 #include "assist.h"
-#include "Drawer.h"
+#include "Surface.h"
 
 namespace Graphics
 {
@@ -33,7 +33,7 @@ namespace Graphics
 		public:
 			static FontSystem* getInstance();
 
-			void print(Drawer *target, std::string text, int x, int y, RGBColor color, 
+			void print(Surface *target, std::string text, int x, int y, RGBColor color, 
 					FontInfo info = std::make_pair("Vera", 12), RenderQuality quality = SOLID);
 	};
 }

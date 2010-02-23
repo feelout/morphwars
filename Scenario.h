@@ -6,7 +6,7 @@
 #include <utility>
 #include "Map.h"
 #include "Player.h"
-#include "Drawer.h"
+#include "Surface.h"
 #include "EngineState.h"
 #include "SidePanel.h"
 #include "PlayerController.h"
@@ -32,7 +32,7 @@ namespace Core
 			void switchTurn(Player *player);
 			void nextTurn();
 
-			virtual void draw(Graphics::Drawer *target);
+			virtual void draw(Graphics::Surface *target);
 			virtual void process();
 
 			virtual bool mouseMoved(int x, int y);

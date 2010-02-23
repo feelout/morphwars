@@ -31,7 +31,7 @@ ImageButton::ImageButton(Rect frame, Graphics::Surface surface)
 			frame.x, frame.y, frame.w, frame.h, this->surface.getWidth(), this->surface.getHeight());
 }
 
-void ImageButton::draw(Graphics::Drawer *target)
+void ImageButton::draw(Graphics::Surface*target)
 {
-	surface.blit(target->getTarget(), frame.x, frame.y);
+	surface.blit(target, frame.x, frame.y);
 }

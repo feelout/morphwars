@@ -43,7 +43,7 @@ bool Container::removeChild(Widget *child)
 	return true;
 }
 
-void Container::draw(Graphics::Drawer *target)
+void Container::draw(Graphics::Surface *target)
 {
 	std::list<Widget*>::iterator i;
 

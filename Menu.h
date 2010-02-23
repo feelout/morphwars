@@ -25,7 +25,7 @@ namespace Core
 		public:
 			MenuState(int screen_w, int screen_h);
 
-			virtual void draw(Graphics::Drawer *target);
+			virtual void draw(Graphics::Surface *target);
 			virtual void process();
 			virtual bool mouseLMBClicked(int x, int y);
 	};

@@ -1,6 +1,7 @@
 #include "OrderPack.h"
 #include "MouseSelector.h"
 #include "Surface.h"
+#include "Drawer.h"
 #include "Logger.h"
 
 using namespace Gui;
@@ -48,9 +49,9 @@ OrderPack::OrderPack(Rect frame)
 	}
 }
 
-void OrderPack::draw(Graphics::Drawer *target)
+void OrderPack::draw(Graphics::Surface *target)
 {
 	Container::draw(target);
-	target->drawRect(frame, RGBColor::WHITE);
+	Graphics::Drawer(target).drawRect(frame, RGBColor::WHITE);
 }
 

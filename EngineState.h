@@ -3,7 +3,7 @@
 
 #include <string>
 #include "EventDispatcher.h"
-#include "Drawer.h"
+#include "Surface.h"
 
 //TODO: State management should be in form of stack
 namespace Core
@@ -33,7 +33,7 @@ namespace Core
 			virtual void pause();
 			virtual void resume();
 
-			virtual void draw(Graphics::Drawer *target)=0;
+			virtual void draw(Graphics::Surface *target)=0;
 			virtual void process()=0;
 
 			virtual bool mouseMoved(int x, int y);

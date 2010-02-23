@@ -19,7 +19,7 @@ namespace Gui
 
 			void setCurrentPlayer(Core::Player *player);
 
-			virtual void draw(Graphics::Drawer *target);
+			virtual void draw(Graphics::Surface *target);
 	};
 
 	class SidePanel : public Container
@@ -45,7 +45,7 @@ namespace Gui
 			~SidePanel();
 
 			void setCurrentPlayer(Core::Player *player);
-			void draw(Graphics::Drawer *target);
+			void draw(Graphics::Surface *target);
 	};
 }
 

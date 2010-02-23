@@ -2,6 +2,7 @@
 #include "Map.h"
 #include "Logger.h"
 #include "Surface.h"
+#include "Drawer.h"
 
 using namespace Core;
 
@@ -197,7 +198,7 @@ Rect Map::getClipping() const
 	return clip;
 }
 
-void Map::draw(Graphics::Drawer *target, FieldOfView *fov, bool drawframe)
+void Map::draw(Graphics::Surface *target, FieldOfView *fov, bool drawframe)
 {
 	int dx=0,dy=0;
 	
@@ -210,7 +211,6 @@ void Map::draw(Graphics::Drawer *target, FieldOfView *fov, bool drawframe)
 		Utility::Logger::getInstance()->log("max_tilex = %i, max_tiley = %i\n", max_tilex, max_tiley);
 		Utility::Logger::getInstance()->log("Clipping rect: %i, %i, %i, %i\n", clip.x, clip.y, clip.w, clip.h);
 
-		Graphics::Drawer cachedDrawer(cached);
 		//for(int tiley=0; tiley < height; ++tiley)
 		for(int tiley=clip.y; tiley < max_tiley; ++tiley)
 		{
@@ -222,18 +222,18 @@ void Map::draw(Graphics::Drawer *target, FieldOfView *fov, bool drawframe)
 			//for(int tilex=0; tilex < width; ++tilex)
 			for(int tilex=clip.x; tilex < max_tilex; ++tilex)
 			{
-				getTile(tilex, tiley)->draw(&cachedDrawer, frame.x + dx+(tilex*TILE_WIDTH),
+				getTile(tilex, tiley)->draw(cached, frame.x + dx+(tilex*TILE_WIDTH),
 						frame.y + (tiley*(TILE_HEIGHT_OFFSET)-dy), fov->isTileVisible(tilex, tiley));
 			}
 		}
 
 		*lastFov = *fov;
 	}
-	cached->blit(target->getTarget(), 0, 0);
+	cached->blit(target, 0, 0);
 
 	if(drawframe)
 	{
-		target->drawRect(frame, RGBColor::WHITE);
+		Graphics::Drawer(target).drawRect(frame, RGBColor::WHITE);
 	}
 }
 

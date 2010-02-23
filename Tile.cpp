@@ -1,6 +1,7 @@
 #include "Tile.h"
 #include "MapObject.h"
 #include "Logger.h"
+#include "Drawer.h"
 #include "assist.h"
 
 using namespace Core;
@@ -278,11 +279,11 @@ std::vector< std::pair<int, int> > Tile::getNeighbours() const
 	return results;
 }
 
-void Tile::draw(Graphics::Drawer *target, int x, int y, bool visible)
+void Tile::draw(Graphics::Surface *target, int x, int y, bool visible)
 {
 	if(visible)
 	{
-		image->blit(target->getTarget(), x, y);
+		image->blit(target, x, y);
 		/*for(std::vector<MapObject*>::iterator i = objects.begin(); i != objects.end(); ++i)
 		{
 			(*i)->draw(target, x, y);
@@ -290,17 +291,18 @@ void Tile::draw(Graphics::Drawer *target, int x, int y, bool visible)
 	}
 	else
 	{
-		shadowedImage->blit(target->getTarget(), x, y);
+		shadowedImage->blit(target, x, y);
 	}
 	// Drawing grid
+	Graphics::Drawer drawer(target);
 	RGBColor gridcolor(255, 255, 255);
-	target->drawLine(x, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET, x + TILE_WIDTH / 2, y + TILE_HEIGHT - TILE_TERRAIN_HEIGHT,
+	drawer.drawLine(x, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET, x + TILE_WIDTH / 2, y + TILE_HEIGHT - TILE_TERRAIN_HEIGHT,
 			gridcolor);
-	target->drawLine(x + TILE_WIDTH / 2, y + TILE_HEIGHT - TILE_TERRAIN_HEIGHT,
+	drawer.drawLine(x + TILE_WIDTH / 2, y + TILE_HEIGHT - TILE_TERRAIN_HEIGHT,
 			x + TILE_WIDTH, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET, gridcolor);
-	target->drawLine(x + TILE_WIDTH, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET,
+	drawer.drawLine(x + TILE_WIDTH, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET,
 			x + TILE_WIDTH / 2, y + TILE_HEIGHT, gridcolor);
-	target->drawLine(x + TILE_WIDTH / 2, y +TILE_HEIGHT, x, y +TILE_HEIGHT - TILE_HEIGHT_OFFSET, gridcolor);
+	drawer.drawLine(x + TILE_WIDTH / 2, y +TILE_HEIGHT, x, y +TILE_HEIGHT - TILE_HEIGHT_OFFSET, gridcolor);
 }
 
 std::pair<int, int> Tile::translateCoordinates(int x, int y, Direction direction)

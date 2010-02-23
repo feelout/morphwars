@@ -1,7 +1,7 @@
 #ifndef MOUSE_SELECTOR_H
 #define MOUSE_SELECTOR_H
 
-#include "Drawer.h"
+#include "Surface.h"
 #include "Engine.h"
 
 namespace Core
@@ -26,7 +26,7 @@ namespace Core
 		public:
 			static MouseState *getInstance();
 
-			void draw(Graphics::Drawer *target);
+			void draw(Graphics::Surface *target);
 			void setActionType(ActionType type);
 			ActionType getActionType() const;
 

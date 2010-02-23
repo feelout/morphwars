@@ -1,6 +1,7 @@
 #include "List.h"
 #include "FontSystem.h"
 #include "Logger.h"
+#include "Drawer.h"
 
 using namespace Gui;
 
@@ -78,11 +79,14 @@ bool List::mouseLMBClicked(int x, int y)
 	return true;
 }
 
-void List::draw(Graphics::Drawer *target)
+void List::draw(Graphics::Surface *target)
 {
 	int lastItem = (items.size() >= maxItems) ? (topItem + maxItems) : (items.size());
 
 	//Utility::Logger::getInstance()->log("Drawing list: current = %i, last = %i\n", currentItem, lastItem);
+	//
+	
+	Graphics::Drawer drawer(target);
 
 	RGBColor color;
 	for(int i=topItem; i < lastItem; ++i)
@@ -97,11 +101,11 @@ void List::draw(Graphics::Drawer *target)
 			color = RGBColor(30, 30, 30);
 			//color = RGBColor::YELLOW;
 		}
-		target->fillRect(Rect(frame.x, frame.y+i*ITEM_HEIGHT, frame.w, ITEM_HEIGHT), color);
-		target->drawRect(Rect(frame.x, frame.y+i*ITEM_HEIGHT, frame.w, ITEM_HEIGHT), RGBColor::WHITE);
+		drawer.fillRect(Rect(frame.x, frame.y+i*ITEM_HEIGHT, frame.w, ITEM_HEIGHT), color);
+		drawer.drawRect(Rect(frame.x, frame.y+i*ITEM_HEIGHT, frame.w, ITEM_HEIGHT), RGBColor::WHITE);
 
 		Graphics::FontSystem::getInstance()->print(target, items[i], frame.x, frame.y+i*ITEM_HEIGHT, RGBColor(255,0,0));	
 	}
 
-	target->drawRect(frame, RGBColor::WHITE);
+	drawer.drawRect(frame, RGBColor::WHITE);
 }

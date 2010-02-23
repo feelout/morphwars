@@ -3,6 +3,7 @@
 #include "assist.h"
 #include "Engine.h"
 #include "Logger.h"
+#include "Drawer.h"
 #include "FontSystem.h"
 
 using namespace Gui;
@@ -87,11 +88,11 @@ void ScenarioSelectingState::process()
 {
 }
 
-void ScenarioSelectingState::draw(Graphics::Drawer *target)
+void ScenarioSelectingState::draw(Graphics::Surface *target)
 {
 	//FIXME : draw everything
-	preview->blit(target->getTarget(), 5, 5);
-	target->drawRect(Rect(5, 5, preview->getWidth(), preview->getHeight()), RGBColor::WHITE);
+	preview->blit(target, 5, 5);
+	Graphics::Drawer(target).drawRect(Rect(5, 5, preview->getWidth(), preview->getHeight()), RGBColor::WHITE);
 	selector->draw(target);
 	Graphics::FontSystem::getInstance()->print(target, info, preview->getWidth()+10, 5, RGBColor(255, 0, 0));
 }

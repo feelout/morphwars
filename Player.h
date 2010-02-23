@@ -5,7 +5,7 @@
 #include <vector>
 #include "assist.h"
 #include "Force.h"
-#include "Drawer.h"
+#include "Surface.h"
 
 namespace Core
 {
@@ -88,7 +88,7 @@ namespace Core
 			void setController(PlayerController *controller);
 			PlayerController *getController() const;
 
-			void renderObjects(Graphics::Drawer *target, const FieldOfView *fov, const Map *map);
+			void renderObjects(Graphics::Surface *target, const FieldOfView *fov, const Map *map);
 	};
 }
 

@@ -39,7 +39,7 @@ namespace Core
 			void setCurrentScenario(std::string scenario);
 
 			virtual void process();
-			virtual void draw(Graphics::Drawer *target);
+			virtual void draw(Graphics::Surface *target);
 
 			virtual bool mouseMoved(int x, int y);
 			virtual bool mouseLMBClicked(int x, int y);
