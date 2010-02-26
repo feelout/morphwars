@@ -404,19 +404,6 @@ void Unit::onTurnBegin()
 	canRetaliate = true;
 }
 
-void Unit::defaultTargetOrder(Tile *target, Map *map)
-{
-	if(!(target->isEnemy(this) && owner->getFieldOfView()->isTileVisible(target->getX(), target->getY())))
-	{
-		MovementOrder *order = new MovementOrder(this, target, map);
-	}
-	else
-	{
-	}
-	MouseState::getInstance()->setActionType(MouseState::SELECT);
-	//if there is something, make AttackOrder
-}
-
 void Unit::drawInfoPanel(Graphics::Surface *target, int x, int y)
 {
 	Graphics::Animation *image = getType()->getGraphics()->getCurrent();

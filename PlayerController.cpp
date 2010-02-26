@@ -25,7 +25,7 @@ void PlayerController::newTurn()
 
 /* LocalPlayerController */
 LocalPlayerController::LocalPlayerController(Player *target, Map *map)
-	: PlayerController(target), map(map)
+	: PlayerController(target), map(map), pendingOrder(NULL)
 {
 	Utility::Logger::getInstance()->log("LocalPlayerController created for %s\n", target->getName().c_str());
 	Engine::getInstance()->getEventDispatcher()->attachListener(this);
@@ -48,9 +48,14 @@ bool LocalPlayerController::objectTargeted(Tile *clickedTile)
 		return false;
 	}
 
-	selected->defaultTargetOrder(clickedTile, map);
+	Order *order = OrderFactory::getInstance()->createOrder(selected->getType()->getDefaultOrder(), selected, map);
+	if(order)
+	{
+		order->execute(clickedTile);
+		return true;
+	}
 
-	return true;
+	return false;
 }
 
 bool LocalPlayerController::mouseMoved(int x, int y)
@@ -66,7 +71,8 @@ bool LocalPlayerController::mouseLMBClicked(int x, int y)
 	if(!target->isCurrent())
 		return false;
 
-	if(MouseState::getInstance()->getActionType() == MouseState::SELECT)
+	//if(MouseState::getInstance()->getActionType() == MouseState::SELECT)
+	if(!pendingOrder)
 	{
 		Tile *clickedTile = map->getTileByMouseCoords(x, y);
 
@@ -89,9 +95,18 @@ bool LocalPlayerController::mouseLMBClicked(int x, int y)
 			return false;
 		}
 	}
-	else if(MouseState::getInstance()->getActionType() == MouseState::MOVE)
+	//else if(MouseState::getInstance()->getActionType() == MouseState::MOVE)
+	else
 	{
-		return objectTargeted(map->getTileByMouseCoords(x,y));
+		//return objectTargeted(map->getTileByMouseCoords(x,y));
+
+		// Apply current order
+		Tile *tile = map->getTileByMouseCoords(x,y);
+		if(tile)
+		{
+			pendingOrder->execute(tile);
+		}
+		return tile != NULL;
 	}
 
 	return false;
@@ -109,6 +124,9 @@ bool LocalPlayerController::keyPressed(int key)
 {
 	switch(key)
 	{
+		/* This is just temporary
+		 * TODO: Think about providing hotkeys
+		 */
 		case SDLK_m:
 			//MOVE;
 			if(target->getSelectedObject())
@@ -129,8 +147,22 @@ bool LocalPlayerController::keyPressed(int key)
 			if(target->getSelectedObject())
 				MouseState::getInstance()->setActionType(MouseState::SKILL);
 			return true;
+		case SDLK_e:
+			// TODO: Remove handler from Scenario
+			if(target->isCurrent())
+			{
+				target->setDone(false);
+			}	
+			return true;
 	}
 	return false;
+}
+
+void LocalPlayerController::setOrder(Order *order)
+{
+	if(pendingOrder)
+		delete pendingOrder;
+	pendingOrder = order;
 }
 
 /* AIPlayerController */

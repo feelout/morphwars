@@ -67,25 +67,21 @@ void Engine::runGameCycle()
 	{
 		renderer->clear();
 		equalizer->frameStarted();
-		// Event processing
+
 		while(SDL_PollEvent(&event))
 		{
 			dispatcher->passEvent(event);
 		}
-		// Do all game logic and drawing here
 
-		/*if(currentScenario)
-		{
-			Core::OrderManager::getInstance()->processOrders();
-			currentScenario->draw(&drawer, 0, 0);
-		}*/
 		if(stateStack->top())
 		{
 			stateStack->top()->process();
 			stateStack->top()->draw(buffer);
 		}
+
 		AnimationManager::getInstance()->updateAnimations();
 		Core::MouseState::getInstance()->draw(buffer);
+
 		renderer->flipBuffers();
 		equalizer->frameEnded();
 	}

@@ -9,8 +9,8 @@ Minimap::Minimap(Rect frame, Core::Map *owner)
 {
 	// Rendering map to temp surface
 	Graphics::Surface nonScaledMinimap((owner->getWidth()+1)*Core::TILE_WIDTH, (owner->getHeight() / 2)*Core::TILE_HEIGHT);
-	//Graphics::Drawer nonScaledDrawer(&nonScaledMinimap);
-	// Disable fog of war
+
+	// Disable fog of war by using stub FOV
 	Core::FieldOfView empty_fov(owner->getWidth(), owner->getHeight());
 
 	for(int y=0; y < owner->getHeight(); ++y)
@@ -27,16 +27,9 @@ Minimap::Minimap(Rect frame, Core::Map *owner)
 	clip.w = owner->getWidth();
 	clip.h = owner->getHeight();
 
-	// Temporarily change frame to remove shift
-	/*Rect true_frame = owner->getFrame();
-	Rect new_frame(0, 0, true_frame.w, true_frame.h);*/
-
-	//owner->setFrame(new_frame);
 	owner->setClipping(clip);
-	//owner->draw(&nonScaledDrawer, &empty_fov, false);
 	owner->draw(&nonScaledMinimap, &empty_fov, false);
 	owner->setClipping(true_clip);
-	//owner->setFrame(true_frame);
 
 	// Zoom to needed dimensions
 	// FIXME: preserve aspect ratio

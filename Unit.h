@@ -110,7 +110,6 @@ namespace Core
 
 			void onTurnBegin();
 
-			virtual void defaultTargetOrder(Tile *target, Map *map);
 			virtual void drawInfoPanel(Graphics::Surface *target, int x, int y);
 	};
 }

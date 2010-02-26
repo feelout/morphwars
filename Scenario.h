@@ -10,6 +10,7 @@
 #include "EngineState.h"
 #include "SidePanel.h"
 #include "PlayerController.h"
+#include "Container.h"
 
 namespace Core
 {

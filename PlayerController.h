@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Map.h"
 #include "EventDispatcher.h"
+#include "Order.h"
 
 namespace Core
 {
@@ -22,11 +23,14 @@ namespace Core
 	{
 		protected:
 			Map *map;
+			Order *pendingOrder;
 
 			bool objectTargeted(Tile *clickedTile);
 		public:
 			LocalPlayerController(Player *target, Map *map);
 			virtual ~LocalPlayerController();
+
+			void setOrder(Order *order);
 
 			virtual bool mouseMoved(int x, int y);
 			virtual bool mouseLMBClicked(int x, int y);

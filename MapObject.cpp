@@ -44,6 +44,16 @@ std::string MapObjectType::getName() const
 	return name;
 }
 
+const std::list<std::string>& MapObjectType::getOrders() const
+{
+	return orders;
+}
+
+std::string MapObjectType::getDefaultOrder() const
+{
+	return defaultOrder;
+}
+
 MapObject::MapObject(MapObjectType *type, Tile *tile, Player *owner)
 	: tile(tile), owner(owner), dx(0), dy(0), type(type->clone()), dead(false)
 {

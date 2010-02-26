@@ -6,6 +6,7 @@
 
 namespace Core 
 {
+	/* Main menu. Serves for switching to other states */
 	class MenuState : public EngineState
 	{
 		public:

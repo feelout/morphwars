@@ -7,7 +7,7 @@
 
 using namespace Core;
 
-Order::Order(Unit *unit)
+/*Order::Order(Unit *unit)
 	: unit(unit), done(false)
 {
 	//Utility::Logger::getInstance()->log("Order::Order\n");
@@ -29,10 +29,67 @@ void Order::stop()
 bool Order::isDone() const
 {
 	return done;
+}*/
+
+Order::Order(MapObject *object, Map *map)
+	: object(object), map(map), done(false)
+{
 }
 
+Order::~Order()
+{
+}
 
-MovementOrder::MovementOrder(Unit *unit, Tile *target, Map *map)
+void Order::execute(Tile *target)
+{
+	this->target = target;
+}
+
+void Order::process()
+{
+}
+
+void Order::stop()
+{
+	done = true;
+}
+
+bool Order::isDone() const
+{
+	return done;
+}
+
+MovementOrder::MovementOrder(MapObject *object, Map *map)
+	: Order(object, map)
+{
+}
+
+void MovementOrder::execute(Tile *target)
+{
+	Order::execute(target);
+
+	if(object->getOwner()->getFieldOfView()->isTileVisible(target->getX(), target->getY()))
+	{
+		if(target->isEnemy(object))
+		{
+			Utility::Logger::getInstance()->log("Occupied by enemy\n");
+			// Can`t move to tile occupied by enemy
+			done = true;
+			return;
+		}
+	}
+
+	if(!makePath())
+	{
+		Utility::Logger::getInstance()->log("Failed to build path from (%i,%i) to (%i,%i)",
+				object->getTile()->getX(), object->getTile()->getY(),
+				target->getX(), target->getY());
+		done = true;
+		return;
+	}
+}
+
+/*MovementOrder::MovementOrder(Unit *unit, Tile *target, Map *map)
 	: Order(unit), target(target), map(map)
 {
 	//Utility::Logger::getInstance()->log("MovementOrder::MovementOrder\n");
@@ -56,10 +113,12 @@ MovementOrder::MovementOrder(Unit *unit, Tile *target, Map *map)
 		done = true;
 		return;
 	}
-}
+}*/
 
 bool MovementOrder::makePath()
 {
+	Unit *unit = static_cast<Unit*>(object);
+
 	Utility::Logger::getInstance()->log("Calculating path from (%i,%i) to (%i,%i)\n", unit->getTile()->getX(),
 		unit->getTile()->getY(), target->getX(), target->getY());
 	//Utility::Logger::getInstance()->log("Unit MP: %i\n", unit->getMP());
@@ -81,13 +140,13 @@ bool MovementOrder::makePath()
 
 	closedlist.push_back(srcNode);
 	
-	/* FIXME: If anything isn`t working, maybe should check if node already in lists */
+	// FIXME: If anything isn`t working, maybe should check if node already in lists 
 
 	while(currentNode->getSource() != target)
 	{
 		//Utility::Logger::getInstance()->log("Iteration: currentNode = (%i,%i)\n",
 			//currentNode->getSource()->getX(), currentNode->getSource()->getY());
-		/* Adding neighbours to open list */
+		// Adding neighbours to open list 
 		std::vector< std::pair<int,int> > neighbourCoords = currentNode->getSource()->getNeighbours();
 		std::vector< std::pair<int,int> >::iterator nb_iter;
 
@@ -104,7 +163,7 @@ bool MovementOrder::makePath()
 				continue;
 			}
 
-			/* Checking if node is already in closed list */
+			// Checking if node is already in closed list 
 			std::vector<AStar::Node*>::iterator check;
 			bool alreadyInCList = false;
 
@@ -132,13 +191,13 @@ bool MovementOrder::makePath()
 				continue;
 			}
 
-			/* Everything is OK */
+			// Everything is OK 
 
 			AStar::Node *node = new AStar::Node(currentNode, map->getTile(nbx, nby),
 					unit->getType()->getMovementType(), target);
 
 
-			/* Finding minimum-cost node */
+			// Finding minimum-cost node 
 			if((!minimumNode) || (minimumNode->getCost() >  node->getCost()))
 			{
 				// Free previous minimum
@@ -161,7 +220,7 @@ bool MovementOrder::makePath()
 		closedlist.push_back(minimumNode);
 		currentNode = minimumNode;
 	}
-	/* Constructing waypoint list from closed list */
+	// Constructing waypoint list from closed list */
 	std::vector<AStar::Node*>::iterator cl_iter;
 
 	for(cl_iter = ++(closedlist.begin()); cl_iter != closedlist.end(); ++cl_iter)
@@ -188,6 +247,7 @@ void MovementOrder::process()
 {
 	/*Utility::Logger::getInstance()->log("MovementOrder::process().Unit tile: %i,%i. Unit MP: %i",
 		unit->getTile()->getX(), unit->getTile()->getY(), unit->getMP());*/
+	Unit *unit = static_cast<Unit*>(object);
 	if(done)
 	{
 		return;
@@ -221,4 +281,9 @@ void MovementOrder::process()
 			}
 		}
 	}
+}
+
+Order* MovementOrderCreator::createOrder(MapObject *object, Map *map)
+{
+	return new MovementOrder(object, map);
 }

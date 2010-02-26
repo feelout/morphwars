@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <list>
 #include "Tile.h"
 #include "Surface.h"
 #include "AnimationPack.h"
@@ -21,6 +22,9 @@ namespace Core
 			bool enabled;
 			std::string type;
 			std::string name;
+			// Orders this unis can perform
+			std::list<std::string> orders;
+			std::string defaultOrder;
 
 			MapObjectType();
 		public:
@@ -50,6 +54,9 @@ namespace Core
 			std::string getType() const;
 
 			std::string getName() const;
+
+			const std::list<std::string>& getOrders() const;
+			std::string getDefaultOrder() const;
 	};
 	/**
 	 * MapObject is drawable object on the map
@@ -97,8 +104,6 @@ namespace Core
 
 			bool isEnemy(MapObject *other) const;
 			virtual bool damage(int damage, MapObject *source)=0;
-
-			virtual void defaultTargetOrder(Tile *target, Map *map)=0;
 	};
 }
 

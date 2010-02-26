@@ -13,7 +13,7 @@ namespace Core
 		protected:
 			/* Is state enabled currently (does check events) */
 			bool enabled;
-			/* Do state drawing? */
+			/* Does state drawing? */
 			bool drawing;
 			/* State caption */
 			std::string name;

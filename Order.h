@@ -3,10 +3,11 @@
 
 #include "Unit.h"
 #include "Map.h"
+#include "OrderFactory.h"
 
 namespace Core
 {
-	class Order
+	/*class Order
 	{
 		protected:
 			// Unit, whom the order was issued
@@ -27,24 +28,46 @@ namespace Core
 			virtual void process()=0;
 			virtual void stop();
 			bool isDone() const;
-	};
+	};*/
 
-	class MovementOrder : Order
+
+	class Order
 	{
 		protected:
-			Tile* target;
+			MapObject *object;
 			Map *map;
+			Tile *target;
+
+			bool done;
+		public:
+			Order(MapObject *unit, Map *map);
+			virtual ~Order();
+
+			virtual void execute(Tile *target);
+			virtual void process();
+			virtual void stop();
+
+			bool isDone() const;
+	};
+
+	class MovementOrder : public Order
+	{
+		protected:
 			std::vector<Tile*> waypoints;
 			std::vector<Tile*>::iterator currentWaypoint;
 
 			bool makePath();
-
-			int target_dx;
-			int target_dy;
 		public:
-			MovementOrder(Unit *unit, Tile *target, Map *map);
+			MovementOrder(MapObject *object, Map *map);
 
+			virtual void execute(Tile *target);
 			virtual void process();
+	};
+
+	class MovementOrderCreator : public IOrderCreator
+	{
+		public:
+			virtual Order* createOrder(MapObject *object, Map *map);
 	};
 }
 
