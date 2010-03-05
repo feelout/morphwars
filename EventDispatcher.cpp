@@ -58,8 +58,8 @@ void EventDispatcher::passEvent(SDL_Event event)
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			{
-				Utility::Logger::getInstance()->log("Mouse button down\n");
-				Utility::Logger::getInstance()->log("Total listeners: %i\n", listeners.size());
+				//Utility::Logger::getInstance()->log("Mouse button down\n");
+				//Utility::Logger::getInstance()->log("Total listeners: %i\n", listeners.size());
 				std::vector<IEventListener*>::iterator i;
 
 				//DEBUG
@@ -68,7 +68,7 @@ void EventDispatcher::passEvent(SDL_Event event)
 
 				for(i = listeners.begin(); i != listeners.end(); i++)
 				{
-					Utility::Logger::getInstance()->log("%i\n", k++);
+					//Utility::Logger::getInstance()->log("%i\n", k++);
 					if(event.button.button == SDL_BUTTON_LEFT)
 					{
 						if((*i)->mouseLMBClicked(event.button.x, event.button.y))

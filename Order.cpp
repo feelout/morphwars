@@ -43,6 +43,7 @@ Order::~Order()
 void Order::execute(Tile *target)
 {
 	this->target = target;
+	OrderManager::getInstance()->addOrder(this);
 }
 
 void Order::process()

@@ -11,7 +11,7 @@ Widget::Widget(Rect frame)
 
 void Widget::frameUpdated()
 {
-	Utility::Logger::getInstance()->log("Widget::frameUpdated()\n");
+	//Utility::Logger::getInstance()->log("Widget::frameUpdated()\n");
 }
 
 Rect Widget::getFrame() const
@@ -21,7 +21,7 @@ Rect Widget::getFrame() const
 
 void Widget::setFrame(Rect frame)
 {
-	Utility::Logger::getInstance()->log("Widget::setFrame()\n");
+	//Utility::Logger::getInstance()->log("Widget::setFrame()\n");
 	this->frame = frame;
 
 	frameUpdated();

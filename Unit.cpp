@@ -44,6 +44,16 @@ UnitType::UnitType(std::string typeName)
 
 	name = name_buf;
 
+	char orderNameBuffer[255];
+	while(!feof(f_def))
+	{
+		fscanf(f_def, "%s\n", &orderNameBuffer);
+		Utility::Logger::getInstance()->log("Order %s added\n", orderNameBuffer);
+		orders.push_back(orderNameBuffer);
+	}
+
+	defaultOrder = "move";
+
 	delete strip;
 }
 
@@ -76,6 +86,8 @@ UnitType* UnitType::clone()
 	result->cost = cost;
 	result->movementType = movementType;
 	result->enabled = enabled;
+	result->orders = orders;
+	result->defaultOrder = defaultOrder;
 
 	result->graphics = graphics;
 	

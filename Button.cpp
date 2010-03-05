@@ -27,8 +27,8 @@ bool Button::mouseLMBClicked(int x, int y)
 ImageButton::ImageButton(Rect frame, Graphics::Surface surface)
 	: Button(frame), surface(surface)
 {
-	Utility::Logger::getInstance()->log("ImageButton: (%i,%i,%i,%i), surface (%i,%i)\n",
-			frame.x, frame.y, frame.w, frame.h, this->surface.getWidth(), this->surface.getHeight());
+	//Utility::Logger::getInstance()->log("ImageButton: (%i,%i,%i,%i), surface (%i,%i)\n",
+			//frame.x, frame.y, frame.w, frame.h, this->surface.getWidth(), this->surface.getHeight());
 }
 
 void ImageButton::draw(Graphics::Surface*target)

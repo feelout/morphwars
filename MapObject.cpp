@@ -51,6 +51,7 @@ const std::list<std::string>& MapObjectType::getOrders() const
 
 std::string MapObjectType::getDefaultOrder() const
 {
+	Utility::Logger::getInstance()->log("Object : default order %s requested\n", defaultOrder.c_str());
 	return defaultOrder;
 }
 

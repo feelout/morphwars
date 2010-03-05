@@ -18,6 +18,7 @@ Scenario::Scenario(std::string path)
 		return;
 	}
 
+	OrderFactory::getInstance()->registerCreator("move", new MovementOrderCreator());
 }
 
 Scenario::~Scenario()
