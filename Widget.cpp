@@ -3,15 +3,14 @@
 
 using namespace Gui;
 
-Widget::Widget(Rect frame)
-	: active(true), focused(false)
+Widget::Widget(Rect frame, Widget *parent)
+	: active(true), focused(false), requestedFrame(frame)
 {
 	setFrame(frame);
 }
 
 void Widget::frameUpdated()
 {
-	//Utility::Logger::getInstance()->log("Widget::frameUpdated()\n");
 }
 
 Rect Widget::getFrame() const
@@ -21,10 +20,14 @@ Rect Widget::getFrame() const
 
 void Widget::setFrame(Rect frame)
 {
-	//Utility::Logger::getInstance()->log("Widget::setFrame()\n");
 	this->frame = frame;
 
 	frameUpdated();
+}
+
+Rect Widget::getRequestedFrame() const
+{
+	return requestedFrame;
 }
 
 bool Widget::isFocused() const
@@ -35,6 +38,16 @@ bool Widget::isFocused() const
 void Widget::setFocused(bool focused)
 {
 	this->focused = focused;
+}
+
+Widget* Widget::getParent() const
+{
+	return parent;
+}
+
+void Widget::setParent(Widget *parent)
+{
+	this->parent = parent;
 }
 
 bool Widget::mouseMoved(int x, int y)

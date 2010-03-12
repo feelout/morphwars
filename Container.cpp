@@ -4,21 +4,18 @@
 
 using namespace Gui;
 
-Container::Container(Rect frame, bool strict)
-	: Widget(frame), strict(strict), focusedWidget(NULL)
+Container::Container(Rect frame, Widget *parent)
+	: Widget(frame, parent), focusedWidget(NULL)
 {
+}
+
+void Container::frameUpdated()
+{
+	recalculateChildrenFrames();
 }
 
 bool Container::addChild(Widget *child)
 {
-	if(strict)
-	{
-		if(!frame.isRectInRect(child->getFrame()))
-		{
-			return false;
-		}
-	}
-
 	children.push_back(child);
 	focusedWidget = child;
 	child->setFocused(true);
@@ -41,6 +38,10 @@ bool Container::removeChild(Widget *child)
 
 	children.erase(i);
 	return true;
+}
+
+void Container::recalculateChildrenFrames()
+{
 }
 
 void Container::draw(Graphics::Surface *target)
