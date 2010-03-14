@@ -218,6 +218,9 @@ void Scenario::switchTurn(Player *player)
 	{
 		sidepanel->setCurrentPlayer(currentPlayer);
 	}
+
+	//FIXME: Does not work, because fov can change by moving units (move to order??)
+	//map->setFieldOfView(currentPlayer->getFieldOfView());
 }
 
 void Scenario::nextTurn()
@@ -236,7 +239,10 @@ void Scenario::nextTurn()
 
 void Scenario::draw(Graphics::Surface *target)
 {
-	map->draw(target, currentPlayer->getFieldOfView());
+	//FIXME!!! - is it slow checking for fov on each frame?
+	map->setFieldOfView(currentPlayer->getFieldOfView());
+	map->draw(target);
+
 	sidepanel->draw(target);
 
 	std::list<Player*>::const_iterator i;

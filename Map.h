@@ -12,7 +12,7 @@
 
 namespace Core
 {
-	class Map
+	class Map : public Gui::Widget
 	{
 		private:
 			Tile **tiles;
@@ -23,7 +23,7 @@ namespace Core
 			// Map clipping rect
 			Rect clip;
 			// As in widget (cannot subclass Widget, because of non-standart draw() method)
-			Rect frame;
+			//Rect frame;
 
 			std::string author;
 			std::string name;
@@ -36,11 +36,17 @@ namespace Core
 			Graphics::Surface *cached;
 			//Minimap
 			//Minimap *minimap; //will be in panel in Scenario
+			//
+			
+			FieldOfView *currentFov;
 
 			void recalculateClipping();
+			virtual void frameUpdated();
+
+			void updateCache();
 		public:
-			Map(Rect frame, int width, int height, std::string tilesetName);
-			Map(Rect frame, TiXmlElement *xmlmap);
+			Map(Rect frame, int width, int height, std::string tilesetName, Widget *parent=NULL);
+			Map(Rect frame, TiXmlElement *xmlmap, Widget *parent=NULL);
 			~Map();
 
 			Tile* getTile(int x, int y);
@@ -49,14 +55,15 @@ namespace Core
 			int getWidth() const;
 			int getHeight() const;
 
-			void setFrame(Rect frame);
-			Rect getFrame() const;
-
 			void setPointOfView(int x, int y);
 			void setClipping(Rect clip);
 			Rect getClipping() const;
 
+			void setFieldOfView(FieldOfView *fov);
+
+			// How to make it consistent with definition of Widget::draw?? TODO: STOPPED HERE
 			void draw(Graphics::Surface *target, FieldOfView *fov, bool drawframe=true);
+			void draw(Graphics::Surface *target);
 	};
 }
 
