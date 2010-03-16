@@ -11,6 +11,7 @@
 #include "SidePanel.h"
 #include "PlayerController.h"
 #include "Container.h"
+#include "Box.h"
 
 namespace Core
 {
@@ -26,6 +27,7 @@ namespace Core
 			Player *currentPlayer;
 
 			Gui::SidePanel *sidepanel;
+			Gui::HBox *hbox;
 		public:
 			Scenario(std::string path);
 			~Scenario();

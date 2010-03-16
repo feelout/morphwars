@@ -7,8 +7,8 @@
 using namespace Core;
 using namespace Gui;
 
-const int MAP_MINIMAL_FRAME_WIDTH = 500;
-const int MAP_MINIMAL_FRAME_HEIGHT = 300;
+//const int MAP_MINIMAL_FRAME_WIDTH = 400;
+//const int MAP_MINIMAL_FRAME_HEIGHT = 300;
 
 bool CompareTiles(Tile *t1, Tile *t2)
 {
@@ -40,7 +40,7 @@ Map::Map(Rect frame, int width, int height, std::string tilesetname, Widget *par
 	lastFov = new FieldOfView(width, height);
 	currentFov = new FieldOfView(width, height);
 
-	requestedFrame = Rect(0, 0, MAP_MINIMAL_FRAME_WIDTH, MAP_MINIMAL_FRAME_HEIGHT); 
+	//requestedFrame = Rect(0, 0, MAP_MINIMAL_FRAME_WIDTH, MAP_MINIMAL_FRAME_HEIGHT); 
 	recalculateClipping(); //TODO: Check if Widget constructor calls frameChanged(). If so, delete this
 }
 
@@ -76,8 +76,10 @@ Map::Map(Rect frame, TiXmlElement *xmlmap, Widget *parent)
 	lastFov = new FieldOfView(width, height); 
 	currentFov = new FieldOfView(width, height);
 
-	requestedFrame = Rect(0, 0, MAP_MINIMAL_FRAME_WIDTH, MAP_MINIMAL_FRAME_HEIGHT); 
+	//requestedFrame = Rect(0, 0, MAP_MINIMAL_FRAME_WIDTH, MAP_MINIMAL_FRAME_HEIGHT); 
 	//setFrame(frame);
+	//
+	Utility::Logger::getInstance()->log("Map requested frame : %i,%i\n", requestedFrame.w, requestedFrame.h);
 	recalculateClipping(); // TODO: same as in previous constructor
 }
 
@@ -185,6 +187,9 @@ int Map::getHeight() const
 void Map::frameUpdated()
 {
 	recalculateClipping();
+
+	Graphics::Drawer drawer(cached);
+	drawer.fillRect(Rect(0, 0, cached->getWidth(), cached->getHeight()), RGBColor::BLACK);
 }
 
 /*void Map::setFrame(Rect frame)
@@ -226,6 +231,7 @@ void Map::setFieldOfView(FieldOfView *fov)
 void Map::updateCache()
 {
 	Utility::Logger::getInstance()->log("Rebuilding map cache\n");
+
 
 	int dx = 0, dy = 0;
 

@@ -31,30 +31,40 @@ void ResourceBar::draw(Graphics::Surface *target)
 
 /* SidePanel class */
 SidePanel::SidePanel(Rect frame, Core::Map *map)
-	: Container(frame), minimap(NULL), currentPlayer(NULL), resources(NULL),
+	: VBox(frame, 5), minimap(NULL), currentPlayer(NULL), resources(NULL),
 	actions(NULL), tileobjects(NULL), buttons(NULL)
 {
-	Rect rb_frame(frame.x+5, frame.y+5, SIDE_PANEL_WIDTH-10, ResourceBar::RESOURCE_BAR_HEIGHT);
-	resources = new ResourceBar(rb_frame);
-	rb_frame.y += rb_frame.h+10;
+	Utility::Logger::getInstance()->log("Creating SidePanel with dimensions %i,%i\n", frame.w, frame.h);
+	Utility::Logger::getInstance()->log("Requested %i,%i\n", requestedFrame.w, requestedFrame.h);
+	//Rect rb_frame(frame.x+5, frame.y+5, SIDE_PANEL_WIDTH-10, ResourceBar::RESOURCE_BAR_HEIGHT);
+	resources = new ResourceBar(Rect(0,0, 100, ResourceBar::RESOURCE_BAR_HEIGHT));
+	//rb_frame.y += rb_frame.h+10;
 	// Keep the minimap square
-	rb_frame.w = SIDE_PANEL_WIDTH-10;
-	rb_frame.h = SIDE_PANEL_WIDTH-10;
-	minimap = new Minimap(rb_frame, map);
+	//rb_frame.w = SIDE_PANEL_WIDTH-10;
+	//rb_frame.h = SIDE_PANEL_WIDTH-10;
+	minimap = new Minimap(Rect(0, 0, SIDE_PANEL_WIDTH-10, SIDE_PANEL_WIDTH-10), map);
 	
-	rb_frame.y += rb_frame.h + 10 + UNIT_BAR_HEIGHT;
-	rb_frame.h = OrderPack::ORDER_BUTTON_HEIGHT+10;
-	actions = new OrderPack(rb_frame);
+	//rb_frame.y += rb_frame.h + 10 + UNIT_BAR_HEIGHT;
+	//rb_frame.h = OrderPack::ORDER_BUTTON_HEIGHT;
+	actions = new OrderPack(Rect(0,0,100, OrderPack::ORDER_BUTTON_HEIGHT));
 
-	addChild(resources);
-	addChild(minimap);
-	addChild(actions);
+	addChild(resources, false, 0);
+	addChild(minimap, false, 0);
+	addChild(actions, true, 0);
+
+	Utility::Logger::getInstance()->log("At the end requested %i,%i\n", requestedFrame.w, requestedFrame.h);
 }
 
 SidePanel::~SidePanel()
 {
 	delete minimap;
 	delete resources;
+}
+
+void SidePanel::frameUpdated()
+{
+	//TODO: FIXME
+	VBox::frameUpdated();
 }
 
 void SidePanel::setCurrentPlayer(Core::Player *player)

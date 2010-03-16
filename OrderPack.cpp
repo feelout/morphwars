@@ -32,7 +32,7 @@ void SkillButtonCb()
 }
 
 OrderPack::OrderPack(Rect frame)
-	: Container(frame)
+	: HBox(frame, 5)
 {
 	const int BUTTONS_NUM = 4;
 	std::string names[BUTTONS_NUM] = {"Gfx/Actions/Move.png", "Gfx/Actions/Stop.png", "Gfx/Actions/Attack.png",
@@ -42,16 +42,18 @@ OrderPack::OrderPack(Rect frame)
 
 	for(int i=0; i < BUTTONS_NUM; ++i)
 	{
-		currentButton = new ImageButton(Rect(5 + frame.x + (ORDER_BUTTON_WIDTH+5)*i, frame.y+5,
-					ORDER_BUTTON_WIDTH, ORDER_BUTTON_HEIGHT), Graphics::Surface(names[i]));
+		/*currentButton = new ImageButton(Rect(5 + frame.x + (ORDER_BUTTON_WIDTH+5)*i, frame.y+5,
+					ORDER_BUTTON_WIDTH, ORDER_BUTTON_HEIGHT), Graphics::Surface(names[i]));*/
+		currentButton = new ImageButton(Rect(0,0, ORDER_BUTTON_WIDTH, ORDER_BUTTON_HEIGHT),
+				Graphics::Surface(names[i]));
 		currentButton->setOnClicked(callbacks[i]);
-		addChild(currentButton);
+		addChild(currentButton, false, 0);
 	}
 }
 
 void OrderPack::draw(Graphics::Surface *target)
 {
-	Container::draw(target);
+	HBox::draw(target);
 	Graphics::Drawer(target).drawRect(frame, RGBColor::WHITE);
 }
 

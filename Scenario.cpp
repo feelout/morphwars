@@ -9,8 +9,11 @@
 
 using namespace Core;
 
+const int MAP_MINIMAL_FRAME_WIDTH = 400;
+const int MAP_MINIMAL_FRAME_HEIGHT = 300;
+
 Scenario::Scenario(std::string path)
-	: EngineState("Scenario"), currentPlayer(NULL), map(NULL), sidepanel(NULL)
+	: EngineState("Scenario"), currentPlayer(NULL), map(NULL), sidepanel(NULL), hbox(NULL)
 {
 	if(!loadFromFile(path))
 	{
@@ -19,6 +22,22 @@ Scenario::Scenario(std::string path)
 	}
 
 	OrderFactory::getInstance()->registerCreator("move", new MovementOrderCreator());
+
+	int screen_height = Engine::getInstance()->getRenderer()->getHeight();
+	int screen_width = Engine::getInstance()->getRenderer()->getWidth();
+
+	Utility::Logger::getInstance()->log("Screen: %i,%i\n", screen_width, screen_height);
+
+	hbox = new Gui::HBox(Rect(0,0,screen_width, screen_height), 5);
+
+	sidepanel = new Gui::SidePanel(Rect(0,0, Gui::SidePanel::SIDE_PANEL_WIDTH, screen_height-50), map);
+
+	Utility::Logger::getInstance()->log("BEGUN SCENARIO HBOX POPULATION\n");
+	Rect rf = sidepanel->getRequestedFrame();
+	Utility::Logger::getInstance()->log("SidePanel requested %i,%i\n", rf.w, rf.h);
+	hbox->addChild(map, true, 0);
+	hbox->addChild(sidepanel, true, 0);
+	Utility::Logger::getInstance()->log("ENDED SCENARIO HBOX POPULATION\n");
 }
 
 Scenario::~Scenario()
@@ -33,8 +52,7 @@ bool Scenario::loadFromFile(std::string path)
 
 	TiXmlDocument xmldoc(path.c_str());
 
-	if(!xmldoc.LoadFile())
-	{
+	if(!xmldoc.LoadFile()) {
 		Utility::Logger::getInstance()->log("Failed to load scenario XML file.\n");
 		return false;
 	}
@@ -45,8 +63,9 @@ bool Scenario::loadFromFile(std::string path)
 	Utility::Logger::getInstance()->log("\nLoading map\n");
 
 	Graphics::Renderer *renderer = Engine::getInstance()->getRenderer();
-	map = new Map(Rect(5,5, renderer->getWidth()-Gui::SidePanel::SIDE_PANEL_WIDTH-15, renderer->getHeight()-10),
-		       	root->FirstChildElement("map"));
+	//map = new Map(Rect(5,5, renderer->getWidth()-Gui::SidePanel::SIDE_PANEL_WIDTH-15, renderer->getHeight()-10),
+		       	//root->FirstChildElement("map"));
+	map = new Map(Rect(0,0, MAP_MINIMAL_FRAME_WIDTH, MAP_MINIMAL_FRAME_HEIGHT), root->FirstChildElement("map"));
 
 	Utility::Logger::getInstance()->log("\nLoading object types\n");
 	/** Unit and Building types **/
@@ -183,11 +202,9 @@ bool Scenario::loadFromFile(std::string path)
 		players.push_back(currentPlayer);
 	}
 
-	int screen_width = Engine::getInstance()->getRenderer()->getWidth();
-	int screen_height = Engine::getInstance()->getRenderer()->getHeight();
 
-	sidepanel = new Gui::SidePanel(Rect(screen_width-Gui::SidePanel::SIDE_PANEL_WIDTH-5, 5,
-				Gui::SidePanel::SIDE_PANEL_WIDTH, screen_height-10), map);
+	//sidepanel = new Gui::SidePanel(Rect(screen_width-Gui::SidePanel::SIDE_PANEL_WIDTH-5, 5,
+	//			Gui::SidePanel::SIDE_PANEL_WIDTH, screen_height-10), map);
 
 	switchTurn(*(players.begin()));
 	//this->currentPlayer = *(players.begin());
@@ -241,9 +258,12 @@ void Scenario::draw(Graphics::Surface *target)
 {
 	//FIXME!!! - is it slow checking for fov on each frame?
 	map->setFieldOfView(currentPlayer->getFieldOfView());
-	map->draw(target);
+	//map->draw(target);
 
-	sidepanel->draw(target);
+	//sidepanel->draw(target);
+	//
+	
+	hbox->draw(target);
 
 	std::list<Player*>::const_iterator i;
 
@@ -256,6 +276,11 @@ void Scenario::draw(Graphics::Surface *target)
 void Scenario::process()
 {
 	OrderManager::getInstance()->processOrders();
+
+	if(currentPlayer->hasEndedTurn())
+	{
+		nextTurn();
+	}
 }
 
 bool Scenario::mouseMoved(int x, int y)

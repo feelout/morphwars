@@ -56,6 +56,7 @@ namespace Core
 
 			bool done; //can end turn(no units are moving)
 			bool current;
+			bool endedTurn;
 
 			FieldOfView *fov;
 
@@ -80,6 +81,9 @@ namespace Core
 			
 			bool isCurrent() const;
 			void setCurrent(bool current);
+
+			bool hasEndedTurn() const;
+			void endTurn();
 
 			void updateFOV();
 

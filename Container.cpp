@@ -16,9 +16,11 @@ void Container::frameUpdated()
 
 bool Container::addChild(Widget *child)
 {
+	//Utility::Logger::getInstance()->log("Container::addChild()\n");
 	children.push_back(child);
 	focusedWidget = child;
 	child->setFocused(true);
+	recalculateChildrenFrames();
 }
 
 bool Container::removeChild(Widget *child)
@@ -37,6 +39,8 @@ bool Container::removeChild(Widget *child)
 	}
 
 	children.erase(i);
+
+	recalculateChildrenFrames();
 	return true;
 }
 

@@ -122,6 +122,8 @@ bool LocalPlayerController::mouseRMBClicked(int x, int y)
 
 bool LocalPlayerController::keyPressed(int key)
 {
+	if(!target->isCurrent())
+		return false;
 	switch(key)
 	{
 		/* This is just temporary
@@ -131,28 +133,26 @@ bool LocalPlayerController::keyPressed(int key)
 			//MOVE;
 			if(target->getSelectedObject())
 				MouseState::getInstance()->setActionType(MouseState::MOVE);
-			return true;
+			return false;
 		case SDLK_a:
 			//ATTACK
 			if(target->getSelectedObject())
 				MouseState::getInstance()->setActionType(MouseState::ATTACK);
-			return true;
+			return false;
 		case SDLK_s:
 			//STOP
 			if(target->getSelectedObject())
 				MouseState::getInstance()->setActionType(MouseState::SELECT);
-			return true;
+			return false;
 		case SDLK_k:
 			// SKILL
 			if(target->getSelectedObject())
 				MouseState::getInstance()->setActionType(MouseState::SKILL);
-			return true;
+			return false;
 		case SDLK_e:
+			Utility::Logger::getInstance()->log("E key pressed\n");
 			// TODO: Remove handler from Scenario
-			if(target->isCurrent())
-			{
-				target->setDone(false);
-			}	
+			target->endTurn();
 			return true;
 	}
 	return false;

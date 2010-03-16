@@ -32,7 +32,7 @@ void List::frameUpdated()
 
 void List::setCurrentItem(int n)
 {
-	Utility::Logger::getInstance()->log("Current: %i of %i\nTop: %i, Max: %i\n", n, items.size(), topItem, maxItems);
+	//Utility::Logger::getInstance()->log("Current: %i of %i\nTop: %i, Max: %i\n", n, items.size(), topItem, maxItems);
 	if(n >= items.size()) return;
 
 	currentItem = n;
@@ -60,7 +60,7 @@ void List::setOnCurrentItemChanged(ListCurrentItemChangedCallback cb)
 
 bool List::mouseMoved(int x, int y)
 {
-	Utility::Logger::getInstance()->log("List::mouseMoved\n");
+	//Utility::Logger::getInstance()->log("List::mouseMoved\n");
 	if(!frame.isPointInRect(x, y))
 		return false;
 

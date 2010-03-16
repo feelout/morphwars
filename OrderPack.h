@@ -1,14 +1,14 @@
 #ifndef ORDER_PACK_H
 #define ORDER_PACK_H
 
-#include "Container.h"
+#include "Box.h"
 
 namespace Gui
 {
 	/**
 	 * OrderPack holds all orders unit can perform
 	 */
-	class OrderPack : public Container
+	class OrderPack : public HBox
 	{
 		public:
 			static const int ORDER_BUTTON_WIDTH = 40;

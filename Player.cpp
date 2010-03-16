@@ -103,7 +103,8 @@ void Player::updateFOV()
 }
 
 Player::Player(std::string name, Fraction fraction, Force *force, RGBColor color, int mapWidth, int mapHeight)
-	: name(name), fraction(fraction), force(force), color(color), energy(0), selected(NULL), done(true), current(false)
+	: name(name), fraction(fraction), force(force), color(color), energy(0), 
+	selected(NULL), done(true), current(false), endedTurn(true)
 {
 	fov = new FieldOfView(mapWidth, mapHeight);
 	force->addPlayer(this);
@@ -168,8 +169,21 @@ bool Player::isCurrent() const
 	return current;
 }
 
+bool Player::hasEndedTurn() const
+{
+	return endedTurn;
+}
+
+void  Player::endTurn()
+{
+	Utility::Logger::getInstance()->log("Player %s : ended turn\n", name.c_str());
+	endedTurn = true;
+}
+
 void Player::setCurrent(bool current)
 {
+	if(current)
+		Utility::Logger::getInstance()->log("Player %s is now current player\n", name.c_str());
 	this->current = current;
 }
 
@@ -181,6 +195,8 @@ void Player::onTurnBegin()
 	{
 		(*i)->onTurnBegin();
 	}
+
+	endedTurn = false;
 }
 
 void Player::setController(PlayerController *controller)

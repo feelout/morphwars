@@ -1,10 +1,10 @@
 #ifndef SIDEPANEL_H
 #define SIDEPANEL_H
 
-#include "Container.h"
 #include "Minimap.h"
 #include "Widget.h"
 #include "Player.h"
+#include "Box.h"
 
 namespace Gui
 {
@@ -22,7 +22,7 @@ namespace Gui
 			virtual void draw(Graphics::Surface *target);
 	};
 
-	class SidePanel : public Container
+	class SidePanel : public VBox
 	{
 		public:
 			static const int SIDE_PANEL_WIDTH = 200;
@@ -40,6 +40,8 @@ namespace Gui
 			Container *tileobjects;
 			// System buttons (menu and end turn)
 			Container *buttons;
+
+			virtual void frameUpdated();
 		public:
 			SidePanel(Rect frame, Core::Map *map);
 			~SidePanel();
