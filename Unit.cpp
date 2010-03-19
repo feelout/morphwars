@@ -161,6 +161,7 @@ Unit::Unit(UnitType *type, Tile *tile, Player *owner)
 	defense = type->getDefense();
 
 	//this->type = type->clone();
+	infoScreen = new Gui::UnitInfoScreen(this);
 }
 
 UnitType* Unit::getType() const

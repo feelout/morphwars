@@ -7,6 +7,7 @@
 #include "Tile.h"
 #include "Surface.h"
 #include "AnimationPack.h"
+#include "ObjectInfoScreen.h"
 
 namespace Core
 {
@@ -80,6 +81,8 @@ namespace Core
 			float dx,dy;
 
 			bool dead;
+
+			Gui::ObjectInfoScreen *infoScreen;
 		public:
 			/**
 			 * Main public constructor
@@ -104,6 +107,8 @@ namespace Core
 
 			bool isEnemy(MapObject *other) const;
 			virtual bool damage(int damage, MapObject *source)=0;
+
+			Gui::ObjectInfoScreen *getInfoScreen() const;
 	};
 }
 

@@ -56,7 +56,7 @@ std::string MapObjectType::getDefaultOrder() const
 }
 
 MapObject::MapObject(MapObjectType *type, Tile *tile, Player *owner)
-	: tile(tile), owner(owner), dx(0), dy(0), type(type->clone()), dead(false)
+	: tile(tile), owner(owner), dx(0), dy(0), type(type->clone()), dead(false), infoScreen(NULL)
 {
 	//Utility::Logger::getInstance()->log("MapObject::MapObject: %s\n", this->type->getName().c_str());
 	tile->addObject(this);
@@ -100,4 +100,9 @@ Player* MapObject::getOwner() const
 MapObjectType* MapObject::getType() const
 {
 	return type;
+}
+
+Gui::ObjectInfoScreen* MapObject::getInfoScreen() const
+{
+	return infoScreen;
 }

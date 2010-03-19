@@ -33,7 +33,7 @@ namespace Gui
 			// Line with energy count (and mb some other info too)
 			ResourceBar *resources;
 			// Info on current object
-			Container *objectinfo;
+			//Container *objectinfo;
 			// Table of object actions
 			Container *actions;
 			// Widget for selecting from objects in tile
