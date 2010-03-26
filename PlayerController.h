@@ -5,6 +5,7 @@
 #include "Map.h"
 #include "EventDispatcher.h"
 #include "Order.h"
+#include "SidePanel.h"
 
 namespace Core
 {
@@ -24,10 +25,12 @@ namespace Core
 		protected:
 			Map *map;
 			Order *pendingOrder;
+			Gui::SidePanel *sidePanel;
+			MapObject *currentObject;
 
 			bool objectTargeted(Tile *clickedTile);
 		public:
-			LocalPlayerController(Player *target, Map *map);
+			LocalPlayerController(Player *target, Map *map, Gui::SidePanel *sidePanel);
 			virtual ~LocalPlayerController();
 
 			void setOrder(Order *order);

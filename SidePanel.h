@@ -5,6 +5,7 @@
 #include "Widget.h"
 #include "Player.h"
 #include "Box.h"
+#include "Placeholder.h"
 
 namespace Gui
 {
@@ -34,6 +35,7 @@ namespace Gui
 			ResourceBar *resources;
 			// Info on current object
 			//Container *objectinfo;
+			Placeholder *objectInfo;
 			// Table of object actions
 			Container *actions;
 			// Widget for selecting from objects in tile

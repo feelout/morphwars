@@ -46,7 +46,7 @@ namespace Core
 			std::vector<Unit*> units;
 			std::vector<Building*> buildings;
 
-			MapObject *selected;
+			//MapObject *selected;
 
 			int energy;
 
@@ -72,8 +72,8 @@ namespace Core
 			Force* getForce() const;
 			std::string getName() const;
 
-			void selectObject(MapObject *object);
-			MapObject *getSelectedObject() const;
+			//void selectObject(MapObject *object);
+			//MapObject *getSelectedObject() const;
 
 			/* Has player done his turn. Only one player can have is set to false at a time*/
 			bool isDone() const;

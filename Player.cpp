@@ -104,7 +104,7 @@ void Player::updateFOV()
 
 Player::Player(std::string name, Fraction fraction, Force *force, RGBColor color, int mapWidth, int mapHeight)
 	: name(name), fraction(fraction), force(force), color(color), energy(0), 
-	selected(NULL), done(true), current(false), endedTurn(true)
+	/*selected(NULL),*/ done(true), current(false), endedTurn(true)
 {
 	fov = new FieldOfView(mapWidth, mapHeight);
 	force->addPlayer(this);
@@ -143,7 +143,7 @@ std::string Player::getName() const
 	return name;
 }
 
-void Player::selectObject(MapObject *object)
+/*void Player::selectObject(MapObject *object)
 {
 	Utility::Logger::getInstance()->log("Object selected by player %s\n", name.c_str());
 	selected = object;
@@ -152,7 +152,7 @@ void Player::selectObject(MapObject *object)
 MapObject* Player::getSelectedObject() const
 {
 	return selected;
-}
+}*/
 
 bool Player::isDone() const
 {

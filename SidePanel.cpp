@@ -78,10 +78,10 @@ void SidePanel::draw(Graphics::Surface *target)
 {
 	Container::draw(target);
 
-	if(currentPlayer && currentPlayer->getSelectedObject())
+	/*if(currentPlayer && currentPlayer->getSelectedObject())
 	{
 		currentPlayer->getSelectedObject()->drawInfoPanel(target, frame.x, 
 			frame.y+ResourceBar::RESOURCE_BAR_HEIGHT+10 + minimap->getFrame().h);
-	}
+	}*/
 	Graphics::Drawer(target).drawRect(frame, RGBColor::WHITE);
 }

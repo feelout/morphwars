@@ -158,7 +158,7 @@ bool Scenario::loadFromFile(std::string path)
 		// TODO: Make using factory
 		if(s_controller == "local")
 		{
-			currentController = new LocalPlayerController(currentPlayer, map);
+			currentController = new LocalPlayerController(currentPlayer, map, sidepanel);
 		}
 		else if(s_controller == "ai")
 		{

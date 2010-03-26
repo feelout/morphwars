@@ -24,8 +24,8 @@ void PlayerController::newTurn()
 }
 
 /* LocalPlayerController */
-LocalPlayerController::LocalPlayerController(Player *target, Map *map)
-	: PlayerController(target), map(map), pendingOrder(NULL)
+LocalPlayerController::LocalPlayerController(Player *target, Map *map, Gui::SidePanel *sidePanel)
+	: PlayerController(target), map(map), pendingOrder(NULL), sidePanel(sidePanel), currentObject(NULL)
 {
 	Utility::Logger::getInstance()->log("LocalPlayerController created for %s\n", target->getName().c_str());
 	Engine::getInstance()->getEventDispatcher()->attachListener(this);
@@ -41,7 +41,8 @@ bool LocalPlayerController::objectTargeted(Tile *clickedTile)
 	if(!clickedTile)
 		return false;
 
-	MapObject *selected = target->getSelectedObject();
+	//MapObject *selected = target->getSelectedObject();
+	MapObject *selected = currentObject;
 
 	if(!selected)
 	{
@@ -84,9 +85,13 @@ bool LocalPlayerController::mouseLMBClicked(int x, int y)
 
 		if(topobject)
 		{
+			if(currentObject)
+				currentObject->setSelected(false);
 			if(topobject->getOwner() == target)
 			{
-				target->selectObject(topobject);
+				// TODO: Make it possible to select other players` units
+				currentObject = topobject;
+				currentObject->setSelected(true);
 			}
 			return true;
 		}
@@ -131,22 +136,26 @@ bool LocalPlayerController::keyPressed(int key)
 		 */
 		case SDLK_m:
 			//MOVE;
-			if(target->getSelectedObject())
+			//if(target->getSelectedObject())
+			if(currentObject)
 				MouseState::getInstance()->setActionType(MouseState::MOVE);
 			return false;
 		case SDLK_a:
 			//ATTACK
-			if(target->getSelectedObject())
+			//if(target->getSelectedObject())
+			if(currentObject)
 				MouseState::getInstance()->setActionType(MouseState::ATTACK);
 			return false;
 		case SDLK_s:
 			//STOP
-			if(target->getSelectedObject())
+			//if(target->getSelectedObject())
+			if(currentObject)
 				MouseState::getInstance()->setActionType(MouseState::SELECT);
 			return false;
 		case SDLK_k:
 			// SKILL
-			if(target->getSelectedObject())
+			//if(target->getSelectedObject())
+			if(currentObject)
 				MouseState::getInstance()->setActionType(MouseState::SKILL);
 			return false;
 		case SDLK_e:

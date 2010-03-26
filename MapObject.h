@@ -81,6 +81,7 @@ namespace Core
 			float dx,dy;
 
 			bool dead;
+			bool selected;
 
 			Gui::ObjectInfoScreen *infoScreen;
 		public:
@@ -107,6 +108,9 @@ namespace Core
 
 			bool isEnemy(MapObject *other) const;
 			virtual bool damage(int damage, MapObject *source)=0;
+
+			void setSelected(bool selected);
+			bool isSelected() const;
 
 			Gui::ObjectInfoScreen *getInfoScreen() const;
 	};

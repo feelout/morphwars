@@ -56,7 +56,7 @@ std::string MapObjectType::getDefaultOrder() const
 }
 
 MapObject::MapObject(MapObjectType *type, Tile *tile, Player *owner)
-	: tile(tile), owner(owner), dx(0), dy(0), type(type->clone()), dead(false), infoScreen(NULL)
+	: tile(tile), owner(owner), dx(0), dy(0), type(type->clone()), dead(false), infoScreen(NULL), selected(false)
 {
 	//Utility::Logger::getInstance()->log("MapObject::MapObject: %s\n", this->type->getName().c_str());
 	tile->addObject(this);
@@ -70,7 +70,8 @@ void MapObject::draw(Graphics::Surface *target, int x, int y)
 {
 	if(dead)
 		return;
-	if( (owner->isCurrent()) && (owner->getSelectedObject() == this) )
+	//if( (owner->isCurrent()) && (owner->getSelectedObject() == this) )
+	if( (owner->isCurrent()) && selected )
 	{
 		// FIXME: Cache map image!!!
 		Graphics::Surface selection = Graphics::Surface("Gfx/Selection.png");
@@ -100,6 +101,16 @@ Player* MapObject::getOwner() const
 MapObjectType* MapObject::getType() const
 {
 	return type;
+}
+
+void MapObject::setSelected(bool selected)
+{
+	this->selected = selected;
+}
+
+bool MapObject::isSelected() const
+{
+	return selected;
 }
 
 Gui::ObjectInfoScreen* MapObject::getInfoScreen() const
