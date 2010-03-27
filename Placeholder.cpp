@@ -1,15 +1,17 @@
 #include "Placeholder.h"
+#include "Logger.h"
 
 using namespace Gui;
 
 Placeholder::Placeholder(Rect frame, Widget *parent)
-	: Widget(frame, parent)
+	: Widget(frame, parent), child(NULL)
 {
 }
 
 void Placeholder::frameUpdated()
 {
-	child->setFrame(frame);
+	if(child)
+		child->setFrame(frame);
 }
 
 void Placeholder::setChild(Widget *child)
@@ -20,5 +22,9 @@ void Placeholder::setChild(Widget *child)
 
 void Placeholder::draw(Graphics::Surface *target)
 {
-	child->draw(target);
+	//Utility::Logger::getInstance()->log("Placeholder %i :: draw\n", number);
+	if(child)
+	{
+		child->draw(target);
+	}
 }

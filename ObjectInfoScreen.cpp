@@ -3,6 +3,7 @@
 #include "Tile.h"
 #include "assist.h"
 #include "Unit.h"
+#include "Drawer.h"
 
 using namespace Gui;
 
@@ -17,11 +18,15 @@ ObjectInfoScreen::ObjectInfoScreen(Core::MapObject *object, Widget *parent)
 
 void ObjectInfoScreen::draw(Graphics::Surface *target)
 {
-	object->draw(target, frame.x, frame.y);	
+	Graphics::Drawer drawer(target);
+
+	object->getType()->getGraphics()->getCurrent()->draw(target, frame.x, frame.y);
 
 	Graphics::FontSystem *fs = Graphics::FontSystem::getInstance();
 
 	fs->print(target, object->getType()->getName(), frame.x + Core::TILE_WIDTH, frame.y, RGBColor::WHITE);
+
+	drawer.drawRect(frame, RGBColor::WHITE);
 }
 
 /*

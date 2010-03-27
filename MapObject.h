@@ -112,7 +112,7 @@ namespace Core
 			void setSelected(bool selected);
 			bool isSelected() const;
 
-			Gui::ObjectInfoScreen *getInfoScreen() const;
+			virtual Gui::ObjectInfoScreen *getInfoScreen() const;
 	};
 }
 

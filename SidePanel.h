@@ -30,6 +30,7 @@ namespace Gui
 		private:
 			Minimap *minimap;
 			Core::Player *currentPlayer;
+			Core::MapObject *currentObject;
 
 			// Line with energy count (and mb some other info too)
 			ResourceBar *resources;
@@ -49,6 +50,7 @@ namespace Gui
 			~SidePanel();
 
 			void setCurrentPlayer(Core::Player *player);
+			void setCurrentObject(Core::MapObject *object);
 			void draw(Graphics::Surface *target);
 	};
 }

@@ -91,7 +91,8 @@ bool LocalPlayerController::mouseLMBClicked(int x, int y)
 			{
 				// TODO: Make it possible to select other players` units
 				currentObject = topobject;
-				currentObject->setSelected(true);
+				currentObject->setSelected(true); 
+				sidePanel->setCurrentObject(currentObject);
 			}
 			return true;
 		}

@@ -30,7 +30,7 @@ Scenario::Scenario(std::string path)
 
 	hbox = new Gui::HBox(Rect(0,0,screen_width, screen_height), 5);
 
-	sidepanel = new Gui::SidePanel(Rect(0,0, Gui::SidePanel::SIDE_PANEL_WIDTH, screen_height-50), map);
+	//sidepanel = new Gui::SidePanel(Rect(0,0, Gui::SidePanel::SIDE_PANEL_WIDTH, screen_height-50), map);
 
 	Utility::Logger::getInstance()->log("BEGUN SCENARIO HBOX POPULATION\n");
 	Rect rf = sidepanel->getRequestedFrame();
@@ -61,8 +61,7 @@ bool Scenario::loadFromFile(std::string path)
 
 	/** Map and tileset **/
 	Utility::Logger::getInstance()->log("\nLoading map\n");
-
-	Graphics::Renderer *renderer = Engine::getInstance()->getRenderer();
+Graphics::Renderer *renderer = Engine::getInstance()->getRenderer();
 	//map = new Map(Rect(5,5, renderer->getWidth()-Gui::SidePanel::SIDE_PANEL_WIDTH-15, renderer->getHeight()-10),
 		       	//root->FirstChildElement("map"));
 	map = new Map(Rect(0,0, MAP_MINIMAL_FRAME_WIDTH, MAP_MINIMAL_FRAME_HEIGHT), root->FirstChildElement("map"));
@@ -96,6 +95,9 @@ bool Scenario::loadFromFile(std::string path)
 	child = NULL;
 
 	std::vector<Force*> forces;
+
+	int screen_height = Engine::getInstance()->getRenderer()->getHeight();
+	sidepanel = new Gui::SidePanel(Rect(0,0, Gui::SidePanel::SIDE_PANEL_WIDTH, screen_height-50), map);
 
 	while(child = parent->IterateChildren("player", child))
 	{
@@ -154,6 +156,7 @@ bool Scenario::loadFromFile(std::string path)
 		/** Adding controller **/
 		PlayerController *currentController = NULL;
 		std::string s_controller = child->ToElement()->Attribute("controller");
+
 
 		// TODO: Make using factory
 		if(s_controller == "local")
