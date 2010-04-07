@@ -7,7 +7,7 @@
 namespace Core 
 {
 	/* Main menu. Serves for switching to other states */
-	class MenuState : public EngineState
+	class MenuState : public EngineState, public Gui::IButtonListener
 	{
 		public:
 			enum MenuButton
@@ -29,6 +29,7 @@ namespace Core
 			virtual void draw(Graphics::Surface *target);
 			virtual void process();
 			virtual bool mouseLMBClicked(int x, int y);
+			virtual bool buttonClicked(Gui::Button *sender);
 	};
 }
 

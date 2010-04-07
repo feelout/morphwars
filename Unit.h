@@ -109,8 +109,6 @@ namespace Core
 			void setMP(int mp);
 
 			void onTurnBegin();
-
-			virtual void drawInfoPanel(Graphics::Surface *target, int x, int y);
 	};
 }
 

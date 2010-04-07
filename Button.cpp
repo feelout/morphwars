@@ -4,21 +4,35 @@
 using namespace Gui;
 
 Button::Button(Rect frame)
-	: Widget(frame), callback(NULL)
+	: Widget(frame)//, callback(NULL)
 {
 }
 
-void Button::setOnClicked(ButtonClickCallback cb)
+/*void Button::setOnClicked(ButtonClickCallback cb)
 {
 	this->callback = cb;
+}*/
+
+void Button::addListener(IButtonListener *listener)
+{
+	listeners.push_back(listener);
+}
+
+void Button::removeListener(IButtonListener *listner)
+{
+	//FIXME!!!
 }
 
 bool Button::mouseLMBClicked(int x, int y)
 {
 	if(frame.isPointInRect(x,y))
 	{
-		callback();
-		return true;
+		//callback();
+		std::list<IButtonListener*>::iterator i;
+		for(i = listeners.begin(); i != listeners.end(); ++i)
+		{
+			return (*i)->buttonClicked(this);
+		}
 	}
 
 	return false;

@@ -100,8 +100,6 @@ namespace Core
 			 */
 			void draw(Graphics::Surface *target, int x, int y);
 
-			virtual void drawInfoPanel(Graphics::Surface *target, int x, int y)=0;
-
 			Tile *getTile() const;
 			Player *getOwner() const;
 			MapObjectType *getType() const;

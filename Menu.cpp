@@ -59,14 +59,22 @@ MenuState::MenuState(int screen_w, int screen_h)
 		//buttons[i] = new Gui::ImageButton(frame, surf);
 		//BUG! Temporary object gets destroyed!!
 		buttons[i] = new Gui::ImageButton(frame, Graphics::Surface(btn_str + buf + ".png"));
+		buttons[i]->addListener(this);
 	}
+}
 
-	buttons[CAMPAIGN]->setOnClicked(CampaignButtonCallback);
-	buttons[SCENARIO]->setOnClicked(ScenarioButtonCallback);
-	buttons[LOADGAME]->setOnClicked(LoadButtonCallback);
-	buttons[OPTIONS]->setOnClicked(OptionsButtonCallback);
-	buttons[CREDITS]->setOnClicked(CreditsButtonCallback);
-	buttons[QUIT]->setOnClicked(QuitButtonCallback);
+bool MenuState::buttonClicked(Gui::Button *sender)
+{
+	if(sender == buttons[SCENARIO])
+	{
+		Graphics::Renderer *renderer = Engine::getInstance()->getRenderer();
+		Engine::getInstance()->changeState(new ScenarioSelectingState(renderer->getWidth(), renderer->getHeight()));
+	}
+	else if(sender == buttons[QUIT])
+	{
+		Engine::getInstance()->stop();
+	}
+	return true;
 }
 
 void MenuState::draw(Graphics::Surface *target)

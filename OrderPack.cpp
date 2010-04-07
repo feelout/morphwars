@@ -10,27 +10,6 @@ using namespace Core;
 const int OrderPack::ORDER_BUTTON_WIDTH;
 const int OrderPack::ORDER_BUTTON_HEIGHT;
 
-void MoveButtonCb()
-{
-	Core::MouseState::getInstance()->setActionType(MouseState::MOVE);
-	Utility::Logger::getInstance()->log("MoveButtonCb called\n");
-}
-
-void StopButtonCb()
-{
-	Core::MouseState::getInstance()->setActionType(MouseState::SELECT);
-}
-
-void AttackButtonCb()
-{
-	Core::MouseState::getInstance()->setActionType(MouseState::ATTACK);
-}
-
-void SkillButtonCb()
-{
-	Core::MouseState::getInstance()->setActionType(MouseState::SKILL);
-}
-
 OrderPack::OrderPack(Rect frame)
 	: HBox(frame, 5)
 {
