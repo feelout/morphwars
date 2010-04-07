@@ -46,6 +46,7 @@ namespace Gui
 
 			virtual void addChild(Widget *child, bool expandable, int spacing);
 			virtual void removeChild(Widget *child);
+			virtual void removeAll();
 
 			virtual void recalculateChildrenFrames();
 	};

@@ -24,6 +24,7 @@ namespace Gui
 
 			bool addChild(Widget *child);
 			bool removeChild(Widget *child);
+			void removeAll();
 
 			virtual void recalculateChildrenFrames();
 

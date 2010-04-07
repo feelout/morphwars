@@ -42,6 +42,19 @@ void Box::removeChild(Widget *child)
 	}
 }
 
+void Box::removeAll()
+{
+	Container::removeAll();
+	std::vector<BoxEntry*>::iterator i;
+
+	for(i = entries.begin(); i != entries.end(); ++i)
+	{
+		delete (*i);
+	}
+
+	entries.clear();
+}
+
 void Box::recalculateChildrenFrames()
 {
 	//Utility::Logger::getInstance()->log("Box : Recalculating children frames\n");
