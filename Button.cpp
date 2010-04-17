@@ -4,7 +4,7 @@
 using namespace Gui;
 
 Button::Button(Rect frame)
-	: Widget(frame)//, callback(NULL)
+	: Widget(frame)
 {
 }
 

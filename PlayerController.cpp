@@ -5,6 +5,7 @@
 #include "Order.h"
 #include "Engine.h"
 #include "MouseSelector.h"
+#include "OrderFactory.h"
 
 using namespace Core;
 
@@ -173,6 +174,11 @@ void LocalPlayerController::setOrder(Order *order)
 	if(pendingOrder)
 		delete pendingOrder;
 	pendingOrder = order;
+}
+
+void LocalPlayerController::setOrder(std::string orderName)
+{
+	setOrder(OrderFactory::getInstance()->createOrder(orderName, currentObject, map));
 }
 
 /* AIPlayerController */

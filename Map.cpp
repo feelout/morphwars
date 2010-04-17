@@ -79,16 +79,13 @@ Map::Map(Rect frame, TiXmlElement *xmlmap, Widget *parent)
 	//requestedFrame = Rect(0, 0, MAP_MINIMAL_FRAME_WIDTH, MAP_MINIMAL_FRAME_HEIGHT); 
 	//setFrame(frame);
 	//
-	Utility::Logger::getInstance()->log("Map requested frame : %i,%i\n", requestedFrame.w, requestedFrame.h);
 	recalculateClipping(); // TODO: same as in previous constructor
 }
 
 void Map::recalculateClipping()
 {
-	Utility::Logger::getInstance()->log("Map::recalculateClipping()\n");
 	clip.w = frame.w / TILE_WIDTH;
 	clip.h = frame.h / TILE_HEIGHT;
-	Utility::Logger::getInstance()->log("Clip : (%i,%i)\n", clip.w, clip.h);
 }
 
 void Map::calculateSurfaces()
@@ -230,15 +227,15 @@ void Map::setFieldOfView(FieldOfView *fov)
 
 void Map::updateCache()
 {
-	Utility::Logger::getInstance()->log("Rebuilding map cache\n");
+	//Utility::Logger::getInstance()->log("Rebuilding map cache\n");
 
 
 	int dx = 0, dy = 0;
 
 	int max_tilex = (width < clip.w) ? width : (clip.x + clip.w);
 	int max_tiley = (height < clip.h) ? height : (clip.y + clip.h);
-	Utility::Logger::getInstance()->log("max_tilex = %i, max_tiley = %i\n", max_tilex, max_tiley);
-	Utility::Logger::getInstance()->log("Clipping rect: %i, %i, %i, %i\n", clip.x, clip.y, clip.w, clip.h);
+	//Utility::Logger::getInstance()->log("max_tilex = %i, max_tiley = %i\n", max_tilex, max_tiley);
+	//Utility::Logger::getInstance()->log("Clipping rect: %i, %i, %i, %i\n", clip.x, clip.y, clip.w, clip.h);
 
 	for(int tiley=clip.y; tiley < max_tiley; ++tiley)
 	{

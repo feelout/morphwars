@@ -34,6 +34,7 @@ namespace Core
 			virtual ~LocalPlayerController();
 
 			void setOrder(Order *order);
+			void setOrder(std::string orderName);
 
 			virtual bool mouseMoved(int x, int y);
 			virtual bool mouseLMBClicked(int x, int y);

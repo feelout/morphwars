@@ -180,7 +180,7 @@ bool Tile::addObject(MapObject *object)
 		//TODO: Sort objects, buildings first
 		topobject = object;
 
-		Utility::Logger::getInstance()->log("Total objects on tile (%i,%i): %i\n", x, y, objects.size());
+		//Utility::Logger::getInstance()->log("Total objects on tile (%i,%i): %i\n", x, y, objects.size());
 
 		return true;
 	}

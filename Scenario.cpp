@@ -32,12 +32,10 @@ Scenario::Scenario(std::string path)
 
 	//sidepanel = new Gui::SidePanel(Rect(0,0, Gui::SidePanel::SIDE_PANEL_WIDTH, screen_height-50), map);
 
-	Utility::Logger::getInstance()->log("BEGUN SCENARIO HBOX POPULATION\n");
 	Rect rf = sidepanel->getRequestedFrame();
-	Utility::Logger::getInstance()->log("SidePanel requested %i,%i\n", rf.w, rf.h);
+
 	hbox->addChild(map, true, 0);
 	hbox->addChild(sidepanel, true, 0);
-	Utility::Logger::getInstance()->log("ENDED SCENARIO HBOX POPULATION\n");
 }
 
 Scenario::~Scenario()

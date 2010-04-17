@@ -35,6 +35,7 @@ bool Container::removeChild(Widget *child)
 	if(child == focusedWidget)
 	{
 		focusedWidget = NULL;
+		child->setParent(NULL);
 		child->setFocused(false);
 	}
 
@@ -42,6 +43,18 @@ bool Container::removeChild(Widget *child)
 
 	recalculateChildrenFrames();
 	return true;
+}
+
+void Container::removeAll()
+{
+	std::list<Widget*>::iterator i;
+	
+	for(i = children.begin(); i != children.end(); ++i)
+	{
+		(*i)->setParent(NULL);
+	}
+
+	children.clear();
 }
 
 void Container::recalculateChildrenFrames()
