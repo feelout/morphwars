@@ -18,6 +18,9 @@ namespace Core
 			virtual ~PlayerController();
 
 			virtual void newTurn();
+
+			//FIXME: DEBUG!
+			Player* getTarget();
 	};
 
 	class LocalPlayerController : public IEventListener, public PlayerController

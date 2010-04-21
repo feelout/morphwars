@@ -24,6 +24,11 @@ void PlayerController::newTurn()
 {
 }
 
+Player* PlayerController::getTarget()
+{
+	return target;
+}
+
 /* LocalPlayerController */
 LocalPlayerController::LocalPlayerController(Player *target, Map *map, Gui::SidePanel *sidePanel)
 	: PlayerController(target), map(map), pendingOrder(NULL), sidePanel(sidePanel), currentObject(NULL)
@@ -112,6 +117,8 @@ bool LocalPlayerController::mouseLMBClicked(int x, int y)
 		if(tile)
 		{
 			pendingOrder->execute(tile);
+			//TODO :Test!
+			pendingOrder = NULL;
 		}
 		return tile != NULL;
 	}
@@ -178,6 +185,7 @@ void LocalPlayerController::setOrder(Order *order)
 
 void LocalPlayerController::setOrder(std::string orderName)
 {
+	Utility::Logger::getInstance()->log("LPC for %s ::setOrder(%s)\n", target->getName().c_str(), orderName.c_str());	
 	setOrder(OrderFactory::getInstance()->createOrder(orderName, currentObject, map));
 }
 

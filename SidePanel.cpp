@@ -23,6 +23,7 @@ OrderButton::OrderButton(std::string orderName)
 
 void OrderButton::setReceiver(Core::LocalPlayerController *receiver)
 {
+	Utility::Logger::getInstance()->log("OrderButton::setReceiver(%s)\n", receiver->getTarget()->getName().c_str());
 	this->receiver = receiver;
 }
 
@@ -57,6 +58,7 @@ OrderPanel::OrderPanel(Rect frame, Widget *parent)
 
 void OrderPanel::setCurrentObject(Core::MapObject *currentObject)
 {
+	Utility::Logger::getInstance()->log("setCurrentObject(%s)\n", currentObject->getType()->getName().c_str());
 	if(currentObject == this->currentObject)
 		return;
 	this->currentObject = currentObject;
@@ -71,9 +73,10 @@ void OrderPanel::setCurrentObject(Core::MapObject *currentObject)
 			getController());
 	for(i = orders.begin(); i != orders.end(); ++i)
 	{
-		OrderButton *button = new OrderButton(*i);
+		//OrderButton *button = new OrderButton(*i);
+		OrderButton *button = OrderButtonCache::getInstance()->getButton(*i);
 		button->setReceiver(ctrl);
-		addChild(new OrderButton(*i), false, 0);
+		addChild(button, false, 0);
 	}
 }
 
