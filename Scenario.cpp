@@ -13,7 +13,7 @@ const int MAP_MINIMAL_FRAME_WIDTH = 400;
 const int MAP_MINIMAL_FRAME_HEIGHT = 300;
 
 Scenario::Scenario(std::string path)
-	: EngineState("Scenario"), currentPlayer(NULL), map(NULL), sidepanel(NULL), hbox(NULL)
+	: EngineState("Scenario"), currentPlayer(NULL), map(NULL), currentGUI(NULL)/*sidepanel(NULL),*/ /*hbox(NULL)*/
 {
 	if(!loadFromFile(path))
 	{
@@ -28,14 +28,12 @@ Scenario::Scenario(std::string path)
 
 	Utility::Logger::getInstance()->log("Screen: %i,%i\n", screen_width, screen_height);
 
-	hbox = new Gui::HBox(Rect(0,0,screen_width, screen_height), 5);
+	//hbox = new Gui::HBox(Rect(0,0,screen_width, screen_height), 5);
 
 	//sidepanel = new Gui::SidePanel(Rect(0,0, Gui::SidePanel::SIDE_PANEL_WIDTH, screen_height-50), map);
 
-	Rect rf = sidepanel->getRequestedFrame();
-
-	hbox->addChild(map, true, 0);
-	hbox->addChild(sidepanel, true, 0);
+	/*hbox->addChild(map, true, 0);
+	hbox->addChild(sidepanel, true, 0);*/
 }
 
 Scenario::~Scenario()
@@ -95,7 +93,7 @@ Graphics::Renderer *renderer = Engine::getInstance()->getRenderer();
 	std::vector<Force*> forces;
 
 	int screen_height = Engine::getInstance()->getRenderer()->getHeight();
-	sidepanel = new Gui::SidePanel(Rect(0,0, Gui::SidePanel::SIDE_PANEL_WIDTH, screen_height-50), map);
+	//sidepanel = new Gui::SidePanel(Rect(0,0, Gui::SidePanel::SIDE_PANEL_WIDTH, screen_height-50), map);
 
 	while(child = parent->IterateChildren("player", child))
 	{
@@ -159,7 +157,10 @@ Graphics::Renderer *renderer = Engine::getInstance()->getRenderer();
 		// TODO: Make using factory
 		if(s_controller == "local")
 		{
-			currentController = new LocalPlayerController(currentPlayer, map, sidepanel);
+			//currentController = new LocalPlayerController(currentPlayer, map, sidepanel);
+			currentController = new LocalPlayerController(currentPlayer, map);
+			// FIXME: Maybe make for all controllers, with checking for NULL
+			Engine::getInstance()->getEventDispatcher()->attachListener(currentController->getGUI());
 		}
 		else if(s_controller == "ai")
 		{
@@ -228,14 +229,19 @@ void Scenario::switchTurn(Player *player)
 		currentPlayer->setCurrent(false);
 	}
 
+	if(player->getController()->getGUI())
+	{
+		currentGUI = player->getController()->getGUI();
+	}
+
 	currentPlayer = player;
 	currentPlayer->setDone(true); //not moving anything yet
 	currentPlayer->setCurrent(true);
 	currentPlayer->onTurnBegin();
-	if(sidepanel)
+	/*if(sidepanel)
 	{
 		sidepanel->setCurrentPlayer(currentPlayer);
-	}
+	}*/
 
 	//FIXME: Does not work, because fov can change by moving units (move to order??)
 	//map->setFieldOfView(currentPlayer->getFieldOfView());
@@ -257,6 +263,10 @@ void Scenario::nextTurn()
 
 void Scenario::draw(Graphics::Surface *target)
 {
+	if(currentGUI)
+	{
+		currentGUI->draw(target);
+	}
 	//FIXME!!! - is it slow checking for fov on each frame?
 	map->setFieldOfView(currentPlayer->getFieldOfView());
 	//map->draw(target);
@@ -264,7 +274,7 @@ void Scenario::draw(Graphics::Surface *target)
 	//sidepanel->draw(target);
 	//
 	
-	hbox->draw(target);
+	//hbox->draw(target);
 
 	std::list<Player*>::const_iterator i;
 
@@ -291,7 +301,7 @@ bool Scenario::mouseMoved(int x, int y)
 
 bool Scenario::mouseLMBClicked(int x, int y)
 {
-	sidepanel->mouseLMBClicked(x,y);
+	//sidepanel->mouseLMBClicked(x,y);
 	return false;
 }
 

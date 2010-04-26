@@ -29,17 +29,42 @@ Player* PlayerController::getTarget()
 	return target;
 }
 
+Gui::Container* PlayerController::getGUI()
+{
+	return NULL;
+}
+
 /* LocalPlayerController */
-LocalPlayerController::LocalPlayerController(Player *target, Map *map, Gui::SidePanel *sidePanel)
-	: PlayerController(target), map(map), pendingOrder(NULL), sidePanel(sidePanel), currentObject(NULL)
+//LocalPlayerController::LocalPlayerController(Player *target, Map *map, Gui::SidePanel *sidePanel)
+	//: PlayerController(target), map(map), pendingOrder(NULL), sidePanel(sidePanel), currentObject(NULL)
+LocalPlayerController::LocalPlayerController(Player *target, Map *map)
+	: PlayerController(target), map(map), pendingOrder(NULL), sidePanel(NULL), currentObject(NULL)
 {
 	Utility::Logger::getInstance()->log("LocalPlayerController created for %s\n", target->getName().c_str());
+
+	Graphics::Renderer *rend = Engine::getInstance()->getRenderer();
+	gui = new Gui::HBox(Rect(0,0,rend->getWidth(), rend->getHeight()), 5);
+
+	sidePanel = new Gui::SidePanel(Rect(0,0, Gui::SidePanel::SIDE_PANEL_WIDTH, rend->getHeight() - 100), map);
+	sidePanel->setCurrentPlayer(target);
+	gui->addChild(map, true, 0);
+	gui->addChild(sidePanel, true, 0);
+
 	Engine::getInstance()->getEventDispatcher()->attachListener(this);
 }
 
 LocalPlayerController::~LocalPlayerController()
 {
 	Engine::getInstance()->getEventDispatcher()->detachListener(this);
+}
+
+void LocalPlayerController::newTurn()
+{
+	sidePanel->setCurrentPlayer(target);
+	if(currentObject)
+	{
+		sidePanel->setCurrentObject(currentObject);
+	}
 }
 
 bool LocalPlayerController::objectTargeted(Tile *clickedTile)
@@ -78,7 +103,6 @@ bool LocalPlayerController::mouseLMBClicked(int x, int y)
 	if(!target->isCurrent())
 		return false;
 
-	//if(MouseState::getInstance()->getActionType() == MouseState::SELECT)
 	if(!pendingOrder)
 	{
 		Tile *clickedTile = map->getTileByMouseCoords(x, y);
@@ -110,12 +134,14 @@ bool LocalPlayerController::mouseLMBClicked(int x, int y)
 	//else if(MouseState::getInstance()->getActionType() == MouseState::MOVE)
 	else
 	{
+		Utility::Logger::getInstance()->log("Executing pending order\n");
 		//return objectTargeted(map->getTileByMouseCoords(x,y));
 
 		// Apply current order
 		Tile *tile = map->getTileByMouseCoords(x,y);
 		if(tile)
 		{
+			Utility::Logger::getInstance()->log("Applying order to (%i,%i)\n", tile->getX(), tile->getY());
 			pendingOrder->execute(tile);
 			//TODO :Test!
 			pendingOrder = NULL;
@@ -168,7 +194,6 @@ bool LocalPlayerController::keyPressed(int key)
 				MouseState::getInstance()->setActionType(MouseState::SKILL);
 			return false;
 		case SDLK_e:
-			Utility::Logger::getInstance()->log("E key pressed\n");
 			// TODO: Remove handler from Scenario
 			target->endTurn();
 			return true;
@@ -179,14 +204,23 @@ bool LocalPlayerController::keyPressed(int key)
 void LocalPlayerController::setOrder(Order *order)
 {
 	if(pendingOrder)
-		delete pendingOrder;
+	{
+		pendingOrder->stop();
+		pendingOrder = NULL;
+	}
 	pendingOrder = order;
+	Utility::Logger::getInstance()->log("New pendingOrder for %s : %s\n", target->getName().c_str(),
+			pendingOrder->getText().c_str());
 }
 
 void LocalPlayerController::setOrder(std::string orderName)
 {
-	Utility::Logger::getInstance()->log("LPC for %s ::setOrder(%s)\n", target->getName().c_str(), orderName.c_str());	
 	setOrder(OrderFactory::getInstance()->createOrder(orderName, currentObject, map));
+}
+
+Gui::Container* LocalPlayerController::getGUI()
+{
+	return gui;
 }
 
 /* AIPlayerController */

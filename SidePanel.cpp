@@ -23,7 +23,6 @@ OrderButton::OrderButton(std::string orderName)
 
 void OrderButton::setReceiver(Core::LocalPlayerController *receiver)
 {
-	Utility::Logger::getInstance()->log("OrderButton::setReceiver(%s)\n", receiver->getTarget()->getName().c_str());
 	this->receiver = receiver;
 }
 
@@ -58,9 +57,6 @@ OrderPanel::OrderPanel(Rect frame, Widget *parent)
 
 void OrderPanel::setCurrentObject(Core::MapObject *currentObject)
 {
-	Utility::Logger::getInstance()->log("setCurrentObject(%s)\n", currentObject->getType()->getName().c_str());
-	if(currentObject == this->currentObject)
-		return;
 	this->currentObject = currentObject;
 
 	removeAll();
@@ -104,9 +100,6 @@ SidePanel::SidePanel(Rect frame, Core::Map *map)
 	: VBox(frame, 5), minimap(NULL), currentPlayer(NULL), currentObject(NULL), resources(NULL),
 	/*actions(NULL),*/ tileobjects(NULL), buttons(NULL), objectInfo(NULL), orderPanel(NULL)
 {
-	Utility::Logger::getInstance()->log("Creating SidePanel with dimensions %i,%i\n", frame.w, frame.h);
-	Utility::Logger::getInstance()->log("Requested %i,%i\n", requestedFrame.w, requestedFrame.h);
-
 	resources = new ResourceBar(Rect(0,0, 100, ResourceBar::RESOURCE_BAR_HEIGHT));
 	minimap = new Minimap(Rect(0, 0, SIDE_PANEL_WIDTH-10, SIDE_PANEL_WIDTH-10), map);
 	//actions = new OrderPack(Rect(0,0,100, OrderPack::ORDER_BUTTON_HEIGHT));
@@ -119,7 +112,6 @@ SidePanel::SidePanel(Rect frame, Core::Map *map)
 	//addChild(actions, true, 0);
 	addChild(orderPanel, false, 0);
 
-	Utility::Logger::getInstance()->log("At the end requested %i,%i\n", requestedFrame.w, requestedFrame.h);
 }
 
 SidePanel::~SidePanel()

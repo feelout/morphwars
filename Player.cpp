@@ -4,6 +4,7 @@
 #include "Tile.h"
 #include "Unit.h"
 #include "Map.h"
+#include "PlayerController.h"
 
 using namespace Core;
 
@@ -196,6 +197,7 @@ void Player::onTurnBegin()
 		(*i)->onTurnBegin();
 	}
 
+	controller->newTurn();
 	endedTurn = false;
 }
 

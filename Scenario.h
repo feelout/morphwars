@@ -26,8 +26,9 @@ namespace Core
 			Map *map;
 			Player *currentPlayer;
 
-			Gui::SidePanel *sidepanel;
-			Gui::HBox *hbox;
+			//Gui::SidePanel *sidepanel;
+			//Gui::HBox *hbox;
+			Gui::Container *currentGUI;
 		public:
 			Scenario(std::string path);
 			~Scenario();

@@ -321,7 +321,7 @@ Tile* Map::getTileByMouseCoords(int mx, int my)
 
 	if( (tilex > width) || (tilex < 0) || (tiley > height) || (tiley < 0) )
 	{
-		Utility::Logger::getInstance()->log("Map::getTileByMouseCoords : clicked out of bounds");
+		//Utility::Logger::getInstance()->log("Map::getTileByMouseCoords : clicked out of bounds");
 		return NULL;
 	}
 

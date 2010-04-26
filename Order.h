@@ -1,6 +1,7 @@
 #ifndef ORDER_H
 #define ORDER_H
 
+#include <string>
 #include "Unit.h"
 #include "Map.h"
 #include "OrderFactory.h"
@@ -48,6 +49,8 @@ namespace Core
 			virtual void stop();
 
 			bool isDone() const;
+
+			virtual std::string getText() const;
 	};
 
 	class MovementOrder : public Order

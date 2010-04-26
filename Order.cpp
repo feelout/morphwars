@@ -7,32 +7,8 @@
 
 using namespace Core;
 
-/*Order::Order(Unit *unit)
-	: unit(unit), done(false)
-{
-	//Utility::Logger::getInstance()->log("Order::Order\n");
-	OrderManager::getInstance()->addOrder(this);
-}
-
-//DEBUG
-Order::~Order()
-{
-	//Utility::Logger::getInstance()->log("Order destructor called\n");
-}
-//ENDDEBUG
-
-void Order::stop()
-{
-	done = true;
-}
-
-bool Order::isDone() const
-{
-	return done;
-}*/
-
 Order::Order(MapObject *object, Map *map)
-	: object(object), map(map), done(false)
+	: object(object), map(map), done(false), target(NULL)
 {
 }
 
@@ -60,6 +36,19 @@ bool Order::isDone() const
 	return done;
 }
 
+std::string Order::getText() const
+{
+	std::string msg = "Order for unit at " + br_itoa(object->getTile()->getX()) + "," 
+		+ br_itoa(object->getTile()->getY());
+	if(target)
+	{
+		msg = msg + "; Target is " + br_itoa(target->getX()) + "," +
+			br_itoa(target->getY());
+	}
+
+	return msg;
+}
+
 MovementOrder::MovementOrder(MapObject *object, Map *map)
 	: Order(object, map)
 {
@@ -73,7 +62,7 @@ void MovementOrder::execute(Tile *target)
 	{
 		if(target->isEnemy(object))
 		{
-			Utility::Logger::getInstance()->log("Occupied by enemy\n");
+			//Utility::Logger::getInstance()->log("Occupied by enemy\n");
 			// Can`t move to tile occupied by enemy
 			done = true;
 			return;
@@ -90,39 +79,12 @@ void MovementOrder::execute(Tile *target)
 	}
 }
 
-/*MovementOrder::MovementOrder(Unit *unit, Tile *target, Map *map)
-	: Order(unit), target(target), map(map)
-{
-	//Utility::Logger::getInstance()->log("MovementOrder::MovementOrder\n");
-
-	if(unit->getOwner()->getFieldOfView()->isTileVisible(target->getX(), target->getY()))
-	{
-		if(target->isEnemy(unit))
-		{
-			Utility::Logger::getInstance()->log("Occupied by enemy\n");
-			// Can`t move to tile occupied by enemy
-			done = true;
-			return;
-		}
-	}
-	
-	if(!makePath())
-	{
-		Utility::Logger::getInstance()->log("Failed to build path from (%i,%i) to (%i,%i)",
-				unit->getTile()->getX(), unit->getTile()->getY(),
-				target->getX(), target->getY());
-		done = true;
-		return;
-	}
-}*/
-
 bool MovementOrder::makePath()
 {
 	Unit *unit = static_cast<Unit*>(object);
 
-	Utility::Logger::getInstance()->log("Calculating path from (%i,%i) to (%i,%i)\n", unit->getTile()->getX(),
-		unit->getTile()->getY(), target->getX(), target->getY());
-	//Utility::Logger::getInstance()->log("Unit MP: %i\n", unit->getMP());
+	/*Utility::Logger::getInstance()->log("Calculating path from (%i,%i) to (%i,%i)\n", unit->getTile()->getX(),
+		unit->getTile()->getY(), target->getX(), target->getY());*/
 
 	int distance = unit->getTile()->getDistance(target);
 
@@ -132,7 +94,6 @@ bool MovementOrder::makePath()
 	}
 	// TODO: if dist == 1, move without A*
 
-	//std::vector<AStar::Node*> openlist;
 	std::vector<AStar::Node*> closedlist;
 
 	AStar::Node* srcNode = new AStar::Node(NULL, unit->getTile(),
@@ -188,7 +149,7 @@ bool MovementOrder::makePath()
 			if((unit->getOwner()->getFieldOfView()->isTileVisible(nbx, nby))
 						&& (map->getTile(nbx, nby)->isEnemy(unit)))
 			{
-				Utility::Logger::getInstance()->log("Enemy in view\n");
+				//Utility::Logger::getInstance()->log("Enemy in view\n");
 				continue;
 			}
 
@@ -228,8 +189,8 @@ bool MovementOrder::makePath()
 	//for(cl_iter = closedlist.begin(); cl_iter != closedlist.end(); ++cl_iter)
 	{
 		waypoints.push_back((*cl_iter)->getSource());
-		Utility::Logger::getInstance()->log("Waypoint: (%i,%i)\n", (*cl_iter)->getSource()->getX(),
-			(*cl_iter)->getSource()->getY());
+		/*Utility::Logger::getInstance()->log("Waypoint: (%i,%i)\n", (*cl_iter)->getSource()->getX(),
+			(*cl_iter)->getSource()->getY());*/
 	}
 
 	currentWaypoint = waypoints.begin();
@@ -276,7 +237,7 @@ void MovementOrder::process()
 			}
 			else
 			{
-				Utility::Logger::getInstance()->log("Next waypoint is hostile\n");
+				//Utility::Logger::getInstance()->log("Next waypoint is hostile\n");
 				unit->getOwner()->setDone(true);
 				done = true;
 			}

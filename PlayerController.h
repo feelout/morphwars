@@ -21,6 +21,7 @@ namespace Core
 
 			//FIXME: DEBUG!
 			Player* getTarget();
+			virtual Gui::Container *getGUI();
 	};
 
 	class LocalPlayerController : public IEventListener, public PlayerController
@@ -30,10 +31,12 @@ namespace Core
 			Order *pendingOrder;
 			Gui::SidePanel *sidePanel;
 			MapObject *currentObject;
+			Gui::HBox *gui;
 
 			bool objectTargeted(Tile *clickedTile);
 		public:
-			LocalPlayerController(Player *target, Map *map, Gui::SidePanel *sidePanel);
+			//LocalPlayerController(Player *target, Map *map, Gui::SidePanel *sidePanel);
+			LocalPlayerController(Player *target, Map *map);
 			virtual ~LocalPlayerController();
 
 			void setOrder(Order *order);
@@ -43,6 +46,9 @@ namespace Core
 			virtual bool mouseLMBClicked(int x, int y);
 			virtual bool mouseRMBClicked(int x, int y);
 			virtual bool keyPressed(int key);
+
+			virtual Gui::Container* getGUI();
+			virtual void newTurn();
 	};
 
 	class AIPlayerController : public PlayerController
