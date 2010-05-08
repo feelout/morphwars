@@ -5,6 +5,7 @@
 #include <string>
 #include <list>
 #include "Animation.h"
+#include "AnimationPack.h"
 
 /**
  * SHIT! we need to update animations individually. So, instead
@@ -31,6 +32,10 @@ namespace Graphics
 	     * List of all animation copies in game.
 	     */
 	    std::list<Animation*> registeredAnimations;
+	    /**
+	     * List of packs, which currently play timed animations
+	     */
+	    std::list<AnimationPack*> packsWithTimedAnimations;
 
 	    /**
 	     * Loads animation with given type
@@ -52,6 +57,7 @@ namespace Graphics
             Animation *getAnimation(std::string type);
 
 	    void addAnimation(std::string name, Animation *animation);
+	    void addTimedAnimationPack(AnimationPack *pack);
 
 	    /**
 	     * Update all registered animations. Call each frame.

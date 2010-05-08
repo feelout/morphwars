@@ -188,9 +188,24 @@ void Player::setCurrent(bool current)
 	this->current = current;
 }
 
+bool predIsDead(const Unit* value)
+{
+	// Selected units is deleted in playerController
+	return value->isDead() && !value->isSelected();
+}
+
 void Player::onTurnBegin()
 {
 	std::vector<Unit*>::iterator i;
+
+	i = std::remove_if(units.begin(), units.end(), predIsDead);
+
+	for(;i != units.end(); ++i)
+	{
+		delete (*i);
+	}
+
+	units.erase(i, units.end());
 
 	for(i = units.begin(); i != units.end(); ++i)
 	{

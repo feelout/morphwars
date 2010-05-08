@@ -111,6 +111,8 @@ namespace Core
 			bool isSelected() const;
 
 			virtual Gui::ObjectInfoScreen *getInfoScreen() const;
+
+			bool isDead() const;
 	};
 }
 

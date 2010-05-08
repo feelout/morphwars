@@ -83,6 +83,11 @@ void AnimationManager::addAnimation(std::string name, Animation *animation)
 	registeredAnimations.push_back(animation);
 }
 
+void AnimationManager::addTimedAnimationPack(AnimationPack *pack)
+{
+	packsWithTimedAnimations.push_back(pack);
+}
+
 void AnimationManager::updateAnimations()
 {
 	std::list<Animation*>::iterator i;
@@ -98,4 +103,16 @@ void AnimationManager::updateAnimations()
 			registeredAnimations.erase(i);
 		}
 	}
+
+	std::list<AnimationPack*>::iterator p;
+
+	for(p = packsWithTimedAnimations.begin(); p != packsWithTimedAnimations.end(); ++p)
+	{
+		if((*p)->updateTimedAnimation())
+		{
+			packsWithTimedAnimations.erase(p);
+			return;
+		}
+	}
+
 }

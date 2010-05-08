@@ -8,30 +8,6 @@
 
 namespace Core
 {
-	/*class Order
-	{
-		protected:
-			// Unit, whom the order was issued
-			Unit *unit;
-			// Image to show on action button
-			Graphics::Surface *buttonImage;
-			// Image to show next to unit
-			Graphics::Surface *unitImage;
-			//TODO: Add separation on active/passive
-			
-			bool done;
-		public:
-			Order(Unit *unit);
-			//DEBUG
-			~Order();
-			//ENDDEBUG
-
-			virtual void process()=0;
-			virtual void stop();
-			bool isDone() const;
-	};*/
-
-
 	class Order
 	{
 		protected:
@@ -68,6 +44,21 @@ namespace Core
 	};
 
 	class MovementOrderCreator : public IOrderCreator
+	{
+		public:
+			virtual Order* createOrder(MapObject *object, Map *map);
+	};
+
+	class AttackOrder : public Order
+	{
+		public:
+			AttackOrder(MapObject *object, Map *map);
+
+			virtual void execute(Tile *target);
+			virtual void process();
+	};
+
+	class AttackOrderCreator : public IOrderCreator
 	{
 		public:
 			virtual Order* createOrder(MapObject *object, Map *map);

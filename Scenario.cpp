@@ -22,6 +22,7 @@ Scenario::Scenario(std::string path)
 	}
 
 	OrderFactory::getInstance()->registerCreator("move", new MovementOrderCreator());
+	OrderFactory::getInstance()->registerCreator("attack", new AttackOrderCreator());
 
 	int screen_height = Engine::getInstance()->getRenderer()->getHeight();
 	int screen_width = Engine::getInstance()->getRenderer()->getWidth();

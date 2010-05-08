@@ -159,6 +159,7 @@ Unit::Unit(UnitType *type, Tile *tile, Player *owner)
 	sp = type->getMaxSP();
 	attack = type->getAttack();
 	defense = type->getDefense();
+	hitsLeft = type->getHitCount();
 
 	//this->type = type->clone();
 	infoScreen = new Gui::UnitInfoScreen(this);
@@ -267,17 +268,24 @@ bool Unit::moveTo(Tile *dst)
 
 bool Unit::performAttack(Tile *tile)
 {
+	Utility::Logger::getInstance()->log("%s : performing attack\n", getType()->getName().c_str());
 	if(this->tile == tile)
 		return false;
 
-	if(this->tile->getDistance(tile) > static_cast<UnitType*>(type)->getAttackDistance())
+	if(!isTileInAtackDistance(tile))
+	{
+		Utility::Logger::getInstance()->log("Target not in attack reach : %i/%i\n",
+				tile->getDistance(this->tile),
+				getType()->getAttackDistance());
 		return false;
+	}
 
 	if(tile->isEnemy(this))
 	{
 		Direction dir = this->tile->getDirection(tile);
 
-		type->getGraphics()->changeToAnimation(type->getName()+"Attack-"+Tile::DirectionToString(tile->getDirection(dst)));
+		type->getGraphics()->playTimedAnimation(type->getName()+"Attack-"+
+				Tile::DirectionToString(this->tile->getDirection(tile)), 2000);
 		type->getGraphics()->getCurrent()->start();
 
 		attackingState = true;
@@ -289,16 +297,16 @@ bool Unit::performAttack(Tile *tile)
 		}
 
 		attackingState = false;
-		if(fightResult && !tile->isEnemy(this))
-		{
-			moveTo(tile);
-		}
+
+		// FIXME: Add timed animation to animation pack
+		/*type->getGraphics()->changeToAnimation(type->getName()+"-"+
+				Tile::DirectionToString(this->tile->getDirection(tile)));*/
 		return fightResult;
 	}
-	else
+	/*else
 	{
 		return moveTo(tile);
-	}
+	}*/
 }
 
 bool Unit::damage(int damage, MapObject *source)
@@ -320,7 +328,9 @@ bool Unit::damage(int damage, MapObject *source)
 		// Retaliation
 		if(canRetaliate && !attackingState && unit_source->getType()->doesEnemyRetaliate())
 		{
-			unit_source->damage(static_cast<UnitType*>(type)->getAttack(), this);
+			//FIXME: Test
+			//unit_source->damage(static_cast<UnitType*>(type)->getAttack(), this);
+			performAttack(unit_source->getTile());
 			canRetaliate = false;
 		}
 		return false;
@@ -331,6 +341,11 @@ void Unit::kill()
 {
 	dead = true;
 	tile->removeObject(this);
+}
+
+bool Unit::isTileInAtackDistance(Tile *tile) const
+{
+	return tile->getDistance(this->tile) <= getType()->getAttackDistance();
 }
 
 bool Unit::updateMovement()
@@ -395,6 +410,11 @@ int Unit::getMP() const
 	return mp;
 }
 
+int Unit::getHitsLeft() const
+{
+	return hitsLeft;
+}
+
 void Unit::setHP(int hp)
 {
 	this->hp = hp;
@@ -414,5 +434,6 @@ void Unit::onTurnBegin()
 {
 	//TODO: Introduce SP and HP regen
 	setMP(getType()->getMaxMP());
+	hitsLeft = getType()->getHitCount();
 	canRetaliate = true;
 }

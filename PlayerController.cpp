@@ -63,7 +63,10 @@ void LocalPlayerController::newTurn()
 	sidePanel->setCurrentPlayer(target);
 	if(currentObject)
 	{
-		sidePanel->setCurrentObject(currentObject);
+		if(currentObject->isDead())
+			delete currentObject;
+		else
+			sidePanel->setCurrentObject(currentObject);
 	}
 }
 

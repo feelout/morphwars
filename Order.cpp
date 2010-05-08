@@ -249,3 +249,30 @@ Order* MovementOrderCreator::createOrder(MapObject *object, Map *map)
 {
 	return new MovementOrder(object, map);
 }
+
+/* AttackOrder class members */
+
+AttackOrder::AttackOrder(MapObject *object, Map *map)
+	: Order(object, map)
+{
+	Unit* unit = static_cast<Unit*>(object);
+
+	if(unit->getHitsLeft() == 0)
+		stop(); //TODO: How will it work with LPC::pendingOrder??
+}
+
+void AttackOrder::execute(Tile *target)
+{
+	Unit* unit = static_cast<Unit*>(object);
+
+	unit->performAttack(target);
+}
+
+void AttackOrder::process()
+{
+}
+
+Order* AttackOrderCreator::createOrder(MapObject *object, Map *map)
+{
+	return new AttackOrder(object, map);
+}

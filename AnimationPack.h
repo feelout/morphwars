@@ -18,6 +18,10 @@ namespace Graphics
 		protected:
 			std::map<std::string, Animation *> animations;
 			Animation *current;
+			Animation *previous; // For timed animations
+
+			unsigned int timedAnimationStart;
+			unsigned int timedAnimationPlayingTime;
 
 		public:
 			AnimationPack();
@@ -42,6 +46,7 @@ namespace Graphics
 			 * @param name Animation name
 			 */
 			void changeToAnimation(std::string name);
+			void playTimedAnimation(std::string name, unsigned int time);
 
 			/**
 			 * Returns current animation
@@ -50,6 +55,12 @@ namespace Graphics
 			Animation* getCurrent() const;
 
 			AnimationPack& operator = (const AnimationPack& other);
+
+			/*
+			 * Updates current timed animation`s state
+			 * @return false, is timed animation ended
+			 */
+			bool updateTimedAnimation();
 	};
 }
 

@@ -3,6 +3,7 @@
 #include "AnimationManager.h"
 #include "Logger.h"
 #include "tinyxml.h"
+#include "Timer.h"
 
 using namespace Graphics;
 
@@ -11,7 +12,7 @@ AnimationPack::AnimationPack()
 }
 
 AnimationPack::AnimationPack(Surface *strip, std::string definition)
-	: current(NULL)
+	: current(NULL), previous(NULL)
 {
 	Utility::Logger::getInstance()->log("Loading animation pack %s\n", definition.c_str());
 
@@ -94,6 +95,12 @@ void AnimationPack::changeToAnimation(std::string name)
 {
 	//Utility::Logger::getInstance()->log("AnimationPack::changeToAnimation(%s)\n", name.c_str());
 	//DEBUG
+	if(previous)
+	{
+		previous = animations[name];
+		return;
+	}
+
 	if(current)
 	{
 		current->stop();
@@ -114,6 +121,17 @@ void AnimationPack::changeToAnimation(std::string name)
 
 	current = animations[name];
 } 
+
+void AnimationPack::playTimedAnimation(std::string name, unsigned int time)
+{
+	timedAnimationStart = Utility::Timer::currentTicks();
+	timedAnimationPlayingTime = time;
+	previous = current;
+	current = animations[name];
+
+	AnimationManager::getInstance()->addTimedAnimationPack(this);
+}
+
 Animation* AnimationPack::getCurrent() const
 {
 	return current;
@@ -142,4 +160,18 @@ AnimationPack& AnimationPack::operator = (const AnimationPack& other)
 		changeToAnimation(i->first);
 	}
 	return *this;
+}
+
+bool AnimationPack::updateTimedAnimation()
+{
+	if(!previous)
+		return true;
+
+	if(Utility::Timer::currentTicks() - timedAnimationStart > timedAnimationPlayingTime)
+	{
+		current = previous;
+		previous = NULL;
+	}
+
+	return false;
 }

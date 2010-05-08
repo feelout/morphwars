@@ -64,6 +64,7 @@ MapObject::MapObject(MapObjectType *type, Tile *tile, Player *owner)
 
 MapObject::~MapObject()
 {
+	tile->removeObject(this);
 }
 
 void MapObject::draw(Graphics::Surface *target, int x, int y)
@@ -116,4 +117,9 @@ bool MapObject::isSelected() const
 Gui::ObjectInfoScreen* MapObject::getInfoScreen() const
 {
 	return infoScreen;
+}
+
+bool MapObject::isDead() const
+{
+	return dead;
 }

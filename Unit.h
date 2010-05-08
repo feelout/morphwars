@@ -54,6 +54,8 @@ namespace Core
 			// true if unit is currently attacking - disables retaliation
 			bool attackingState;
 
+			int hitsLeft; //FIXME: Replentish on each turn
+
 			/** Stupid anti-OOP hack **/
 			//int dx, dy; //Drawing deltas
 
@@ -88,12 +90,15 @@ namespace Core
 			/**
 			 * Attacks unit within attack range
 			 * @param tile Tile to attack
-			 * @return True if enemy destroyed (also moves unit to tile)
+			 * @return True if enemy destroyed 
 			 */
 			bool performAttack(Tile *tile);
+
 			// True if enemy destroyed
 			virtual bool damage(int damage, MapObject *source);
 			void kill();
+
+			bool isTileInAtackDistance(Tile *tile) const;
 
 			/**
 			 * Updates unit movement
@@ -104,6 +109,7 @@ namespace Core
 			int getHP() const;
 			int getSP() const;
 			int getMP() const;
+			int getHitsLeft() const;
 			void setHP(int hp);
 			void setSP(int sp);
 			void setMP(int mp);
