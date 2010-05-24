@@ -13,7 +13,7 @@ namespace Core
 	const int TILE_WIDTH = 60;//40;
 	const int TILE_TERRAIN_HEIGHT = 30;//21;
 	const int TILE_HEIGHT_OFFSET = 15;
-	const int TILE_HEIGHT_LEVEL_OFFSET = 10;
+	const int TILE_HEIGHT_LEVEL_OFFSET = 8;
 
 	/**
 	 * Types of tile images
@@ -102,6 +102,8 @@ namespace Core
 			 * Returt tile image for given image type
 			 */
 			Graphics::Surface *getTileImage(Direction type) const;
+			Graphics::Surface *getLeftHeightFiller() const;
+			Graphics::Surface *getRightHeightFiller() const;
 
 			int getPriority() const;
 			int getMovementCost(MovementType type) const;
@@ -159,6 +161,7 @@ namespace Core
 
 			int getX() const;
 			int getY() const;
+			int getHeight() const;
 
 			/**
 			 * Calculates tile neighbours

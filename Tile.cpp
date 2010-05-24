@@ -48,6 +48,16 @@ Graphics::Surface* TileType::getTileImage(Direction type) const
 	return surfaces[type];
 }
 
+Graphics::Surface* TileType::getLeftHeightFiller() const
+{
+	return surfaces[9];
+}
+
+Graphics::Surface* TileType::getRightHeightFiller() const
+{
+	return surfaces[10];
+}
+
 int TileType::getPriority() const
 {
 	return priority;
@@ -234,6 +244,11 @@ int Tile::getY() const
 	return y;
 }
 
+int Tile::getHeight() const
+{
+	return height;
+}
+
 //Returns 4 neighbours
 std::vector< std::pair<int, int> > Tile::getDiagonalNeighbours() const
 {
@@ -283,6 +298,12 @@ std::vector< std::pair<int, int> > Tile::getNeighbours() const
 
 void Tile::draw(Graphics::Surface *target, int x, int y, bool visible)
 {
+	for(int h=0; h < height; ++h)
+	{
+		getType()->getLeftHeightFiller()->blit(target, x, y);
+		getType()->getRightHeightFiller()->blit(target, x, y);
+		y -= TILE_HEIGHT_LEVEL_OFFSET;
+	}
 	if(visible)
 	{
 		image->blit(target, x, y);
@@ -306,6 +327,15 @@ void Tile::draw(Graphics::Surface *target, int x, int y, bool visible)
 	drawer.drawLine(x + TILE_WIDTH, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET,
 			x + TILE_WIDTH / 2, y + TILE_HEIGHT, gridcolor);
 	drawer.drawLine(x + TILE_WIDTH / 2, y +TILE_HEIGHT, x, y +TILE_HEIGHT - TILE_HEIGHT_OFFSET, gridcolor);
+	// Drawing height borders
+	drawer.drawLine(x, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET, x,
+				y + TILE_HEIGHT - TILE_HEIGHT_OFFSET + height * TILE_HEIGHT_LEVEL_OFFSET,
+				gridcolor);
+	drawer.drawLine(x + TILE_WIDTH, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET, x + TILE_WIDTH,
+				y + TILE_HEIGHT - TILE_HEIGHT_OFFSET + height * TILE_HEIGHT_LEVEL_OFFSET,
+				gridcolor);
+	drawer.drawLine(x + TILE_WIDTH / 2, y + TILE_HEIGHT, x + TILE_WIDTH / 2,
+			y + TILE_HEIGHT + height * TILE_HEIGHT_LEVEL_OFFSET, gridcolor);
 	// Drawing 
 	std::string coords = "(" + br_itoa(this->x) + "," + br_itoa(this->y) + ")";
 	/*Graphics::FontSystem::getInstance()->print(target, coords, x,
