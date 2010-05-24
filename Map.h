@@ -32,7 +32,6 @@ namespace Core
 			void calculateSurfaces();
 
 			//Cache
-			FieldOfView *lastFov;
 			Graphics::Surface *cached;
 			//Minimap
 			//Minimap *minimap; //will be in panel in Scenario

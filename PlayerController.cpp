@@ -47,6 +47,7 @@ LocalPlayerController::LocalPlayerController(Player *target, Map *map)
 
 	sidePanel = new Gui::SidePanel(Rect(0,0, Gui::SidePanel::SIDE_PANEL_WIDTH, rend->getHeight() - 100), map);
 	sidePanel->setCurrentPlayer(target);
+	//DEBUG!!
 	gui->addChild(map, true, 0);
 	gui->addChild(sidePanel, true, 0);
 
@@ -61,6 +62,7 @@ LocalPlayerController::~LocalPlayerController()
 void LocalPlayerController::newTurn()
 {
 	sidePanel->setCurrentPlayer(target);
+	map->setFieldOfView(target->getFieldOfView()); //FIXME: DEBUG
 	if(currentObject)
 	{
 		if(currentObject->isDead())

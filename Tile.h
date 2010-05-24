@@ -13,6 +13,7 @@ namespace Core
 	const int TILE_WIDTH = 60;//40;
 	const int TILE_TERRAIN_HEIGHT = 30;//21;
 	const int TILE_HEIGHT_OFFSET = 15;
+	const int TILE_HEIGHT_LEVEL_OFFSET = 10;
 
 	/**
 	 * Types of tile images
@@ -56,7 +57,7 @@ namespace Core
 		HIGHAIR,
 	};
 
-	const int TILE_IMAGES_NUM = 9;
+	const int TILE_IMAGES_NUM = 11;
 	const int MOVEMENT_TYPES_NUM = 5;
 
 	struct MovementCosts
@@ -119,8 +120,10 @@ namespace Core
 			//Units and building occupying
 			std::vector<MapObject*> objects;
 			MapObject* topobject;
+
+			int height;
 		public:
-			Tile(int x, int y, TileType *type);
+			Tile(int x, int y, int height, TileType *type);
 
 			//void setImageType(Direction imgtype);
 			void setImage(Graphics::Surface *image);

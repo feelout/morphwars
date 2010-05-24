@@ -6,7 +6,8 @@
 
 using namespace Core;
 
-const float SHADOW_FACTOR=0.5;
+const float SHADOW_FACTOR=0.3; //FIXME: DEBUG!
+//const float SHADOW_FACTOR=0.5;
 
 
 TileType::TileType(Graphics::Surface *src, int y, int priority, MovementCosts movementCosts)
@@ -31,7 +32,8 @@ TileType::TileType(Graphics::Surface *src, int y, int priority, MovementCosts mo
 		surfaces[i] = v_surfaces[i];
 	}
 
-	delete mainSurf; }
+	delete mainSurf; 
+}
 
 TileType::~TileType()
 {
@@ -56,8 +58,8 @@ int TileType::getMovementCost(MovementType type) const
 	return movementCosts.costs[type];
 }
 
-Tile::Tile(int x, int y, TileType *type)
-	: x(x), y(y), type(type), topobject(NULL)
+Tile::Tile(int x, int y, int height, TileType *type)
+	: x(x), y(y), height(height), type(type), topobject(NULL)
 {
 	//printf("Tile (%i,%i) created\n", x, y);
 	image = type->getTileImage(CENTER);
@@ -288,6 +290,7 @@ void Tile::draw(Graphics::Surface *target, int x, int y, bool visible)
 		{
 			(*i)->draw(target, x, y);
 		}*/ //Can`t use because of map caching
+		//Utility::Logger::getInstance()->log("Drawing visible tile (%i,%i)\n", this->x, this->y);
 	}
 	else
 	{
@@ -303,6 +306,10 @@ void Tile::draw(Graphics::Surface *target, int x, int y, bool visible)
 	drawer.drawLine(x + TILE_WIDTH, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET,
 			x + TILE_WIDTH / 2, y + TILE_HEIGHT, gridcolor);
 	drawer.drawLine(x + TILE_WIDTH / 2, y +TILE_HEIGHT, x, y +TILE_HEIGHT - TILE_HEIGHT_OFFSET, gridcolor);
+	// Drawing 
+	std::string coords = "(" + br_itoa(this->x) + "," + br_itoa(this->y) + ")";
+	/*Graphics::FontSystem::getInstance()->print(target, coords, x,
+			y + TILE_HEIGHT - TILE_HEIGHT_OFFSET, RGBColor::RED);*/
 }
 
 std::pair<int, int> Tile::translateCoordinates(int x, int y, Direction direction)

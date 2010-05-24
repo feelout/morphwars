@@ -270,12 +270,6 @@ void Scenario::draw(Graphics::Surface *target)
 	}
 	//FIXME!!! - is it slow checking for fov on each frame?
 	map->setFieldOfView(currentPlayer->getFieldOfView());
-	//map->draw(target);
-
-	//sidepanel->draw(target);
-	//
-	
-	//hbox->draw(target);
 
 	std::list<Player*>::const_iterator i;
 

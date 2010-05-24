@@ -25,7 +25,7 @@ bool BackwardCompareUnits(Unit *u1, Unit *u2)
 }
 
 FieldOfView::FieldOfView(int w, int h)
-	: w(w), h(h)
+	: w(w), h(h), dirty(true)
 {
 	tiles = new bool[w*h];
 	
@@ -38,6 +38,8 @@ void FieldOfView::clear()
 	{
 		tiles[i] = false;
 	}
+
+	setDirty(true);
 }
 
 bool FieldOfView::isTileVisible(int x, int y) const
@@ -50,24 +52,17 @@ void FieldOfView::setTileVisible(int x, int y, bool visible)
 	if((x < 0) || (x >= w) || (y < 0) || (y >= h)) return;
 
 	tiles[x+y*w] = visible;
+	setDirty(true);
 }
 
-FieldOfView& FieldOfView::operator = (const FieldOfView& other)
+void FieldOfView::setDirty(bool dirty)
 {
-	for(int i=0; i < w*h; ++i)
-	{
-		tiles[i] = other.tiles[i];
-	}
+	this->dirty = dirty;
 }
 
-bool FieldOfView::operator == (const FieldOfView& other)
+bool FieldOfView::isDirty()
 {
-	for(int i=0; i < w*h; ++i)
-	{
-		if(tiles[i] != other.tiles[i]) return false;
-	}
-
-	return true;
+	return dirty;
 }
 
 void Player::updateFOV()

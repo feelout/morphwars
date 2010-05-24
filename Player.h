@@ -27,6 +27,7 @@ namespace Core
 		private:
 			bool *tiles;
 			int w,h;
+			bool dirty;
 		public:
 			FieldOfView(int w, int h);
 
@@ -35,8 +36,12 @@ namespace Core
 
 			void clear();
 
-			FieldOfView& operator = (const FieldOfView& other);
-			bool operator == (const FieldOfView& other);
+			/*FieldOfView& operator = (const FieldOfView& other);
+			bool operator == (const FieldOfView& other);*/
+
+			void copyFromOther(FieldOfView *other);
+			void setDirty(bool dirty);
+			bool isDirty();
 	};
 
 	class Player

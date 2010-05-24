@@ -30,14 +30,14 @@ Map::Map(Rect frame, int width, int height, std::string tilesetname, Widget *par
 	{
 		for(int x=0; x < width; ++x)
 		{
-			tiles[x+y*width] = new Tile(x, y, tileset->getType(0));
+			tiles[x+y*width] = new Tile(x, y, 1, tileset->getType(0));
 			tiles[x+y*width]->setImage(tiles[x+y*width]->getType()->getTileImage(CENTER));
 		}
 	}
 
 	//width+1 because of tile shift
 	cached = new Graphics::Surface((width+1)*TILE_WIDTH, height*TILE_HEIGHT);
-	lastFov = new FieldOfView(width, height);
+	//lastFov = new FieldOfView(width, height);
 	currentFov = new FieldOfView(width, height);
 
 	//requestedFrame = Rect(0, 0, MAP_MINIMAL_FRAME_WIDTH, MAP_MINIMAL_FRAME_HEIGHT); 
@@ -58,13 +58,15 @@ Map::Map(Rect frame, TiXmlElement *xmlmap, Widget *parent)
 
 	TiXmlNode *row=NULL, *cell=NULL;
 	int x=0, y=0;
+	int height;
 
 	while(row = xmlmap->IterateChildren("row", row))
 	{
 		//FIXME: atoi(cell->Value()) is somehow always zero
 		while(cell = row->IterateChildren("cell", cell))
 		{
-			tiles[x+y*width] = new Tile(x, y, tileset->getType(atoi(cell->ToElement()->GetText())));
+			cell->ToElement()->QueryIntAttribute("height", &height);
+			tiles[x+y*width] = new Tile(x, y, height, tileset->getType(atoi(cell->ToElement()->GetText())));
 			++x;
 		}
 		x=0;
@@ -72,8 +74,8 @@ Map::Map(Rect frame, TiXmlElement *xmlmap, Widget *parent)
 	}
 
 	calculateSurfaces();
-	cached = new Graphics::Surface((width+1)*TILE_WIDTH, height*TILE_HEIGHT);
-	lastFov = new FieldOfView(width, height); 
+	cached = new Graphics::Surface((width+1)*TILE_WIDTH, (height+1)*TILE_HEIGHT);
+	//lastFov = new FieldOfView(width, height); 
 	currentFov = new FieldOfView(width, height);
 
 	//requestedFrame = Rect(0, 0, MAP_MINIMAL_FRAME_WIDTH, MAP_MINIMAL_FRAME_HEIGHT); 
@@ -218,24 +220,36 @@ Rect Map::getClipping() const
 
 void Map::setFieldOfView(FieldOfView *fov)
 {
-	if(!(*currentFov == *fov))
+	//if(!(*currentFov == *fov))
+	if(currentFov != fov || currentFov->isDirty())
 	{
-		*currentFov = *fov;
+		WriteToLog("Map : got new FOV.\n");
+		//*currentFov = *fov;
+		currentFov = fov;
+		/*currentFov->copyFromOther(fov);
+		for(int x=0; x < width; ++x)
+		{
+			for(int y=0; y < height; ++y)
+			{
+				if(currentFov->isTileVisible(x,y) != fov->isTileVisible(x,y))
+					WriteToLog("ACTUNG!\n");
+			}
+		}*/
 		updateCache();
+		currentFov->setDirty(false);
 	}
 }
 
 void Map::updateCache()
 {
-	//Utility::Logger::getInstance()->log("Rebuilding map cache\n");
-
+	Utility::Logger::getInstance()->log("Rebuilding map cache\n");
 
 	int dx = 0, dy = 0;
 
 	int max_tilex = (width < clip.w) ? width : (clip.x + clip.w);
 	int max_tiley = (height < clip.h) ? height : (clip.y + clip.h);
 	//Utility::Logger::getInstance()->log("max_tilex = %i, max_tiley = %i\n", max_tilex, max_tiley);
-	//Utility::Logger::getInstance()->log("Clipping rect: %i, %i, %i, %i\n", clip.x, clip.y, clip.w, clip.h);
+	Utility::Logger::getInstance()->log("Clipping rect: %i, %i, %i, %i\n", clip.x, clip.y, clip.w, clip.h);
 
 	for(int tiley=clip.y; tiley < max_tiley; ++tiley)
 	{
@@ -252,20 +266,18 @@ void Map::updateCache()
 
 void Map::draw(Graphics::Surface *target)
 {
+	//WriteToLog("Map::draw\n");
+	//Utility::Logger::getInstance()->log("Frame : (%i,%i)\n", frame.w, frame.h);
 	//FIXME: Maybe create cache to (0,0) and blit to real coordinates
-	cached->blit(target, 0, 0);
-	Graphics::Drawer(target).drawRect(frame, RGBColor::WHITE);
+	/*cached->blit(target, 0, 0);
+	Graphics::Drawer(target).drawRect(frame, RGBColor::WHITE);*/
+	draw(target, currentFov, true);
 }
 
 void Map::draw(Graphics::Surface *target, FieldOfView *fov, bool drawframe)
 {
 	int dx=0,dy=0;
 	
-	if(!(*lastFov == *fov)) //update cache, maybe it`s not so effective(FOV must be cloned)
-	{
-		updateCache();
-		*lastFov = *fov;
-	}
 	cached->blit(target, 0, 0);
 
 	if(drawframe)
