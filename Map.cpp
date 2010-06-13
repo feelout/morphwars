@@ -136,7 +136,8 @@ void Map::calculateSurfaces()
 			{
 				//printf("Current tile priority: %i\tNeighbour priority: %i\n", currentTilePriority,
 						//(*i)->getType()->getPriority());
-				if((*i)->getType()->getPriority() > currentTilePriority)
+				if( (*i)->getType()->getPriority() > currentTilePriority &&
+						(*i)->getHeight() >= currentTile->getHeight() )
 				{
 					//printf("Blitting neighbour surfaces for (%i,%i)\n", x, y);
 					Direction facing = (*i)->getDirection(currentTile);
