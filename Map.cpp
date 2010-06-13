@@ -21,7 +21,7 @@ bool CompareTiles(Tile *t1, Tile *t2)
 }
 
 Map::Map(Rect frame, int width, int height, std::string tilesetname, Widget *parent)
-	: Widget(frame, parent), width(width), height(height), cached(NULL), clip(0,0,0,0)
+	: Widget(frame, parent), width(width), height(height), cached(NULL), clip(0,0,0,0), maxTileHeight(1)
 {
 	tiles = new Tile*[width*height];
 	tileset = new TileSet(tilesetname);
@@ -36,7 +36,7 @@ Map::Map(Rect frame, int width, int height, std::string tilesetname, Widget *par
 	}
 
 	//width+1 because of tile shift
-	cached = new Graphics::Surface((width+1)*TILE_WIDTH, height*TILE_HEIGHT);
+	cached = new Graphics::Surface((width+1)*TILE_WIDTH, height*TILE_HEIGHT+TILE_HEIGHT_OFFSET*maxTileHeight);
 	//lastFov = new FieldOfView(width, height);
 	currentFov = new FieldOfView(width, height);
 
@@ -45,7 +45,7 @@ Map::Map(Rect frame, int width, int height, std::string tilesetname, Widget *par
 }
 
 Map::Map(Rect frame, TiXmlElement *xmlmap, Widget *parent)
-	: Widget(frame, parent), cached(NULL), clip(0,0,0,0)
+	: Widget(frame, parent), cached(NULL), clip(0,0,0,0), maxTileHeight(1)
 {
 	xmlmap->QueryIntAttribute("width", &width);
 	xmlmap->QueryIntAttribute("height", &height);
@@ -67,6 +67,7 @@ Map::Map(Rect frame, TiXmlElement *xmlmap, Widget *parent)
 		{
 			cell->ToElement()->QueryIntAttribute("height", &height);
 			tiles[x+y*width] = new Tile(x, y, height, tileset->getType(atoi(cell->ToElement()->GetText())));
+			maxTileHeight = std::max(tiles[x+y*width]->getHeight(), maxTileHeight);
 			++x;
 		}
 		x=0;
@@ -74,7 +75,8 @@ Map::Map(Rect frame, TiXmlElement *xmlmap, Widget *parent)
 	}
 
 	calculateSurfaces();
-	cached = new Graphics::Surface((width+1)*TILE_WIDTH, (height+1)*TILE_HEIGHT);
+	cached = new Graphics::Surface((width+1)*TILE_WIDTH, (height+1)*TILE_HEIGHT+
+			TILE_HEIGHT_LEVEL_OFFSET*maxTileHeight);
 	//lastFov = new FieldOfView(width, height); 
 	currentFov = new FieldOfView(width, height);
 
@@ -250,11 +252,12 @@ void Map::updateCache()
 	int max_tiley = (height < clip.h) ? height : (clip.y + clip.h);
 	//Utility::Logger::getInstance()->log("max_tilex = %i, max_tiley = %i\n", max_tilex, max_tiley);
 	Utility::Logger::getInstance()->log("Clipping rect: %i, %i, %i, %i\n", clip.x, clip.y, clip.w, clip.h);
+	Utility::Logger::getInstance()->log("Max tile height : %i\n", maxTileHeight);
 
 	for(int tiley=clip.y; tiley < max_tiley; ++tiley)
 	{
 		dx = (tiley % 2) * TILE_WIDTH/2;
-		dy = TILE_HEIGHT - TILE_TERRAIN_HEIGHT;
+		dy = TILE_HEIGHT - TILE_TERRAIN_HEIGHT - TILE_HEIGHT_LEVEL_OFFSET * maxTileHeight;
 
 		for(int tilex=clip.x; tilex < max_tilex; ++tilex)
 		{
@@ -278,7 +281,7 @@ void Map::draw(Graphics::Surface *target, FieldOfView *fov, bool drawframe)
 {
 	int dx=0,dy=0;
 	
-	cached->blit(target, 0, 0);
+	cached->blit(target, 0, TILE_HEIGHT_LEVEL_OFFSET*maxTileHeight);
 
 	if(drawframe)
 	{

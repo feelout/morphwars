@@ -298,6 +298,7 @@ std::vector< std::pair<int, int> > Tile::getNeighbours() const
 
 void Tile::draw(Graphics::Surface *target, int x, int y, bool visible)
 {
+	Utility::Logger::getInstance()->log("Tile(%i,%i)::draw(%i,%i)\n", this->x , this->y, x, y);
 	for(int h=0; h < height; ++h)
 	{
 		getType()->getLeftHeightFiller()->blit(target, x, y);

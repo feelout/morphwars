@@ -16,6 +16,7 @@ namespace Core
 	{
 		private:
 			Tile **tiles;
+			int maxTileHeight;
 			TileSet *tileset;
 
 			int width,height;
