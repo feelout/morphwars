@@ -58,6 +58,16 @@ Graphics::Surface* TileType::getRightHeightFiller() const
 	return surfaces[10];
 }
 
+Graphics::Surface* TileType::getLeftHeightTransition() const
+{
+	return surfaces[11];
+}
+
+Graphics::Surface* TileType::getRightHeightTransition() const
+{
+	return surfaces[12];
+}
+
 int TileType::getPriority() const
 {
 	return priority;
@@ -73,12 +83,11 @@ Tile::Tile(int x, int y, int height, TileType *type)
 {
 	//printf("Tile (%i,%i) created\n", x, y);
 	image = type->getTileImage(CENTER);
+	leftHeightLevelImages = new Graphics::Surface*[height];
+	rightHeightLevelImages = new Graphics::Surface*[height];
+	std::fill(leftHeightLevelImages, leftHeightLevelImages + height, type->getLeftHeightFiller());
+	std::fill(rightHeightLevelImages, rightHeightLevelImages + height, type->getRightHeightFiller());
 }
-
-/*void Tile::setImageType(TileImageType imgtype)
-{
-	image = type->getTileImage(imgtype);
-}*/
 
 void Tile::setImage(Graphics::Surface *image)
 {
@@ -249,6 +258,16 @@ int Tile::getHeight() const
 	return height;
 }
 
+/*int Tile::getTopY() const
+{
+	return topY;
+}*/
+
+std::pair<int, int> Tile::getTopCoords() const
+{
+	return topCoords;
+}
+
 //Returns 4 neighbours
 std::vector< std::pair<int, int> > Tile::getDiagonalNeighbours() const
 {
@@ -301,10 +320,16 @@ void Tile::draw(Graphics::Surface *target, int x, int y, bool visible)
 	Utility::Logger::getInstance()->log("Tile(%i,%i)::draw(%i,%i)\n", this->x , this->y, x, y);
 	for(int h=0; h < height; ++h)
 	{
-		getType()->getLeftHeightFiller()->blit(target, x, y);
-		getType()->getRightHeightFiller()->blit(target, x, y);
+		//getType()->getLeftHeightFiller()->blit(target, x, y);
+		//getType()->getRightHeightFiller()->blit(target, x, y);
+		// FIXME : Change 0 to h
+		leftHeightLevelImages[0]->blit(target, x, y);
+		rightHeightLevelImages[0]->blit(target, x, y);
 		y -= TILE_HEIGHT_LEVEL_OFFSET;
 	}
+	Utility::Logger::getInstance()->log("Tile(%i,%i) : final top y = %i\n", this->x, this->y, y);
+	//topY = y;
+	topCoords = std::make_pair(x, y);
 	if(visible)
 	{
 		image->blit(target, x, y);

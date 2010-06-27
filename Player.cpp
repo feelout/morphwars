@@ -228,23 +228,27 @@ void Player::renderObjects(Graphics::Surface *target, const FieldOfView *fov, co
 
 	int dx,dy;
 	int tilex,tiley;
+	int mapDelta = map->getMaxTileHeight() * TILE_HEIGHT_LEVEL_OFFSET;
 
 	for(i = units.begin(); i != units.end(); ++i)
 	{
 		tilex = (*i)->getTile()->getX();
 		tiley = (*i)->getTile()->getY();
+		std::pair<int, int> tileTopCoords = (*i)->getTile()->getTopCoords();
 
 		if(!map->getClipping().isPointInRect(tilex, tiley))
 			continue;
 
-		//FIXME: Change coordinates when shifted
-		dx = (tiley % 2) * TILE_WIDTH/2 + map->getFrame().x - map->getClipping().x * TILE_WIDTH;
-		dy = TILE_HEIGHT - TILE_TERRAIN_HEIGHT - map->getFrame().y + map->getClipping().y * (TILE_HEIGHT / 2);
+		//dx = (tiley % 2) * TILE_WIDTH/2 - map->getFrame().x /*- map->getClipping().x * TILE_WIDTH*/;
+		//dy = TILE_HEIGHT - TILE_TERRAIN_HEIGHT - map->getFrame().y /*+ map->getClipping().y * (TILE_HEIGHT / 2)*/
+		//		+ mapDelta;
 
 		if(fov->isTileVisible(tilex, tiley))
 		{
-			(*i)->draw(target,dx+(tilex*TILE_WIDTH),
-				(tiley*(TILE_HEIGHT_OFFSET)-dy));
+			/*(*i)->draw(target,dx+(tilex*TILE_WIDTH),
+				(tiley*(TILE_HEIGHT_OFFSET)-dy));*/
+			//(*i)->draw(target, dx + (tilex*TILE_WIDTH), (*i)->getTile()->getTopY());
+			(*i)->draw(target, tileTopCoords.first, tileTopCoords.second+mapDelta);
 		}
 	}
 }

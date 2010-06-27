@@ -57,7 +57,7 @@ namespace Core
 		HIGHAIR,
 	};
 
-	const int TILE_IMAGES_NUM = 11;
+	const int TILE_IMAGES_NUM = 13;
 	const int MOVEMENT_TYPES_NUM = 5;
 
 	struct MovementCosts
@@ -104,6 +104,8 @@ namespace Core
 			Graphics::Surface *getTileImage(Direction type) const;
 			Graphics::Surface *getLeftHeightFiller() const;
 			Graphics::Surface *getRightHeightFiller() const;
+			Graphics::Surface *getLeftHeightTransition() const;
+			Graphics::Surface *getRightHeightTransition() const;
 
 			int getPriority() const;
 			int getMovementCost(MovementType type) const;
@@ -118,12 +120,16 @@ namespace Core
 			int x,y; //might be not needed
 			Graphics::Surface *image;
 			Graphics::Surface *shadowedImage;
+			Graphics::Surface **leftHeightLevelImages;
+			Graphics::Surface **rightHeightLevelImages;
 			TileType *type;
 			//Units and building occupying
 			std::vector<MapObject*> objects;
 			MapObject* topobject;
 
 			int height;
+			//int topY; //FIXME: do smth with this
+			std::pair<int, int> topCoords;
 		public:
 			Tile(int x, int y, int height, TileType *type);
 
@@ -162,6 +168,8 @@ namespace Core
 			int getX() const;
 			int getY() const;
 			int getHeight() const;
+			//int getTopY() const; /* y coord, where to draw object */
+			std::pair<int, int> getTopCoords() const;
 
 			/**
 			 * Calculates tile neighbours

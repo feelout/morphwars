@@ -69,8 +69,13 @@ MapObject::~MapObject()
 
 void MapObject::draw(Graphics::Surface *target, int x, int y)
 {
+	// TODO : Draw only if is top object on tile
 	if(dead)
 		return;
+
+	//y -= (TILE_HEIGHT_LEVEL_OFFSET * (getTile()->getHeight()));
+	//y -= TILE_HEIGHT_LEVEL_OFFSET;
+
 	//if( (owner->isCurrent()) && (owner->getSelectedObject() == this) )
 	if( (owner->isCurrent()) && selected )
 	{
@@ -78,6 +83,8 @@ void MapObject::draw(Graphics::Surface *target, int x, int y)
 		Graphics::Surface selection = Graphics::Surface("Gfx/Selection.png");
 		selection.blit(target, x+int(dx), y+int(dy));
 	}
+	Utility::Logger::getInstance()->log("MapObject(%i,%i)::draw(%i,%i)\n",
+		getTile()->getX(), getTile()->getY(), x+int(dx), y+int(dy));
 	type->getGraphics()->getCurrent()->draw(target, x+int(dx), y+int(dy));
 }
 

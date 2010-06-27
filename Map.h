@@ -61,6 +61,8 @@ namespace Core
 
 			void setFieldOfView(FieldOfView *fov);
 
+			int getMaxTileHeight() const;
+
 			// How to make it consistent with definition of Widget::draw?? TODO: STOPPED HERE
 			void draw(Graphics::Surface *target, FieldOfView *fov, bool drawframe=true);
 			void draw(Graphics::Surface *target);

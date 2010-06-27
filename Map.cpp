@@ -243,6 +243,11 @@ void Map::setFieldOfView(FieldOfView *fov)
 	}
 }
 
+int Map::getMaxTileHeight() const
+{
+	return maxTileHeight;
+}
+
 void Map::updateCache()
 {
 	Utility::Logger::getInstance()->log("Rebuilding map cache\n");
@@ -295,10 +300,10 @@ Tile* Map::getTileByMouseCoords(int mx, int my)
 	Graphics::Surface coordFinder("Gfx/CoordFinder.png");
 
 	int rectX = (mx-frame.x) / coordFinder.getWidth();
-	int rectY = (my-frame.y) / coordFinder.getHeight() * 2;
+	int rectY = (my-frame.y-(maxTileHeight+1)*TILE_HEIGHT_LEVEL_OFFSET) / coordFinder.getHeight() * 2;
 
 	int cf_x = (mx-frame.x) % coordFinder.getWidth();
-	int cf_y = (my-frame.y) % coordFinder.getHeight();
+	int cf_y = (my-frame.y-(maxTileHeight+1)*TILE_HEIGHT_LEVEL_OFFSET) % coordFinder.getHeight();
 
 	int tilex, tiley;
 
