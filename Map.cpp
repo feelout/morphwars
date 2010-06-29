@@ -59,6 +59,7 @@ Map::Map(Rect frame, TiXmlElement *xmlmap, Widget *parent)
 	TiXmlNode *row=NULL, *cell=NULL;
 	int x=0, y=0;
 	int height;
+	std::string cliff;
 
 	while(row = xmlmap->IterateChildren("row", row))
 	{
@@ -67,6 +68,10 @@ Map::Map(Rect frame, TiXmlElement *xmlmap, Widget *parent)
 		{
 			cell->ToElement()->QueryIntAttribute("height", &height);
 			tiles[x+y*width] = new Tile(x, y, height, tileset->getType(atoi(cell->ToElement()->GetText())));
+
+			if(cell->ToElement()->QueryStringAttribute("cliff", &cliff) == TIXML_SUCCESS)
+				tiles[x+y*width]->setCliffDirection(Tile::StringToDirection(cliff));
+
 			maxTileHeight = std::max(tiles[x+y*width]->getHeight(), maxTileHeight);
 			++x;
 		}
@@ -100,11 +105,18 @@ void Map::calculateSurfaces()
 	{
 		for(int x=0; x < width; ++x)
 		{
+			Tile *currentTile = getTile(x,y);
+
+			if(currentTile->isCliff())
+			{
+				currentTile->setImage(currentTile->getType()->
+							getCliffImage(currentTile->getCliffDirection()));
+				continue;
+			}
 			//TODO: Cache instead of producting unneeded copies
 			/** Check neighbours **/
 			Graphics::Surface *tilesurf = new Graphics::Surface(TILE_WIDTH, TILE_HEIGHT);
 
-			Tile *currentTile = getTile(x,y);
 			currentTile->getType()->getTileImage(CENTER)->blit(tilesurf, 0, 0);
 
 			int currentTilePriority = currentTile->getType()->getPriority();

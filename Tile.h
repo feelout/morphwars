@@ -57,7 +57,8 @@ namespace Core
 		HIGHAIR,
 	};
 
-	const int TILE_IMAGES_NUM = 13;
+	/* Center + 8 transitions + 2 height fillers + 2 transitions + 4 cliffs */
+	const int TILE_IMAGES_NUM = 17;
 	const int MOVEMENT_TYPES_NUM = 5;
 
 	struct MovementCosts
@@ -106,6 +107,7 @@ namespace Core
 			Graphics::Surface *getRightHeightFiller() const;
 			Graphics::Surface *getLeftHeightTransition() const;
 			Graphics::Surface *getRightHeightTransition() const;
+			Graphics::Surface *getCliffImage(Direction direction) const;
 
 			int getPriority() const;
 			int getMovementCost(MovementType type) const;
@@ -128,7 +130,7 @@ namespace Core
 			MapObject* topobject;
 
 			int height;
-			//int topY; //FIXME: do smth with this
+			Direction cliff;
 			std::pair<int, int> topCoords;
 		public:
 			Tile(int x, int y, int height, TileType *type);
@@ -171,6 +173,10 @@ namespace Core
 			//int getTopY() const; /* y coord, where to draw object */
 			std::pair<int, int> getTopCoords() const;
 
+			bool isCliff() const;
+			Direction getCliffDirection() const;
+			void setCliffDirection(Direction direction);
+
 			/**
 			 * Calculates tile neighbours
 			 * @return Coordinates of tile neighbours
@@ -183,6 +189,7 @@ namespace Core
 
 			static std::pair<int, int> translateCoordinates(int x, int y, Direction direction);
 			static std::string DirectionToString(Direction direction);
+			static Direction StringToDirection(std::string direction);
 	};
 }
 

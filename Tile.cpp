@@ -68,6 +68,24 @@ Graphics::Surface* TileType::getRightHeightTransition() const
 	return surfaces[12];
 }
 
+Graphics::Surface* TileType::getCliffImage(Direction direction) const
+{
+	switch(direction)
+	{
+		case SOUTHWEST:
+			return surfaces[13];
+		case NORTHWEST:
+			return surfaces[14];
+		case NORTHEAST:
+			return surfaces[15];
+		case SOUTHEAST:
+			return surfaces[16];
+		default:
+			Utility::Logger::getInstance()->log("Invalid cliff direction\n");
+			return NULL;
+	}
+}
+
 int TileType::getPriority() const
 {
 	return priority;
@@ -79,7 +97,7 @@ int TileType::getMovementCost(MovementType type) const
 }
 
 Tile::Tile(int x, int y, int height, TileType *type)
-	: x(x), y(y), height(height), type(type), topobject(NULL)
+	: x(x), y(y), height(height), type(type), topobject(NULL), cliff(CENTER)
 {
 	//printf("Tile (%i,%i) created\n", x, y);
 	image = type->getTileImage(CENTER);
@@ -268,6 +286,21 @@ std::pair<int, int> Tile::getTopCoords() const
 	return topCoords;
 }
 
+bool Tile::isCliff() const
+{
+	return cliff != CENTER;
+}
+
+Direction Tile::getCliffDirection() const
+{
+	return cliff;
+}
+
+void Tile::setCliffDirection(Direction direction)
+{
+	cliff = direction;
+}
+
 //Returns 4 neighbours
 std::vector< std::pair<int, int> > Tile::getDiagonalNeighbours() const
 {
@@ -346,13 +379,16 @@ void Tile::draw(Graphics::Surface *target, int x, int y, bool visible)
 	// Drawing grid
 	Graphics::Drawer drawer(target);
 	RGBColor gridcolor(255, 255, 255);
-	drawer.drawLine(x, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET, x + TILE_WIDTH / 2, y + TILE_HEIGHT - TILE_TERRAIN_HEIGHT,
-			gridcolor);
-	drawer.drawLine(x + TILE_WIDTH / 2, y + TILE_HEIGHT - TILE_TERRAIN_HEIGHT,
-			x + TILE_WIDTH, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET, gridcolor);
-	drawer.drawLine(x + TILE_WIDTH, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET,
-			x + TILE_WIDTH / 2, y + TILE_HEIGHT, gridcolor);
-	drawer.drawLine(x + TILE_WIDTH / 2, y +TILE_HEIGHT, x, y +TILE_HEIGHT - TILE_HEIGHT_OFFSET, gridcolor);
+	if(!isCliff()) 
+	{
+		drawer.drawLine(x, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET, x + TILE_WIDTH / 2, y + TILE_HEIGHT - TILE_TERRAIN_HEIGHT,
+				gridcolor);
+		drawer.drawLine(x + TILE_WIDTH / 2, y + TILE_HEIGHT - TILE_TERRAIN_HEIGHT,
+				x + TILE_WIDTH, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET, gridcolor);
+		drawer.drawLine(x + TILE_WIDTH, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET,
+				x + TILE_WIDTH / 2, y + TILE_HEIGHT, gridcolor);
+		drawer.drawLine(x + TILE_WIDTH / 2, y +TILE_HEIGHT, x, y +TILE_HEIGHT - TILE_HEIGHT_OFFSET, gridcolor);
+	}
 	// Drawing height borders
 	drawer.drawLine(x, y + TILE_HEIGHT - TILE_HEIGHT_OFFSET, x,
 				y + TILE_HEIGHT - TILE_HEIGHT_OFFSET + height * TILE_HEIGHT_LEVEL_OFFSET,
@@ -428,4 +464,26 @@ std::string Tile::DirectionToString(Direction direction)
 		case WEST:
 			return "W";
 	}
+}
+
+Direction Tile::StringToDirection(std::string direction)
+{
+	if(direction == "N")
+		return NORTH;
+	else if(direction == "NE")
+		return NORTHEAST;
+	else if(direction == "E")
+		return EAST;
+	else if(direction == "SE")
+		return SOUTHEAST;
+	else if(direction == "S")
+		return SOUTH;
+	else if(direction == "SW")
+		return SOUTHWEST;
+	else if(direction == "W")
+		return WEST;
+	else if(direction == "NW")
+		return NORTHWEST;
+	else
+		return CENTER;
 }
