@@ -206,7 +206,7 @@ int Tile::getDistance(Tile *dst) const //FIXME, check from (1,1) to (2,3)
 	return distance;
 }
 
-bool Tile::canBeAdded(MapObject *object)
+bool Tile::canBeAdded(const MapObject *object) const
 {
 	return ( (objects.empty()) || (!isEnemy(object)) );
 }
@@ -248,7 +248,7 @@ MapObject* Tile::getTopObject() const
 	return topobject;
 }
 
-bool Tile::isEnemy(MapObject *object) const
+bool Tile::isEnemy(const MapObject *object) const
 {
 	//Utility::Logger::getInstance()->log("(%i,%i)->isEnemy()\n", x, y);
 	if(objects.size() != 0)
@@ -350,7 +350,7 @@ std::vector< std::pair<int, int> > Tile::getNeighbours() const
 
 void Tile::draw(Graphics::Surface *target, int x, int y, bool visible)
 {
-	Utility::Logger::getInstance()->log("Tile(%i,%i)::draw(%i,%i)\n", this->x , this->y, x, y);
+	//Utility::Logger::getInstance()->log("Tile(%i,%i)::draw(%i,%i)\n", this->x , this->y, x, y);
 	for(int h=0; h < height; ++h)
 	{
 		//getType()->getLeftHeightFiller()->blit(target, x, y);
@@ -360,7 +360,7 @@ void Tile::draw(Graphics::Surface *target, int x, int y, bool visible)
 		rightHeightLevelImages[0]->blit(target, x, y);
 		y -= TILE_HEIGHT_LEVEL_OFFSET;
 	}
-	Utility::Logger::getInstance()->log("Tile(%i,%i) : final top y = %i\n", this->x, this->y, y);
+	//Utility::Logger::getInstance()->log("Tile(%i,%i) : final top y = %i\n", this->x, this->y, y);
 	//topY = y;
 	topCoords = std::make_pair(x, y);
 	if(visible)
@@ -463,6 +463,8 @@ std::string Tile::DirectionToString(Direction direction)
 			return "SW";
 		case WEST:
 			return "W";
+		case CENTER:
+			return "C";
 	}
 }
 

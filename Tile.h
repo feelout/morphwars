@@ -155,7 +155,7 @@ namespace Core
 			 */
 			int getDistance(Tile *dst) const;
 
-			bool canBeAdded(MapObject *object);
+			bool canBeAdded(const MapObject *object) const;
 			bool addObject(MapObject *object);
 			void removeObject(MapObject *object);
 			MapObject* getTopObject() const;
@@ -165,7 +165,7 @@ namespace Core
 			 * @param object Object
 			 * @return true if tile objects are on the same force
 			 */
-			bool isEnemy(MapObject *object) const;
+			bool isEnemy(const MapObject *object) const;
 
 			int getX() const;
 			int getY() const;

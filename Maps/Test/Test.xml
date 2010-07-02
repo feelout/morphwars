@@ -29,7 +29,7 @@
 			<cell height="1">0</cell>
 			<cell height="1">1</cell>
 			<cell height="1">0</cell>
-			<cell height="1">2</cell>
+			<cell height="1" cliff="SE">2</cell>
 			<cell height="1">2</cell>
 		</row>
 	</map>

@@ -83,13 +83,14 @@ bool MovementOrder::makePath()
 {
 	Unit *unit = static_cast<Unit*>(object);
 
-	/*Utility::Logger::getInstance()->log("Calculating path from (%i,%i) to (%i,%i)\n", unit->getTile()->getX(),
-		unit->getTile()->getY(), target->getX(), target->getY());*/
+	Utility::Logger::getInstance()->log("A* : Calculating path from (%i,%i) to (%i,%i)\n", unit->getTile()->getX(),
+		unit->getTile()->getY(), target->getX(), target->getY());
 
 	int distance = unit->getTile()->getDistance(target);
 
 	if(distance == 0)
 	{
+		Utility::Logger::getInstance()->log("A* : Zero distance, aborting\n");
 		return false;
 	}
 	// TODO: if dist == 1, move without A*
@@ -106,8 +107,8 @@ bool MovementOrder::makePath()
 
 	while(currentNode->getSource() != target)
 	{
-		//Utility::Logger::getInstance()->log("Iteration: currentNode = (%i,%i)\n",
-			//currentNode->getSource()->getX(), currentNode->getSource()->getY());
+		Utility::Logger::getInstance()->log("A* : Iteration: currentNode = (%i,%i)\n",
+			currentNode->getSource()->getX(), currentNode->getSource()->getY());
 		// Adding neighbours to open list 
 		std::vector< std::pair<int,int> > neighbourCoords = currentNode->getSource()->getNeighbours();
 		std::vector< std::pair<int,int> >::iterator nb_iter;
@@ -119,9 +120,11 @@ bool MovementOrder::makePath()
 			// Checking for validity
 			int nbx = nb_iter->first;
 			int nby = nb_iter->second;
+			Utility::Logger::getInstance()->log("A* : Checking neighbour (%i,%i)\n", nbx, nby);
 
 			if( (nbx < 0) || (nbx >= map->getWidth()) || (nby < 0) || (nby >= map->getHeight()) )
 			{
+				Utility::Logger::getInstance()->log("A* : Neighbour outside of map bounds.\n");
 				continue;
 			}
 
@@ -134,6 +137,7 @@ bool MovementOrder::makePath()
 				if( ((*check)->getSource()->getX() == nb_iter->first)
 						&& ((*check)->getSource()->getY() == nb_iter->second) )
 				{
+					WriteToLog("A* : Neighbour already in closed list\n");
 					alreadyInCList = true;
 					break;
 				}
@@ -149,10 +153,16 @@ bool MovementOrder::makePath()
 			if((unit->getOwner()->getFieldOfView()->isTileVisible(nbx, nby))
 						&& (map->getTile(nbx, nby)->isEnemy(unit)))
 			{
-				//Utility::Logger::getInstance()->log("Enemy in view\n");
+				Utility::Logger::getInstance()->log("A* : Enemy on tile\n");
 				continue;
 			}
 
+			if( !unit->canMoveFromTo(closedlist.back()->getSource(),
+					map->getTile(nbx, nby)))
+			{
+				Utility::Logger::getInstance()->log("A* : Tile inaccessible\n");
+				continue;
+			}
 			// Everything is OK 
 
 			AStar::Node *node = new AStar::Node(currentNode, map->getTile(nbx, nby),
@@ -177,6 +187,12 @@ bool MovementOrder::makePath()
 				// Free unneeded node
 				delete node;
 			}
+		}
+
+		if(!minimumNode)
+		{
+			Utility::Logger::getInstance()->log("A* : Unable to find path.\n");
+			return false;
 		}
 
 		closedlist.push_back(minimumNode);

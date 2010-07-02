@@ -87,6 +87,8 @@ namespace Core
 			 */
 			bool moveTo(Tile *tile);
 
+			bool canMoveFromTo(Tile *src, Tile *dst) const;
+
 			/**
 			 * Attacks unit within attack range
 			 * @param tile Tile to attack
