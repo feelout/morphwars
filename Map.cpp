@@ -6,9 +6,7 @@
 
 using namespace Core;
 using namespace Gui;
-
-//const int MAP_MINIMAL_FRAME_WIDTH = 400;
-//const int MAP_MINIMAL_FRAME_HEIGHT = 300;
+using Graphics::Surface;
 
 bool CompareTiles(Tile *t1, Tile *t2)
 {
@@ -16,7 +14,6 @@ bool CompareTiles(Tile *t1, Tile *t2)
 	{
 		return false;
 	}
-	//printf("CompareTiles: (%i,%i) vs (%i,%i)\n", t1->getX(), t1->getY(), t2->getX(), t2->getY());
 	return t1->getType()->getPriority() > t2->getType()->getPriority();
 }
 
@@ -36,11 +33,10 @@ Map::Map(Rect frame, int width, int height, std::string tilesetname, Widget *par
 	}
 
 	//width+1 because of tile shift
-	cached = new Graphics::Surface((width+1)*TILE_WIDTH, height*TILE_HEIGHT+TILE_HEIGHT_OFFSET*maxTileHeight);
+	cached = new Surface((width+1)*TILE_WIDTH, height*TILE_HEIGHT+TILE_HEIGHT_OFFSET*maxTileHeight);
 	//lastFov = new FieldOfView(width, height);
 	currentFov = new FieldOfView(width, height);
 
-	//requestedFrame = Rect(0, 0, MAP_MINIMAL_FRAME_WIDTH, MAP_MINIMAL_FRAME_HEIGHT); 
 	recalculateClipping(); //TODO: Check if Widget constructor calls frameChanged(). If so, delete this
 }
 
@@ -53,7 +49,7 @@ Map::Map(Rect frame, TiXmlElement *xmlmap, Widget *parent)
 	Utility::Logger::getInstance()->log("Map dimensions: %ix%i\n", width, height);
 
 	tileset = new TileSet(xmlmap->Attribute("tileset"));
-	//printf("tiles = new Tile*[%i]\n", width * height);
+
 	tiles = new Tile*[width*height];
 
 	TiXmlNode *row=NULL, *cell=NULL;
@@ -63,7 +59,6 @@ Map::Map(Rect frame, TiXmlElement *xmlmap, Widget *parent)
 
 	while(row = xmlmap->IterateChildren("row", row))
 	{
-		//FIXME: atoi(cell->Value()) is somehow always zero
 		while(cell = row->IterateChildren("cell", cell))
 		{
 			cell->ToElement()->QueryIntAttribute("height", &height);
@@ -80,14 +75,10 @@ Map::Map(Rect frame, TiXmlElement *xmlmap, Widget *parent)
 	}
 
 	calculateSurfaces();
-	cached = new Graphics::Surface((width+1)*TILE_WIDTH, (height+1)*TILE_HEIGHT+
+	cached = new Surface((width+1)*TILE_WIDTH, (height+1)*TILE_HEIGHT+
 			TILE_HEIGHT_LEVEL_OFFSET*maxTileHeight);
-	//lastFov = new FieldOfView(width, height); 
 	currentFov = new FieldOfView(width, height);
 
-	//requestedFrame = Rect(0, 0, MAP_MINIMAL_FRAME_WIDTH, MAP_MINIMAL_FRAME_HEIGHT); 
-	//setFrame(frame);
-	//
 	recalculateClipping(); // TODO: same as in previous constructor
 }
 
@@ -107,17 +98,42 @@ void Map::calculateSurfaces()
 		{
 			Tile *currentTile = getTile(x,y);
 
-			if(currentTile->isCliff())
+			/*if(currentTile->isCliff())
 			{
+				// FIXME FIXME FIXME FOUND IT TODO TODO TODO
 				currentTile->setImage(currentTile->getType()->
 							getCliffImage(currentTile->getCliffDirection()));
 				continue;
-			}
+			}*/
 			//TODO: Cache instead of producting unneeded copies
 			/** Check neighbours **/
-			Graphics::Surface *tilesurf = new Graphics::Surface(TILE_WIDTH, TILE_HEIGHT);
+			//Surface *tilesurf = new Surface(TILE_WIDTH, TILE_HEIGHT);
+			Surface *tilesurf = NULL;
 
-			currentTile->getType()->getTileImage(CENTER)->blit(tilesurf, 0, 0);
+			if(currentTile->isCliff())
+				tilesurf = currentTile->getType()->getCliffImage(currentTile->getCliffDirection());
+			else
+				tilesurf = new Surface(TILE_WIDTH, TILE_HEIGHT);
+			/*Surface **leftFillers = new Surface*[currentTile->getHeight()];
+			Surface **rightFillers = new Surface*[currentTile->getHeight()];*/
+
+			/* FIXME: Those two should probably use (height-1) as multiplier */
+			Surface *leftHeightImage = new Surface(TILE_WIDTH,
+					TILE_HEIGHT + currentTile->getHeight() * TILE_HEIGHT_LEVEL_OFFSET);
+					//+ currentTile->isCliff() ? TILE_HEIGHT_LEVEL_OFFSET : 0);
+			Surface *rightHeightImage = new Surface(TILE_WIDTH,
+					TILE_HEIGHT + currentTile->getHeight() * TILE_HEIGHT_LEVEL_OFFSET);
+					//+ currentTile->isCliff() ? TILE_HEIGHT_LEVEL_OFFSET : 0);
+
+			// Create initial height fillers, not influenced by neighbours
+			for(int i=0, y=leftHeightImage->getHeight(); i < currentTile->getHeight(); ++i, y -= TILE_HEIGHT_LEVEL_OFFSET)
+			{
+				currentTile->getType()->getLeftHeightFiller()->blit(leftHeightImage, 0, y);	
+				currentTile->getType()->getRightHeightFiller()->blit(rightHeightImage, 0, y);	
+			}
+
+			if(!currentTile->isCliff())
+				currentTile->getType()->getTileImage(CENTER)->blit(tilesurf, 0, 0);
 
 			int currentTilePriority = currentTile->getType()->getPriority();
 
@@ -135,32 +151,65 @@ void Map::calculateSurfaces()
 				}
 			}
 
-			//printf("Neighbours: %i\n", neighbours.size());
-
-			//ENDDEBUG
-
 			/** Sort neighbours by priority **/
 			std::sort(neighbours.begin(), neighbours.end(), CompareTiles);
 
-			//printf("Blitting neighbour surfaces for (%i,%i)\n", x, y);
 			/** Blit neighbour surfaces **/
 			for(std::vector<Tile*>::iterator i=neighbours.begin(); i != neighbours.end(); ++i)
 			{
-				//printf("Current tile priority: %i\tNeighbour priority: %i\n", currentTilePriority,
-						//(*i)->getType()->getPriority());
-				if( (*i)->getType()->getPriority() > currentTilePriority &&
-						(*i)->getHeight() >= currentTile->getHeight() )
+				// XXX: Pull up common thing
+				// Add terrain transitions
+				if( !currentTile->isCliff() && (*i)->getType()->getPriority() > currentTilePriority &&
+						( (*i)->getHeight() >= currentTile->getHeight() 
+						  || (*i)->getHeight() == currentTile->getHeight()-1
+						  && (*i)->getCliffDirection() == currentTile->getDirection((*i)))
+				  )
 				{
-					//printf("Blitting neighbour surfaces for (%i,%i)\n", x, y);
 					Direction facing = (*i)->getDirection(currentTile);
-					//Direction facing = currentTile->getDirection((*i));
-
-					//printf("\tTile: (%i,%i), Facing: %i\n", (*i)->getX(), (*i)->getY(), facing);
 
 					(*i)->getType()->getTileImage(facing)->blit(tilesurf, 0, 0);
-				} }
+				} 
+				// Add height transitions
+				if( (*i)->getType()->getPriority() > currentTilePriority )
+				{
+					Direction facing = (*i)->getDirection(currentTile);
+					Surface *targetHeightFiller = NULL;
+					
+					switch(facing)
+					{
+						case NORTHWEST:
+						case SOUTHEAST:
+							targetHeightFiller = leftHeightImage;
+							break;
+						case NORTHEAST:
+						case SOUTHWEST:
+							targetHeightFiller = rightHeightImage;
+							break;
+						default:
+							continue;
+					}
+
+					Surface *transition = (*i)->getType()->getHeightTransition(facing);
+
+					for(int h=0, y=leftHeightImage->getHeight(); h < (*i)->getHeight(); ++h)
+					{
+						transition->blit(targetHeightFiller, 0, y);
+						y -= TILE_HEIGHT_LEVEL_OFFSET;
+					}
+				}
+			}
 
 			currentTile->setImage(tilesurf);
+			//XXX HEAVY DEBUG
+			if(currentTile->getX() == 3 && currentTile->getY() == 2)
+			{
+				if(!leftHeightImage)
+					WriteToLog("Left height image = NULL\n");
+				if(!rightHeightImage)
+					WriteToLog("Right heigh image = NULL\n");
+			}
+			currentTile->setLeftHeightLevelImage(leftHeightImage);
+			currentTile->setRightHeightLevelImage(rightHeightImage);
 		}
 	}
 }
@@ -206,17 +255,6 @@ void Map::frameUpdated()
 	drawer.fillRect(Rect(0, 0, cached->getWidth(), cached->getHeight()), RGBColor::BLACK);
 }
 
-/*void Map::setFrame(Rect frame)
-{
-	this->frame = frame;
-	recalculateClipping();
-}*/
-
-/*Rect Map::getFrame() const
-{
-	return frame;
-}*/
-
 void Map::setPointOfView(int x, int y)
 {
 	clip.x = x;
@@ -235,21 +273,9 @@ Rect Map::getClipping() const
 
 void Map::setFieldOfView(FieldOfView *fov)
 {
-	//if(!(*currentFov == *fov))
 	if(currentFov != fov || currentFov->isDirty())
 	{
-		//WriteToLog("Map : got new FOV.\n");
-		//*currentFov = *fov;
 		currentFov = fov;
-		/*currentFov->copyFromOther(fov);
-		for(int x=0; x < width; ++x)
-		{
-			for(int y=0; y < height; ++y)
-			{
-				if(currentFov->isTileVisible(x,y) != fov->isTileVisible(x,y))
-					WriteToLog("ACTUNG!\n");
-			}
-		}*/
 		updateCache();
 		currentFov->setDirty(false);
 	}
@@ -262,15 +288,10 @@ int Map::getMaxTileHeight() const
 
 void Map::updateCache()
 {
-	//Utility::Logger::getInstance()->log("Rebuilding map cache\n");
-
 	int dx = 0, dy = 0;
 
 	int max_tilex = (width < clip.w) ? width : (clip.x + clip.w);
 	int max_tiley = (height < clip.h) ? height : (clip.y + clip.h);
-	//Utility::Logger::getInstance()->log("max_tilex = %i, max_tiley = %i\n", max_tilex, max_tiley);
-	//Utility::Logger::getInstance()->log("Clipping rect: %i, %i, %i, %i\n", clip.x, clip.y, clip.w, clip.h);
-	//Utility::Logger::getInstance()->log("Max tile height : %i\n", maxTileHeight);
 
 	for(int tiley=clip.y; tiley < max_tiley; ++tiley)
 	{
@@ -285,17 +306,12 @@ void Map::updateCache()
 	}
 }
 
-void Map::draw(Graphics::Surface *target)
+void Map::draw(Surface *target)
 {
-	//WriteToLog("Map::draw\n");
-	//Utility::Logger::getInstance()->log("Frame : (%i,%i)\n", frame.w, frame.h);
-	//FIXME: Maybe create cache to (0,0) and blit to real coordinates
-	/*cached->blit(target, 0, 0);
-	Graphics::Drawer(target).drawRect(frame, RGBColor::WHITE);*/
 	draw(target, currentFov, true);
 }
 
-void Map::draw(Graphics::Surface *target, FieldOfView *fov, bool drawframe)
+void Map::draw(Surface *target, FieldOfView *fov, bool drawframe)
 {
 	int dx=0,dy=0;
 	
@@ -309,7 +325,7 @@ void Map::draw(Graphics::Surface *target, FieldOfView *fov, bool drawframe)
 
 Tile* Map::getTileByMouseCoords(int mx, int my)
 {
-	Graphics::Surface coordFinder("Gfx/CoordFinder.png");
+	Surface coordFinder("Gfx/CoordFinder.png");
 
 	int rectX = (mx-frame.x) / coordFinder.getWidth();
 	int rectY = (my-frame.y-(maxTileHeight+1)*TILE_HEIGHT_LEVEL_OFFSET) / coordFinder.getHeight() * 2;

@@ -57,8 +57,8 @@ namespace Core
 		HIGHAIR,
 	};
 
-	/* Center + 8 transitions + 2 height fillers + 2 transitions + 4 cliffs */
-	const int TILE_IMAGES_NUM = 17;
+	/* Center + 8 transitions + 2 height fillers + 4 transitions + 4 cliffs */
+	const int TILE_IMAGES_NUM = 19;
 	const int MOVEMENT_TYPES_NUM = 5;
 
 	struct MovementCosts
@@ -100,14 +100,14 @@ namespace Core
 			~TileType();
 
 			/**
-			 * Returt tile image for given image type
+			 * Return tile image for given image type
 			 */
 			Graphics::Surface *getTileImage(Direction type) const;
 			Graphics::Surface *getLeftHeightFiller() const;
 			Graphics::Surface *getRightHeightFiller() const;
-			Graphics::Surface *getLeftHeightTransition() const;
-			Graphics::Surface *getRightHeightTransition() const;
 			Graphics::Surface *getCliffImage(Direction direction) const;
+
+			Graphics::Surface *getHeightTransition(Direction direction) const;
 
 			int getPriority() const;
 			int getMovementCost(MovementType type) const;
@@ -122,8 +122,10 @@ namespace Core
 			int x,y; //might be not needed
 			Graphics::Surface *image;
 			Graphics::Surface *shadowedImage;
-			Graphics::Surface **leftHeightLevelImages;
-			Graphics::Surface **rightHeightLevelImages;
+			Graphics::Surface *leftHeightImage;
+			Graphics::Surface *shadowedLeftHeightImage;
+			Graphics::Surface *rightHeightImage;
+			Graphics::Surface *shadowedRightHeightImage;
 			TileType *type;
 			//Units and building occupying
 			std::vector<MapObject*> objects;
@@ -137,6 +139,8 @@ namespace Core
 
 			//void setImageType(Direction imgtype);
 			void setImage(Graphics::Surface *image);
+			void setLeftHeightLevelImage(Graphics::Surface *image);
+			void setRightHeightLevelImage(Graphics::Surface *image);
 
 			TileType* getType() const;
 

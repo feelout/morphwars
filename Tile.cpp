@@ -58,14 +58,22 @@ Graphics::Surface* TileType::getRightHeightFiller() const
 	return surfaces[10];
 }
 
-Graphics::Surface* TileType::getLeftHeightTransition() const
+Graphics::Surface* TileType::getHeightTransition(Direction direction) const
 {
-	return surfaces[11];
-}
-
-Graphics::Surface* TileType::getRightHeightTransition() const
-{
-	return surfaces[12];
+	switch(direction)
+	{
+		case NORTHWEST:
+			return surfaces[11];
+		case NORTHEAST:
+			return surfaces[12];
+		case SOUTHEAST:
+			return surfaces[13];
+		case SOUTHWEST:
+			return surfaces[14];
+		default:
+			Utility::Logger::getInstance()->log("Invalid cliff transition direction\n");
+			return NULL;
+	}
 }
 
 Graphics::Surface* TileType::getCliffImage(Direction direction) const
@@ -73,13 +81,13 @@ Graphics::Surface* TileType::getCliffImage(Direction direction) const
 	switch(direction)
 	{
 		case SOUTHWEST:
-			return surfaces[13];
-		case NORTHWEST:
-			return surfaces[14];
-		case NORTHEAST:
 			return surfaces[15];
-		case SOUTHEAST:
+		case NORTHWEST:
 			return surfaces[16];
+		case NORTHEAST:
+			return surfaces[17];
+		case SOUTHEAST:
+			return surfaces[18];
 		default:
 			Utility::Logger::getInstance()->log("Invalid cliff direction\n");
 			return NULL;
@@ -97,20 +105,47 @@ int TileType::getMovementCost(MovementType type) const
 }
 
 Tile::Tile(int x, int y, int height, TileType *type)
-	: x(x), y(y), height(height), type(type), topobject(NULL), cliff(CENTER)
+	: x(x), y(y), height(height), type(type), topobject(NULL), cliff(CENTER),
+	image(NULL), shadowedImage(NULL), leftHeightImage(NULL), shadowedLeftHeightImage(NULL),
+	rightHeightImage(NULL), shadowedRightHeightImage(NULL)
 {
 	//printf("Tile (%i,%i) created\n", x, y);
-	image = type->getTileImage(CENTER);
-	leftHeightLevelImages = new Graphics::Surface*[height];
-	rightHeightLevelImages = new Graphics::Surface*[height];
-	std::fill(leftHeightLevelImages, leftHeightLevelImages + height, type->getLeftHeightFiller());
-	std::fill(rightHeightLevelImages, rightHeightLevelImages + height, type->getRightHeightFiller());
+	//image = type->getTileImage(CENTER); //XXX DEBUG
 }
 
 void Tile::setImage(Graphics::Surface *image)
 {
 	this->image = image;
 	this->shadowedImage = Graphics::Surface::createShadowedSurface(image, SHADOW_FACTOR);
+}
+
+void Tile::setLeftHeightLevelImage(Graphics::Surface *image)
+{
+	//XXX HEAVY DEBUG
+	
+	leftHeightImage = image;
+	if(getX() == 3 && getY() == 2)
+	{
+		if(!leftHeightImage)
+			WriteToLog("Tile : Left height image = NULL\n");
+	}
+	shadowedLeftHeightImage = Graphics::Surface::createShadowedSurface(image, SHADOW_FACTOR);
+	if(getX() == 3 && getY() == 2)
+	{
+		if(!leftHeightImage)
+			WriteToLog("Tile : Left height image = NULL\n");
+	}
+}
+
+void Tile::setRightHeightLevelImage(Graphics::Surface *image)
+{
+	rightHeightImage = image;
+	if(getX() == 3 && getY() == 2)
+	{
+		if(!rightHeightImage)
+			WriteToLog("Tile : Left height image = NULL\n");
+	}
+	shadowedRightHeightImage = Graphics::Surface::createShadowedSurface(image, SHADOW_FACTOR);
 }
 
 TileType* Tile::getType() const
@@ -350,27 +385,33 @@ std::vector< std::pair<int, int> > Tile::getNeighbours() const
 
 void Tile::draw(Graphics::Surface *target, int x, int y, bool visible)
 {
-	//Utility::Logger::getInstance()->log("Tile(%i,%i)::draw(%i,%i)\n", this->x , this->y, x, y);
+	if(!leftHeightImage)
+		WriteToLog("Tile::draw : leftHeighImage is NULL\n");
+	// XXX DEBUG
+	//if(visible)
+	{
+		leftHeightImage->blit(target, x, y);
+		rightHeightImage->blit(target, x, y);
+	}
+	/*else
+	{
+		shadowedLeftHeightImage->blit(target, x, y);
+		shadowedRightHeightImage->blit(target, x, y);
+	}*/
+
 	for(int h=0; h < height; ++h)
 	{
-		//getType()->getLeftHeightFiller()->blit(target, x, y);
-		//getType()->getRightHeightFiller()->blit(target, x, y);
-		// FIXME : Change 0 to h
-		leftHeightLevelImages[0]->blit(target, x, y);
-		rightHeightLevelImages[0]->blit(target, x, y);
+		//XXX CHANGE TO SINGLE COMBINED IMAGE
+		/*leftHeightLevelImages[h]->blit(target, x, y);
+		rightHeightLevelImages[h]->blit(target, x, y);*/
 		y -= TILE_HEIGHT_LEVEL_OFFSET;
 	}
-	//Utility::Logger::getInstance()->log("Tile(%i,%i) : final top y = %i\n", this->x, this->y, y);
-	//topY = y;
+
+	// XXX: This is ugly
 	topCoords = std::make_pair(x, y);
 	if(visible)
 	{
 		image->blit(target, x, y);
-		/*for(std::vector<MapObject*>::iterator i = objects.begin(); i != objects.end(); ++i)
-		{
-			(*i)->draw(target, x, y);
-		}*/ //Can`t use because of map caching
-		//Utility::Logger::getInstance()->log("Drawing visible tile (%i,%i)\n", this->x, this->y);
 	}
 	else
 	{
