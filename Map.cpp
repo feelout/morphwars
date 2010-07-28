@@ -3,6 +3,7 @@
 #include "Logger.h"
 #include "Surface.h"
 #include "Drawer.h"
+#include "assist.h"
 
 using namespace Core;
 using namespace Gui;
@@ -98,38 +99,26 @@ void Map::calculateSurfaces()
 		{
 			Tile *currentTile = getTile(x,y);
 
-			/*if(currentTile->isCliff())
-			{
-				// FIXME FIXME FIXME FOUND IT TODO TODO TODO
-				currentTile->setImage(currentTile->getType()->
-							getCliffImage(currentTile->getCliffDirection()));
-				continue;
-			}*/
 			//TODO: Cache instead of producting unneeded copies
 			/** Check neighbours **/
-			//Surface *tilesurf = new Surface(TILE_WIDTH, TILE_HEIGHT);
 			Surface *tilesurf = NULL;
 
 			if(currentTile->isCliff())
 				tilesurf = currentTile->getType()->getCliffImage(currentTile->getCliffDirection());
 			else
 				tilesurf = new Surface(TILE_WIDTH, TILE_HEIGHT);
-			/*Surface **leftFillers = new Surface*[currentTile->getHeight()];
-			Surface **rightFillers = new Surface*[currentTile->getHeight()];*/
 
 			/* FIXME: Those two should probably use (height-1) as multiplier */
 			Surface *leftHeightImage = new Surface(TILE_WIDTH,
 					TILE_HEIGHT + currentTile->getHeight() * TILE_HEIGHT_LEVEL_OFFSET);
-					//+ currentTile->isCliff() ? TILE_HEIGHT_LEVEL_OFFSET : 0);
 			Surface *rightHeightImage = new Surface(TILE_WIDTH,
 					TILE_HEIGHT + currentTile->getHeight() * TILE_HEIGHT_LEVEL_OFFSET);
-					//+ currentTile->isCliff() ? TILE_HEIGHT_LEVEL_OFFSET : 0);
 
 			// Create initial height fillers, not influenced by neighbours
-			for(int i=0, y=leftHeightImage->getHeight(); i < currentTile->getHeight(); ++i, y -= TILE_HEIGHT_LEVEL_OFFSET)
+			for(int i=0, y=0; i < currentTile->getHeight(); ++i, y -= TILE_HEIGHT_LEVEL_OFFSET)
 			{
-				currentTile->getType()->getLeftHeightFiller()->blit(leftHeightImage, 0, y);	
-				currentTile->getType()->getRightHeightFiller()->blit(rightHeightImage, 0, y);	
+				currentTile->getType()->getLeftHeightFiller()->blit(leftHeightImage, 0, y);
+				currentTile->getType()->getRightHeightFiller()->blit(rightHeightImage, 0, y);
 			}
 
 			if(!currentTile->isCliff())
@@ -157,7 +146,7 @@ void Map::calculateSurfaces()
 			/** Blit neighbour surfaces **/
 			for(std::vector<Tile*>::iterator i=neighbours.begin(); i != neighbours.end(); ++i)
 			{
-				// XXX: Pull up common thing
+				// TODO: Pull up common thing
 				// Add terrain transitions
 				if( !currentTile->isCliff() && (*i)->getType()->getPriority() > currentTilePriority &&
 						( (*i)->getHeight() >= currentTile->getHeight() 
@@ -191,7 +180,7 @@ void Map::calculateSurfaces()
 
 					Surface *transition = (*i)->getType()->getHeightTransition(facing);
 
-					for(int h=0, y=leftHeightImage->getHeight(); h < (*i)->getHeight(); ++h)
+					for(int h=0, y=0; h < (*i)->getHeight(); ++h, y -= TILE_HEIGHT_LEVEL_OFFSET)
 					{
 						transition->blit(targetHeightFiller, 0, y);
 						y -= TILE_HEIGHT_LEVEL_OFFSET;
@@ -200,14 +189,6 @@ void Map::calculateSurfaces()
 			}
 
 			currentTile->setImage(tilesurf);
-			//XXX HEAVY DEBUG
-			if(currentTile->getX() == 3 && currentTile->getY() == 2)
-			{
-				if(!leftHeightImage)
-					WriteToLog("Left height image = NULL\n");
-				if(!rightHeightImage)
-					WriteToLog("Right heigh image = NULL\n");
-			}
 			currentTile->setLeftHeightLevelImage(leftHeightImage);
 			currentTile->setRightHeightLevelImage(rightHeightImage);
 		}

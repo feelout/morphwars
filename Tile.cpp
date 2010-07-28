@@ -385,19 +385,16 @@ std::vector< std::pair<int, int> > Tile::getNeighbours() const
 
 void Tile::draw(Graphics::Surface *target, int x, int y, bool visible)
 {
-	if(!leftHeightImage)
-		WriteToLog("Tile::draw : leftHeighImage is NULL\n");
-	// XXX DEBUG
-	//if(visible)
+	if(visible)
 	{
 		leftHeightImage->blit(target, x, y);
 		rightHeightImage->blit(target, x, y);
 	}
-	/*else
+	else
 	{
 		shadowedLeftHeightImage->blit(target, x, y);
 		shadowedRightHeightImage->blit(target, x, y);
-	}*/
+	}
 
 	for(int h=0; h < height; ++h)
 	{
@@ -440,7 +437,7 @@ void Tile::draw(Graphics::Surface *target, int x, int y, bool visible)
 	drawer.drawLine(x + TILE_WIDTH / 2, y + TILE_HEIGHT, x + TILE_WIDTH / 2,
 			y + TILE_HEIGHT + height * TILE_HEIGHT_LEVEL_OFFSET, gridcolor);
 	// Drawing 
-	std::string coords = "(" + br_itoa(this->x) + "," + br_itoa(this->y) + ")";
+	//std::string coords = "(" + br_itoa(this->x) + "," + br_itoa(this->y) + ")";
 	/*Graphics::FontSystem::getInstance()->print(target, coords, x,
 			y + TILE_HEIGHT - TILE_HEIGHT_OFFSET, RGBColor::RED);*/
 }

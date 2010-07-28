@@ -19,6 +19,7 @@ SDL_Surface* Surface::createEmptySurface(int width, int height)
 	}
 
 	Uint32 colorkey = SDL_MapRGB(result->format, 0, 0, 0); //what a hack...
+	//Uint32 colorkey = SDL_MapRGB(result->format, 0xff, 0, 0xff); //what a hack...
 	SDL_SetColorKey(result, SDL_SRCCOLORKEY, colorkey);
 
 	return result;
@@ -68,7 +69,7 @@ Surface::Surface(const Surface& other)
 	//FIXME: Fill with alpha, check if scenario works
 	Drawer filler(this);
 	Rect fillingRect(0,0,other.getWidth(),other.getHeight());
-	RGBColor fillingColor(0, 0, 0);
+	RGBColor fillingColor(0x0, 0x0, 0x0);
 	filler.fillRect(fillingRect, fillingColor);
 
 	other.blit(this, 0, 0);
@@ -174,4 +175,10 @@ Surface* Surface::createShadowedSurface(Surface *src, float factor)
 	}
 	
 	return darkened;
+}
+
+void Surface::save(const std::string path) const
+{
+	if(SDL_SaveBMP(surface, path.c_str()) == -1)
+		Utility::Logger::getInstance()->log("Failed to save image %s\n", path.c_str());
 }

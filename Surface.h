@@ -69,6 +69,8 @@ namespace Graphics
 
 			Surface* zoom(double x_factor, double y_factor, bool antialias=false);
 
+			void save(const std::string path) const;
+
 			/**
 			 * Splits surface into frames
 			 * @param strip Source surface
