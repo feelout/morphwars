@@ -317,7 +317,7 @@ Tile* Map::getTileByMouseCoords(int mx, int my)
 	int tilex, tiley;
 
 	Graphics::Drawer peeker(&coordFinder);
-	RGBColor color = peeker.getPixel(cf_x, cf_y);
+	const RGBColor color = peeker.getPixel(cf_x, cf_y);
 
 	if(color == RGBColor::WHITE)
 	{

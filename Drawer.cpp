@@ -8,12 +8,12 @@ Drawer::Drawer(Surface *target)
 {
 }
 
-void Drawer::putPixel(int x, int y, RGBColor color)
+void Drawer::putPixel(int x, int y, const RGBColor& color)
 {
 	pixelRGBA(target->getSurface(), x, y, color.r, color.g, color.b, 255);
 }
 
-RGBColor Drawer::getPixel(int x, int y)
+RGBColor Drawer::getPixel(int x, int y) const
 {
 	Uint8 *p = (Uint8 *)target->getSurface()->pixels + y * target->getSurface()->pitch + x * 4; // 4 = Bpp
 	Uint32 pixel = *(Uint32 *)p;
@@ -23,17 +23,17 @@ RGBColor Drawer::getPixel(int x, int y)
 	return result;
 }
 
-void Drawer::drawLine(int x1, int y1, int x2, int y2, RGBColor color)
+void Drawer::drawLine(int x1, int y1, int x2, int y2, const RGBColor& color)
 {
 	lineRGBA(target->getSurface(), x1, y1, x2, y2, color.r , color.g, color.b, 255);
 }
 
-void Drawer::drawRect(Rect rect, RGBColor color)
+void Drawer::drawRect(Rect rect, const RGBColor& color)
 {
 	rectangleRGBA(target->getSurface(), rect.x, rect.y, rect.x+rect.w, rect.y+rect.h, color.r, color.g, color.b, 255);
 }
 
-void Drawer::fillRect(Rect rect, RGBColor color)
+void Drawer::fillRect(Rect rect, const RGBColor& color)
 {
 	//boxRGBA(target->getSurface(), rect.x, rect.y, rect.x+rect.w, rect.y+rect.h, color.r, color.g, color.b, color.a);
 	SDL_Rect sdlrect = {rect.x, rect.y, rect.w, rect.h};

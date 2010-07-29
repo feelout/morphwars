@@ -64,12 +64,12 @@ struct Rect
  */
 struct RGBColor
 {
-	static RGBColor RED;
-	static RGBColor YELLOW;
-	static RGBColor BLUE;
-	static RGBColor GREEN;
-	static RGBColor WHITE;
-	static RGBColor BLACK;
+	static const RGBColor RED;
+	static const RGBColor YELLOW;
+	static const RGBColor BLUE;
+	static const RGBColor GREEN;
+	static const RGBColor WHITE;
+	static const RGBColor BLACK;
 
 	unsigned char r,g,b;
 
@@ -91,7 +91,7 @@ struct RGBColor
 		return result;
 	}
 
-	bool operator==(RGBColor& other)
+	bool operator==(const RGBColor& other) const
 	{
 		if(&other == this)
 			return true;

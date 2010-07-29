@@ -2,12 +2,12 @@
 #include "assist.h"
 #include "Logger.h"
 
-RGBColor RGBColor::RED = RGBColor(255, 0, 0);
-RGBColor RGBColor::YELLOW = RGBColor(255, 255, 0);
-RGBColor RGBColor::BLUE = RGBColor(0, 0, 255);
-RGBColor RGBColor::GREEN = RGBColor(0, 255, 0);
-RGBColor RGBColor::WHITE = RGBColor(255, 255, 255);
-RGBColor RGBColor::BLACK = RGBColor(0, 0, 0);
+const RGBColor RGBColor::RED = RGBColor(255, 0, 0);
+const RGBColor RGBColor::YELLOW = RGBColor(255, 255, 0);
+const RGBColor RGBColor::BLUE = RGBColor(0, 0, 255);
+const RGBColor RGBColor::GREEN = RGBColor(0, 255, 0);
+const RGBColor RGBColor::WHITE = RGBColor(255, 255, 255);
+const RGBColor RGBColor::BLACK = RGBColor(0, 0, 0);
 
 SDL_Surface *createSurface(int w, int h)
 {
