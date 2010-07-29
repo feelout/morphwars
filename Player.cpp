@@ -71,6 +71,9 @@ void Player::updateFOV()
 	//TODO: find the way to combine vectors
 	for(std::vector<Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 	{
+		if((*i)->isDead())
+			continue;
+
 		std::vector< std::pair<int, int> > neighbours = (*i)->getTile()->getNeighbours();
 		std::vector< std::pair<int, int> >::iterator nb_iter;
 
@@ -186,18 +189,21 @@ void Player::setCurrent(bool current)
 bool predIsDead(const Unit* value)
 {
 	// Selected units is deleted in playerController
-	return value->isDead() && !value->isSelected();
+	return value->isDead();//&& !value->isSelected();
 }
 
 void Player::onTurnBegin()
 {
-	std::vector<Unit*>::iterator i;
+	Utility::Logger::getInstance()->log("%s::onTurnBegin()\n", name.c_str());
+	Utility::Logger::getInstance()->log("Total %i units\n", units.size());
+	std::vector<Unit*>::iterator i,j;
 
 	i = std::remove_if(units.begin(), units.end(), predIsDead);
 
-	for(;i != units.end(); ++i)
+	for(j = i;j != units.end(); ++j)
 	{
-		delete (*i);
+		if(!(*j)->isSelected())
+			delete (*j);
 	}
 
 	units.erase(i, units.end());
@@ -207,7 +213,10 @@ void Player::onTurnBegin()
 		(*i)->onTurnBegin();
 	}
 
+	Utility::Logger::getInstance()->log("After cleanup : %i units\n", units.size());
+
 	controller->newTurn();
+
 	endedTurn = false;
 }
 

@@ -61,15 +61,21 @@ LocalPlayerController::~LocalPlayerController()
 
 void LocalPlayerController::newTurn()
 {
-	sidePanel->setCurrentPlayer(target);
-	map->setFieldOfView(target->getFieldOfView()); //FIXME: DEBUG
 	if(currentObject)
 	{
 		if(currentObject->isDead())
+		{
+			WriteToLog("CurrentObject is dead - deleting\n");
 			delete currentObject;
+		}
 		else
+		{
+			WriteToLog("CurrentObject is not dead\n");
 			sidePanel->setCurrentObject(currentObject);
+		}
 	}
+	sidePanel->setCurrentPlayer(target);
+	map->setFieldOfView(target->getFieldOfView()); //FIXME: DEBUG
 }
 
 bool LocalPlayerController::objectTargeted(Tile *clickedTile)

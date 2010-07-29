@@ -382,6 +382,7 @@ bool Unit::damage(int damage, MapObject *source)
 void Unit::kill()
 {
 	dead = true;
+	owner->updateFOV();
 	tile->removeObject(this);
 }
 
