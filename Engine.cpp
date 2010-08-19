@@ -4,6 +4,7 @@
 #include "AnimationManager.h"
 #include "MouseSelector.h"
 #include "Drawer.h"
+#include "PythonGlue.h"
 
 Engine *Engine::instance = NULL;
 
@@ -55,6 +56,8 @@ Engine::Engine(int w, int h, bool fs)
 	//dispatcher->attachListener(menu);
 	changeState(menu);
 	Core::MouseState::getInstance()->setActionType(Core::MouseState::SELECT);
+
+	Utility::InitPythonGlueCode();
 }
 
 void Engine::runGameCycle()

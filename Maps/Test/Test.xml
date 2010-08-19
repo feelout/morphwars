@@ -61,9 +61,9 @@
 	</players>
 
 	<scripts>
-		<onbegin>beginscript.lua</onbegin>
-		<oneachturn>eachturn.lua</oneachturn>
-		<ondestroy id="RED_WT">bluewin.lua</ondestroy>
-		<ondestroy id="BLUE_WT">redwin.lua</ondestroy>
+		<onbegin>beginscript.py</onbegin>
+		<oneachturn>eachturn.py</oneachturn>
+		<!--<ondestroy id="RED_WT">bluewin.lua</ondestroy>
+		<ondestroy id="BLUE_WT">redwin.lua</ondestroy>-->
 	</scripts>
 </scenario>

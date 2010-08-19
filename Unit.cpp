@@ -69,11 +69,9 @@ UnitType::UnitType()
 
 UnitType* UnitType::clone()
 {
-	//Utility::Logger::getInstance()->log("UnitType::clone()\n");
 	UnitType *result = new UnitType();
 
 	result->name = name;
-	//Utility::Logger::getInstance()->log("Result->name == %s\n", result->name.c_str());
 	result->type = type;
 	result->maxhp = maxhp;
 	result->maxsp = maxsp;
@@ -153,7 +151,6 @@ Unit::Unit(UnitType *type, Tile *tile, Player *owner)
 	: MapObject(type, tile, owner), moving(false), canRetaliate(true), attackingState(false), dxmodifier(0),
 		dymodifier(0), dstdx(0), dstdy(0), dst(NULL)
 {
-	//Utility::Logger::getInstance()->log("Unit::Unit: %s\n", this->type->getName().c_str());
 	hp = type->getMaxHP();
 	mp = type->getMaxMP();
 	sp = type->getMaxSP();
@@ -161,7 +158,6 @@ Unit::Unit(UnitType *type, Tile *tile, Player *owner)
 	defense = type->getDefense();
 	hitsLeft = type->getHitCount();
 
-	//this->type = type->clone();
 	infoScreen = new Gui::UnitInfoScreen(this);
 }
 
@@ -172,8 +168,6 @@ UnitType* Unit::getType() const
 
 bool Unit::changePosition(Tile *newPosition)
 {
-	/*Utility::Logger::getInstance()->log("Changing unit position from (%i,%i) to (%i,%i)\n",
-		tile->getX(), tile->getY(), newPosition->getX(), newPosition->getY());*/
 	if(newPosition == tile)
 		return false;
 	
@@ -195,7 +189,7 @@ bool Unit::changePosition(Tile *newPosition)
 bool Unit::moveTo(Tile *dst)
 {
 	Utility::Logger::getInstance()->log("Unit::moveTo (%i,%i)\n", dst->getX(), dst->getY());
-	//Utiltiy::Logger::getInstance()->log("Direction : %s\n", Tile::DirectionToString(tile->getDirection
+
 	if(tile == dst)
 		return false;
 
@@ -265,43 +259,23 @@ bool Unit::moveTo(Tile *dst)
 	}
 }
 
-/*
- * XXX : Cliff checking does not work!!! 
- */
 bool Unit::canMoveFromTo(Tile *src, Tile *dst) const
 {
-	/*Utility::Logger::getInstance()->log("Checking movement from (%i,%i) to (%i,%i)\n",
-			src->getX(), src->getY(), dst->getX(), dst->getY());*/
 	/* Occupied by enemy */
 	if(!dst->canBeAdded(this))
 		return false;
-	/* Not enough MP */ // Disable, so canMoveTo could be used in A*
-	/*if(mp < dst->getType()->getMovementCost(getType()->getMovementType()))
-		return false;*/
+
 	int srch = src->getHeight();
 	int dsth = dst->getHeight();
-
-	/*Utility::Logger::getInstance()->log("Src height = %i\nDst height = %i\n", srch, dsth);
-	Utility::Logger::getInstance()->log("Direction from source to dest : %s\n",
-			Tile::DirectionToString(src->getDirection(dst)).c_str());
-	Utility::Logger::getInstance()->log("Src cliff : %s\nDst cliff : %s\n",
-			Tile::DirectionToString(src->getCliffDirection()).c_str(),
-			Tile::DirectionToString(dst->getCliffDirection()).c_str());*/
 
 	if(srch != dsth)
 	{
 		if(abs(srch-dsth) != 1)
 			return false;
-		/*if(dst->isCliff() && srch > dsth && dst->getCliffDirection() != src->getDirection(dst))
-			return false;
-		if(src->isCliff() && srch < dsth && src->getCliffDirection() != dst->getDirection(src))
-			return false;*/
 		if(dst->isCliff() && srch > dsth && dst->getCliffDirection() == src->getDirection(dst))
 			return true;
 		if(src->isCliff() && srch < dsth && src->getCliffDirection() == dst->getDirection(src))
 			return true;
-		/*if(!dst->isCliff() && !src->isCliff())
-			return false;*/
 		return false;
 	}
 
@@ -340,15 +314,8 @@ bool Unit::performAttack(Tile *tile)
 
 		attackingState = false;
 
-		// FIXME: Add timed animation to animation pack
-		/*type->getGraphics()->changeToAnimation(type->getName()+"-"+
-				Tile::DirectionToString(this->tile->getDirection(tile)));*/
 		return fightResult;
 	}
-	/*else
-	{
-		return moveTo(tile);
-	}*/
 }
 
 bool Unit::damage(int damage, MapObject *source)
