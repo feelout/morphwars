@@ -8,18 +8,19 @@
 using namespace Core;
 
 Order::Order(MapObject *object, Map *map)
-	: object(object), map(map), done(false), target(NULL)
+	: object(object), map(map), done(false), target(NULL) 
 {
 }
 
 Order::~Order()
 {
+	Utility::Logger::getInstance()->log("ORDER::~ORDER\n");
 }
 
 void Order::execute(Tile *target)
 {
 	this->target = target;
-	OrderManager::getInstance()->addOrder(this);
+	//OrderManager::getInstance()->addOrder(boost::shared_ptr<Order>(this)); XXX: See PlayerController XXX-s
 }
 
 void Order::process()
@@ -205,8 +206,8 @@ bool MovementOrder::makePath()
 	//for(cl_iter = closedlist.begin(); cl_iter != closedlist.end(); ++cl_iter)
 	{
 		waypoints.push_back((*cl_iter)->getSource());
-		/*Utility::Logger::getInstance()->log("Waypoint: (%i,%i)\n", (*cl_iter)->getSource()->getX(),
-			(*cl_iter)->getSource()->getY());*/
+		Utility::Logger::getInstance()->log("Waypoint: (%i,%i)\n", (*cl_iter)->getSource()->getX(),
+			(*cl_iter)->getSource()->getY());
 	}
 
 	currentWaypoint = waypoints.begin();
@@ -218,19 +219,22 @@ bool MovementOrder::makePath()
 		delete (*cl_iter);
 	}
 
+	Utility::Logger::getInstance()->log("A* calculation is done\n");
+
 	return true;
 }
 
 void MovementOrder::process()
 {
-	/*Utility::Logger::getInstance()->log("MovementOrder::process().Unit tile: %i,%i. Unit MP: %i",
-		unit->getTile()->getX(), unit->getTile()->getY(), unit->getMP());*/
 	Unit *unit = static_cast<Unit*>(object);
 	if(done)
 	{
 		return;
 	}
 
+
+	Utility::Logger::getInstance()->log("MovementOrder::process().Unit tile: %i,%i. Unit MP: %i\n",
+		unit->getTile()->getX(), unit->getTile()->getY(), unit->getMP());
 
 	if(unit->updateMovement())
 	{
@@ -261,9 +265,9 @@ void MovementOrder::process()
 	}
 }
 
-Order* MovementOrderCreator::createOrder(MapObject *object, Map *map)
+boost::shared_ptr<Order> MovementOrderCreator::createOrder(MapObject *object, Map *map)
 {
-	return new MovementOrder(object, map);
+	return boost::shared_ptr<Order>(new MovementOrder(object, map));
 }
 
 /* AttackOrder class members */
@@ -288,7 +292,7 @@ void AttackOrder::process()
 {
 }
 
-Order* AttackOrderCreator::createOrder(MapObject *object, Map *map)
+boost::shared_ptr<Order> AttackOrderCreator::createOrder(MapObject *object, Map *map)
 {
-	return new AttackOrder(object, map);
+	return boost::shared_ptr<Order>(new AttackOrder(object, map));
 }

@@ -6,6 +6,7 @@
 #include "Engine.h"
 #include "MouseSelector.h"
 #include "OrderFactory.h"
+#include "OrderManager.h"
 
 using namespace Core;
 
@@ -35,10 +36,8 @@ Gui::Container* PlayerController::getGUI()
 }
 
 /* LocalPlayerController */
-//LocalPlayerController::LocalPlayerController(Player *target, Map *map, Gui::SidePanel *sidePanel)
-	//: PlayerController(target), map(map), pendingOrder(NULL), sidePanel(sidePanel), currentObject(NULL)
 LocalPlayerController::LocalPlayerController(Player *target, Map *map)
-	: PlayerController(target), map(map), pendingOrder(NULL), sidePanel(NULL), currentObject(NULL)
+	: PlayerController(target), map(map), pendingOrder(), sidePanel(NULL), currentObject(NULL)
 {
 	Utility::Logger::getInstance()->log("LocalPlayerController created for %s\n", target->getName().c_str());
 
@@ -91,14 +90,18 @@ bool LocalPlayerController::objectTargeted(Tile *clickedTile)
 		return false;
 	}
 
-	Order *order = OrderFactory::getInstance()->createOrder(selected->getType()->getDefaultOrder(), selected, map);
-	if(order)
+	//boost::shared_ptr<Order> order = OrderFactory::getInstance()->createOrder(selected->getType()->getDefaultOrder(), selected, map);
+	setOrder(selected->getType()->getDefaultOrder());
+	/*if(order.get())
 	{
+		// XXX DEBUG
+		order->getText();
 		order->execute(clickedTile);
 		return true;
-	}
+	}*/
 
-	return false;
+	//return false;
+	return true;
 }
 
 bool LocalPlayerController::mouseMoved(int x, int y)
@@ -154,8 +157,15 @@ bool LocalPlayerController::mouseLMBClicked(int x, int y)
 		{
 			Utility::Logger::getInstance()->log("Applying order to (%i,%i)\n", tile->getX(), tile->getY());
 			pendingOrder->execute(tile);
-			//TODO :Test!
-			pendingOrder = NULL;
+			/* XXX : Found the error: before reset(), use_count == 1,
+			 * despite adding another shared_ptr to the same Order
+			 * to the OrderManager::orders vector. So, when we do reset,
+			 * order pointed is deleted */
+			/* XXX: As a workaround, I move addition from Order::execute to this point.
+			 * So, must not forget, when other Controllers are done, put something similar
+			 * to them */
+			OrderManager::getInstance()->addOrder(pendingOrder);
+			pendingOrder.reset();
 		}
 		return tile != NULL;
 	}
@@ -212,21 +222,37 @@ bool LocalPlayerController::keyPressed(int key)
 	return false;
 }
 
-void LocalPlayerController::setOrder(Order *order)
+void LocalPlayerController::setOrder(boost::shared_ptr<Order> order)
 {
+	Utility::Logger::getInstance()->log("Controller::setOrder(%s)\n", order->getText().c_str());
+
 	if(pendingOrder)
 	{
+		Utility::Logger::getInstance()->log("Controller : stopping pending order\n");
 		pendingOrder->stop();
-		pendingOrder = NULL;
+		pendingOrder.reset();
 	}
+	Utility::Logger::getInstance()->log("Controller : order.use_count = %d\n", order.use_count());
+	/// XXX Is this the real bug?
 	pendingOrder = order;
+	if(pendingOrder) {
+		Utility::Logger::getInstance()->log("PO is OK\n");
+		pendingOrder->getText().c_str();
+	}
+	if(order) {
+		Utility::Logger::getInstance()->log("Order is OK\n");
+	}
+	Utility::Logger::getInstance()->log("Controller : order.use_count = %d\n", order.use_count());
 	Utility::Logger::getInstance()->log("New pendingOrder for %s : %s\n", target->getName().c_str(),
 			pendingOrder->getText().c_str());
 }
 
 void LocalPlayerController::setOrder(std::string orderName)
 {
-	setOrder(OrderFactory::getInstance()->createOrder(orderName, currentObject, map));
+	WriteToLog("LocalPlayerController::setOrder(orderName)\n");
+	boost::shared_ptr<Order> order = OrderFactory::getInstance()->createOrder(orderName, currentObject, map);
+	WriteToLog(order->getText().c_str()); // XXX DEBUG
+	setOrder(order);
 }
 
 Gui::Container* LocalPlayerController::getGUI()

@@ -12,11 +12,11 @@ namespace Core
 		private:
 			static OrderManager* instance;
 
-			std::vector<Order*> orders;
+			std::vector< boost::shared_ptr<Order> > orders;
 		public:
 			static OrderManager* getInstance();
 
-			void addOrder(Order *order);
+			void addOrder(boost::shared_ptr<Order> order);
 			void processOrders();
 	};
 }

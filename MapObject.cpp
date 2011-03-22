@@ -111,6 +111,10 @@ MapObjectType* MapObject::getType() const
 	return type;
 }
 
+bool MapObject::damage(int damage, MapObject *source)
+{
+}
+
 void MapObject::setSelected(bool selected)
 {
 	this->selected = selected;

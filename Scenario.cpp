@@ -15,14 +15,14 @@ const int MAP_MINIMAL_FRAME_HEIGHT = 300;
 Scenario::Scenario(std::string path)
 	: EngineState("Scenario"), currentPlayer(NULL), map(NULL), currentGUI(NULL)/*sidepanel(NULL),*/ /*hbox(NULL)*/
 {
+	OrderFactory::getInstance()->registerCreator("move", new MovementOrderCreator());
+	OrderFactory::getInstance()->registerCreator("attack", new AttackOrderCreator());
+
 	if(!loadFromFile(path))
 	{
 		Utility::Logger::getInstance()->log("Failed to load scenario %s\n", path.c_str());
 		return;
 	}
-
-	OrderFactory::getInstance()->registerCreator("move", new MovementOrderCreator());
-	OrderFactory::getInstance()->registerCreator("attack", new AttackOrderCreator());
 
 	int screen_height = Engine::getInstance()->getRenderer()->getHeight();
 	int screen_width = Engine::getInstance()->getRenderer()->getWidth();

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <boost/shared_ptr.hpp>
 
 using namespace std;
 
@@ -16,7 +17,7 @@ namespace Core
 	class IOrderCreator
 	{
 		public:
-			virtual Order* createOrder(MapObject *object, Map *map)=0;
+			virtual boost::shared_ptr<Order> createOrder(MapObject *object, Map *map)=0;
 	};
 
 	/* Creates orders by name */
@@ -30,7 +31,8 @@ namespace Core
 			static OrderFactory* getInstance();
 
 			void registerCreator(string name, IOrderCreator *creator);
-			Order* createOrder(string name, MapObject *object, Map *map); 
+			bool isRegistered(string name);
+			boost::shared_ptr<Order> createOrder(string name, MapObject *object, Map *map); 
 
 	};
 };

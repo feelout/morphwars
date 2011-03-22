@@ -130,7 +130,7 @@ bool Engine::loadScenario(std::string path)
 	return true;
 }
 
-//TEMPORATY - May include duplicating states
+//TEMPORARY - May include duplicating states
 void Engine::changeState(Core::EngineState *newState)
 {
 	Utility::Logger::getInstance()->log("State changed to %s\n", newState->getName().c_str());

@@ -92,7 +92,7 @@ namespace Core
 			 * @param owner Owner of an object
 			 */
 			MapObject(MapObjectType *type, Tile *tile, Player *owner);
-			virtual ~MapObject()=0;
+			virtual ~MapObject();
 
 			/**
 			 * Draws object
@@ -105,7 +105,7 @@ namespace Core
 			MapObjectType *getType() const;
 
 			bool isEnemy(MapObject *other) const;
-			virtual bool damage(int damage, MapObject *source)=0;
+			virtual bool damage(int damage, MapObject *source);
 
 			void setSelected(bool selected);
 			bool isSelected() const;

@@ -3,15 +3,13 @@
 
 int main(int argc, char *argv[])
 {
-	try
-	{
+	try {
 		Engine::init(800, 640, false);
 		Engine::getInstance()->runGameCycle();
 	}
-	catch(...)
+	catch (boost::python::error_already_set&)
 	{
-		boost::python::handle_exception();
+		PyErr_Print();
 	}
-
 	return 0;
 }

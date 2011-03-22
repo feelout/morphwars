@@ -28,7 +28,7 @@ namespace Core
 	{
 		protected:
 			Map *map;
-			Order *pendingOrder;
+			boost::shared_ptr<Order> pendingOrder;
 			Gui::SidePanel *sidePanel;
 			MapObject *currentObject;
 			Gui::HBox *gui;
@@ -39,7 +39,7 @@ namespace Core
 			LocalPlayerController(Player *target, Map *map);
 			virtual ~LocalPlayerController();
 
-			void setOrder(Order *order);
+			void setOrder(boost::shared_ptr<Order> order);
 			void setOrder(std::string orderName);
 
 			virtual bool mouseMoved(int x, int y);

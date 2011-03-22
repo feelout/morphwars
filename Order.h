@@ -46,7 +46,7 @@ namespace Core
 	class MovementOrderCreator : public IOrderCreator
 	{
 		public:
-			virtual Order* createOrder(MapObject *object, Map *map);
+			virtual boost::shared_ptr<Order> createOrder(MapObject *object, Map *map);
 	};
 
 	class AttackOrder : public Order
@@ -61,7 +61,7 @@ namespace Core
 	class AttackOrderCreator : public IOrderCreator
 	{
 		public:
-			virtual Order* createOrder(MapObject *object, Map *map);
+			virtual boost::shared_ptr<Order> createOrder(MapObject *object, Map *map);
 	};
 }
 
